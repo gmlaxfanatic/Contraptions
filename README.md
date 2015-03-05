@@ -1,10 +1,10 @@
 #Contraptions
 
-Contraptions goal is to provide a framework for adding increased functionality to blocks in minecraft. At its core it is meant to be highly flexible to the addition of new functional elements to individual minecraft blocks, allowing for the simple creation of a wide range of different kinds of interactive structures. This program will allow tens of thousands of interactive blocks to be added to the minecraft world in an efficient manner.
+Contraptions goal is to provide a framework for adding increased functionality to blocks in minecraft. At its core it is meant to be highly flexible to the addition of new functional elements to individual minecraft blocks, allowing for the simple creation of a wide range of different kinds of interactive structures. This program will allow tens of thousands of interactive blocks to be added to the minecraft world in an efficient manner giving rise to emergent constructions of complex machinery.
 
 ##The Contraption
 
-A Contraption is a single minecraft block that pieces together a bunch of widgets and resources. Widgets are functional components that interact with the minecraft world and the resources of the Contraption. Resources are simple values within the contraption that represent a range of different properties, they allow widgets to interact with each other. Via the composition of multiple widgets and resources contraptions will easily give rise to complex behavior and interaction with the minecraft world and other contraptions.
+A contraption is a single minecraft block that pieces together a bunch of widgets and resources. Widgets are functional components that interact with the minecraft world and the resources of the contraption. Resources are simple values within the contraption that represent a range of different properties, they allow widgets to interact with each other and factories to keep track of their current state. Via the composition of multiple widgets and resources contraptions will easily give rise to complex behavior and interaction with the minecraft world and other contraptions.
 
 Potential contraptions include:
 
@@ -16,17 +16,17 @@ Potential contraptions include:
 
 ##Widgets
 
-A contraption's widgets are what allow
-Modules are what enable FunctionalBlocks to do things. They can either be triggered events, say produce some goods, or time based events, say consume some energy. Time based events preferrably are not required to be run frequently, should no require chunk loading, and are executed via Bukkit's scheduler.
+A contraption's widgets are what allow it to do things, and each contraption implementation decides how specifically to use the widgets that have been coded. These widgets can respond to events, do things over time, or respond to other widgets in the same contraption or others. Programmatic constraints dictate that widgets should not trigger chunk loads and should not be required to run frequently.
 
-##Tentative Modules planned:
+##Tentative Widgets:
 
-1.  Match modile: A module that when triggered attempts to consume a set of items, but only consumes them if the inventory only contains those items.
-1.  Production module: A module that when triggered attempts to convert one set of items in the FunctionalBlocks inventory to another set of Items
-1.  Drain module: A module which drains an abstract resource over time, when the resource reaches zero it attempts to consume a set of items which will add more resource to the module. There is also a maximum amount of resource the the module can contain. This resource can also be changed via other modules in other FunctionalBlock.
-1.  Sink module: Pull items from surrounding containers over time
-1.  Source module: Push items to surrounding containers over time
-1.  Aura module: Influence the attributes of surrounding containers over time
-1.  Trigger module: trigger ajoining functional blocks
-1.  Teleportation module: Teleport the interacting player to nether
-1.  Effect module: Bestow an effect upon the interacting player
+1.  Match widget: A widget that when triggered attempts to consume a set of items, but only consumes them if the inventory only contains those items.
+1.  Production widget: A widget that when triggered attempts to convert one set of items in the contraption to another set of items
+1.  Decay widget: A widget which drains a resource over time.
+1.  Generation widget: A widget that will convert a set of items into a resource.
+1.  Load widget: Load items from surrounding containers over time
+1.  Unload widget: Unloads items to surrounding containers over time
+1.  Aura widget: Influence the resources of surrounding contraptions every so often
+1.  Trigger widget: Trigger widgets in ajoining functional blocks
+1.  Teleportation widget: Teleport the interacting player to nether
+1.  Effect widget: Bestow an effect upon the interacting player
