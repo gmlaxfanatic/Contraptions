@@ -1,6 +1,6 @@
-package com.untamedears.contraption;
+package com.untamedears.contraptions;
 
-import com.untamedears.contraption.contraptions.Contraption;
+import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import java.util.HashMap;
 import java.util.Map;

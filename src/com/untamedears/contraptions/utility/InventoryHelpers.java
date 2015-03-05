@@ -1,4 +1,4 @@
-package com.untamedears.contraption.utility;
+package com.untamedears.contraptions.utility;
 
 import java.util.ListIterator;
 import java.util.Set;

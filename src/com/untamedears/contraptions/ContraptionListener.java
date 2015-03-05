@@ -1,6 +1,6 @@
-package com.untamedears.contraption;
+package com.untamedears.contraptions;
 
-import com.untamedears.contraption.ContraptionManager;
+import com.untamedears.contraptions.ContraptionManager;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

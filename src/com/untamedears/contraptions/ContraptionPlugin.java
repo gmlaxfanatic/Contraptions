@@ -1,6 +1,6 @@
-package com.untamedears.contraption;
+package com.untamedears.contraptions;
 
-import com.untamedears.contraption.ContraptionManager;
+import com.untamedears.contraptions.ContraptionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ContraptionPlugin extends JavaPlugin

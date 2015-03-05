@@ -1,8 +1,8 @@
-package com.untamedears.contraption.gadgets;
+package com.untamedears.contraptions.gadgets;
 
 
-import com.untamedears.contraption.contraptions.Contraption;
-import com.untamedears.contraption.Resource;
+import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.utility.Resource;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;

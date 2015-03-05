@@ -1,7 +1,7 @@
 package com.untamedears.contraptions.properties;
 
-import com.untamedears.contraption.ContraptionManager;
-import com.untamedears.contraption.contraptions.Contraption;
+import com.untamedears.contraptions.ContraptionManager;
+import com.untamedears.contraptions.contraptions.Contraption;
 import org.bukkit.Location;
 import org.bukkit.Material;
 

@@ -1,4 +1,4 @@
-package com.untamedears.contraption;
+package com.untamedears.contraptions.utility;
 
 public class Resource {
     

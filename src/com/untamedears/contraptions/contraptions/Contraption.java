@@ -1,7 +1,7 @@
-package com.untamedears.contraption.contraptions;
+package com.untamedears.contraptions.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
-import com.untamedears.contraption.ContraptionManager;
+import com.untamedears.contraptions.ContraptionManager;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;

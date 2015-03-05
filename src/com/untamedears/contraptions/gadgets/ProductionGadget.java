@@ -1,6 +1,6 @@
-package com.untamedears.contraption.gadgets;
+package com.untamedears.contraptions.gadgets;
 
-import com.untamedears.contraption.utility.InventoryHelpers;
+import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.util.Set;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
