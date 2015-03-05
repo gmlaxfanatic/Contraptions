@@ -2,9 +2,11 @@ package com.untamedears.contraption.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraption.ContraptionManager;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Represents a Contraption in the minecraft world
@@ -13,12 +15,13 @@ public class Contraption {
 
     Location location;
     ContraptionProperties properties;
-    
+    Set<BukkitTask> tasks;
+
     public Contraption(ContraptionProperties properties, Location location) {
         this.location = location;
         this.properties = properties;
     }
-    
+
     protected ContraptionProperties getProperties() {
         return properties;
     }
@@ -36,15 +39,15 @@ public class Contraption {
     }
 
     /*
-    Updates the state of the contraption
-    */
+     Updates the state of the contraption
+     */
     public void update() {
         //Check energy, consume more if needed
-        if(!isValid()) {
+        if (!isValid()) {
             getContraptionManager().destroy(this);
         }
     }
-    
+
     /*
      * Checks if the material for this block is at the location
      */
@@ -56,6 +59,14 @@ public class Contraption {
      * Inactivates associated modules
      */
     public void destroy() {
+        for (BukkitTask task : tasks) {
+            try {
+                task.cancel();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     /*

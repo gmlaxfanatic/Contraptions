@@ -3,6 +3,7 @@ package com.untamedears.contraptions.properties;
 import com.untamedears.contraption.ContraptionManager;
 import com.untamedears.contraption.contraptions.Contraption;
 import com.untamedears.contraption.contraptions.Factory;
+import com.untamedears.contraption.gadgets.DecayGadget;
 import com.untamedears.contraption.gadgets.GenerationGadget;
 import com.untamedears.contraption.gadgets.ProductionGadget;
 import com.untamedears.contraption.utility.InventoryHelpers;
@@ -24,6 +25,7 @@ public class FactoryProperties extends ContraptionProperties {
     Set<ItemStack> match;
     ProductionGadget productionGadget;
     GenerationGadget generationGadget;
+    DecayGadget decayGadget;
     Set<ItemStack> powerItems;
 
     public FactoryProperties(ContraptionManager contraptionManager, Set<ItemStack> match, Set<ItemStack> inputs, Set<ItemStack> outputs, Set<ItemStack> powerItems) {
@@ -59,6 +61,10 @@ public class FactoryProperties extends ContraptionProperties {
     
     public ProductionGadget getProductionGadget() {
         return productionGadget;
+    }
+    
+    public DecayGadget getDecayGadget() {
+        return decayGadget;
     }
 
 }

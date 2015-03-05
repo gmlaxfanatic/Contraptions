@@ -2,18 +2,16 @@ package com.untamedears.contraption.contraptions;
 
 import com.untamedears.contraption.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
-import com.untamedears.contraption.gadgets.DecayGadget;
 import org.bukkit.Location;
 
 public class Factory extends Contraption {
 
-    DecayGadget decayGadget;
     Resource energy;
 
     public Factory(FactoryProperties properties, Location location) {
         super(properties, location);
         energy = new Resource(0,52594800);
-        decayGadget = new DecayGadget(this,energy,1);
+        tasks.add(properties.getDecayGadget().startDecay(this, energy));
     }
     
     @Override
@@ -44,16 +42,6 @@ public class Factory extends Contraption {
         //If contraption ran out of energy destroy it
         if(energy.getResource() < 0) {
             getContraptionManager().destroy(this);
-        }
-    }
-
-    @Override
-    public void destroy() {
-        try{
-            decayGadget.cancel();
-        }
-        catch(IllegalStateException e) {
-            e.printStackTrace();
         }
     }
 }

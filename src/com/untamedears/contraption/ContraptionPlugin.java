@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ContraptionPlugin extends JavaPlugin
 {
 
+    static ContraptionPlugin contraptionPlugin;
     ContraptionManager contraptionManager;
     
     @Override
@@ -30,5 +31,9 @@ public class ContraptionPlugin extends JavaPlugin
             {
                     e.printStackTrace();
             }
+    }
+    
+    public static ContraptionPlugin getContraptionPlugin() {
+        return contraptionPlugin;
     }
 }
