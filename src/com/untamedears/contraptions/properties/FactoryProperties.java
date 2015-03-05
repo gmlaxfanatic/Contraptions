@@ -1,4 +1,4 @@
-package com.untamedears.properties;
+package com.untamedears.contraptions.properties;
 
 import com.untamedears.contraption.ContraptionManager;
 import com.untamedears.contraption.contraptions.Contraption;

@@ -1,7 +1,7 @@
 package com.untamedears.contraption.contraptions;
 
 import com.untamedears.contraption.Resource;
-import com.untamedears.properties.FactoryProperties;
+import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraption.gadgets.DecayGadget;
 import org.bukkit.Location;
 

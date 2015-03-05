@@ -1,7 +1,7 @@
 package com.untamedears.contraption;
 
 import com.untamedears.contraption.contraptions.Contraption;
-import com.untamedears.properties.ContraptionProperties;
+import com.untamedears.contraptions.properties.ContraptionProperties;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
