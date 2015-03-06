@@ -4,6 +4,7 @@ import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.util.Set;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.json.JSONObject;
 
 /*
  * A module used to produce one set of items given a second set of items
@@ -18,6 +19,39 @@ public class ProductionGadget {
     public ProductionGadget(Set<ItemStack> inputs, Set<ItemStack> outputs) {
         this.inputs = inputs;
         this.outputs = outputs;
+    }
+    
+        /**
+     * Imports a ProductionGadget from a JSONObject
+     * 
+     * Format of JSON object should be as follows:
+     * {
+     *   "inputs":
+     *     [{
+     *         "material": "MATERIAL_NAME",
+     *         "amount": 1,
+     *         "durability": 0,
+     *         "name": "DISPLAY_NAME",
+     *         "lore": "LORE"
+     *       },...
+     *       }],
+     *   "outputs":
+     *     [{
+     *         "material": "MATERIAL_NAME",
+     *         "amount": 1,
+     *         "durability": 0,
+     *         "name": "DISPLAY_NAME",
+     *         "lore": "LORE"
+     *       },...
+     *       }]
+     * }
+     * @param jsonObject The JSONObject containing the information
+     * @return A ProductionGadget with the properties contained in the JSONObject
+     */
+    public static ProductionGadget fromJSON(JSONObject jsonObject) {
+        Set<ItemStack> inputs = InventoryHelpers.fromJSON(jsonObject.getJSONArray("inputs"));
+        Set<ItemStack> outputs = InventoryHelpers.fromJSON(jsonObject.getJSONArray("outputs"));
+        return new ProductionGadget(inputs, outputs);
     }
         
     /*

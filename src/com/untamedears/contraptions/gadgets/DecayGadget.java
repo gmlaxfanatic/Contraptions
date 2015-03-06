@@ -7,6 +7,7 @@ import com.untamedears.contraptions.utility.Resource;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.json.JSONObject;
 
 /*
  * A widget which will decay a resource over time
@@ -22,6 +23,21 @@ public class DecayGadget {
     
     public BukkitTask run(Contraption contraption, Resource resource) {
         return (new DecayRunnable(contraption,resource)).runTaskTimerAsynchronously(ContraptionPlugin.getContraptionPlugin(), 1000, 1000);
+    }
+    
+    /**
+     * Imports a DecayGadget from a JSONObject
+     * 
+     * Format of JSON object should be as follows:
+     * {
+     *   "rate": 1
+     * }
+     * @param jsonObject The JSONObject containing the information
+     * @return A DecayGadget with the properties contained in the JSONObject
+     */
+    public DecayGadget fromJSON(JSONObject jsonObject) {
+        double rate = jsonObject.getDouble("rate");
+        return new DecayGadget(rate);
     }
     
     /*
