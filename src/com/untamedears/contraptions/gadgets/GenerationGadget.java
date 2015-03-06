@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
 /**
- *
  * A gadget which will consume and itemstack and convert it into a resource.
  *
  * This can be used for things such as powering Contraptions via the items they

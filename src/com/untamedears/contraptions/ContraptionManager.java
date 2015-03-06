@@ -76,7 +76,7 @@ public class ContraptionManager {
      * Handles all events which may trigger a block
      */
     public void handleTriggeringEvent(Event e) {
-        
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     /*

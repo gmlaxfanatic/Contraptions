@@ -6,9 +6,33 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
-/*
- * A module used to produce one set of items given a second set of items
+/**
+ * A gadget the produces a set of ItemStacks from another set of ItemStacks
+ * 
+ * It can be imported from a config with the following JSON object:
+ * <pre>
+ * {
+ *   "inputs":
+ *     [{
+ *         "material": "MATERIAL_NAME",
+ *         "amount": 1,
+ *         "durability": 0,
+ *         "name": "DISPLAY_NAME",
+ *         "lore": "LORE"
+ *       },...
+ *       }],
+ *   "outputs":
+ *     [{
+ *         "material": "MATERIAL_NAME",
+ *         "amount": 1,
+ *         "durability": 0,
+ *         "name": "DISPLAY_NAME",
+ *         "lore": "LORE"
+ *       },...
+ *       }]
+ * </pre>
  */
+
 public class ProductionGadget {
     
     //Set of items used as inputs
@@ -16,35 +40,20 @@ public class ProductionGadget {
     //Set of items used as outputs
     Set<ItemStack> outputs;
     
+    /**
+     * Creates a Production Gadget
+     * 
+     * @param inputs The ItemStacks which are consumed
+     * @param outputs The ItemStacks which are produced
+     */
     public ProductionGadget(Set<ItemStack> inputs, Set<ItemStack> outputs) {
         this.inputs = inputs;
         this.outputs = outputs;
     }
     
-        /**
+    /**
      * Imports a ProductionGadget from a JSONObject
      * 
-     * Format of JSON object should be as follows:
-     * {
-     *   "inputs":
-     *     [{
-     *         "material": "MATERIAL_NAME",
-     *         "amount": 1,
-     *         "durability": 0,
-     *         "name": "DISPLAY_NAME",
-     *         "lore": "LORE"
-     *       },...
-     *       }],
-     *   "outputs":
-     *     [{
-     *         "material": "MATERIAL_NAME",
-     *         "amount": 1,
-     *         "durability": 0,
-     *         "name": "DISPLAY_NAME",
-     *         "lore": "LORE"
-     *       },...
-     *       }]
-     * }
      * @param jsonObject The JSONObject containing the information
      * @return A ProductionGadget with the properties contained in the JSONObject
      */
@@ -53,11 +62,14 @@ public class ProductionGadget {
         Set<ItemStack> outputs = InventoryHelpers.fromJSON(jsonObject.getJSONArray("outputs"));
         return new ProductionGadget(inputs, outputs);
     }
-        
-    /*
-     * Attempts to exchange the inputs for the ouputs of the functional block
-     * returns whether or not it was successful
+
+    /**
+     * Excuted the Production function
+     * 
+     * @param inventory
+     * @return
      */
+    
     public boolean produceGoods(Inventory inventory){
         //Attempt to remove inputs from contraption
         if(InventoryHelpers.remove(inventory, inputs)){

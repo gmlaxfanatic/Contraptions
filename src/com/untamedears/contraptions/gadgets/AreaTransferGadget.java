@@ -2,12 +2,19 @@ package com.untamedears.contraptions.gadgets;
 
 import com.untamedears.contraptions.ContraptionPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.json.JSONObject;
 
+/**
+ *
+ * @author Brian
+ */
 public class AreaTransferGadget {
 
     //The name of the which is being transfered to
@@ -17,12 +24,31 @@ public class AreaTransferGadget {
     //Rate at which the transfer is occuring
     double rate;
 
+    /**
+     * Creates an AreaTransferGadget
+     *
+     * @param resourceID String representing the resource this effects
+     * @param radius     Square radius over which this effects contraptions
+     * @param rate       Rate in 1/tick with which resources transfer from this
+     *                   gadget
+     */
     public AreaTransferGadget(String resourceID, int radius, double rate) {
         this.resourceID = resourceID;
         this.radius = radius;
         this.rate = rate;
     }
 
+    public static GenerationGadget fromJSON(JSONObject jsonObject) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Transfers a resource from a contraption to surrounding Contraptions
+     *
+     * @param contraption Contraption being transfered from
+     * @param resource    Resource being transfered from
+     * @param time        # ticks of transfer to occur
+     */
     public void areaTransfer(Contraption contraption, Resource resource, int time) {
         Set<Contraption> contraptions = getContraptions(contraption);
         int amount = (int) Math.floor(time * rate);
@@ -49,6 +75,13 @@ public class AreaTransferGadget {
         fromResource.change(transferedResource);
     }
 
+    /**
+     * Creates a runnable associated with this gadget for a specific contraption
+     *
+     * @param contraption Contraption associated with runnable
+     * @param resource    Resource associated with runnable
+     * @return The Task that was scheduled to run
+     */
     public BukkitTask run(Contraption contraption, Resource resource) {
         return (new AreaTransferRunnable(contraption, resource)).runTaskTimerAsynchronously(ContraptionPlugin.getContraptionPlugin(), 1000, 1000);
     }
@@ -57,6 +90,7 @@ public class AreaTransferGadget {
      * Gets contraptions given this AreaTransferWidgets radius
      *
      * @param contraption The contraption around which to get other contraptions
+     * @return The Contraptions surrounding the given contraption
      */
     private Set<Contraption> getContraptions(Contraption contraption) {
         return contraption.getContraptionManager().getContraptions(contraption.getLocation(), radius);
@@ -65,20 +99,29 @@ public class AreaTransferGadget {
     class AreaTransferRunnable extends BukkitRunnable {
 
         //Associated Contraption
-
         Contraption contraption;
         //Decaying resource
         Resource resource;
         //Keeps track of the period of the task
         int period;
-
+        
+        /**
+         * Creates an AreaTransferRunnable
+         * 
+         * @param contraption Contraption associated with the AreaTransfer
+         * @param resource Resource that is being transferred
+         */
         public AreaTransferRunnable(Contraption contraption, Resource resource) {
             this.contraption = contraption;
             this.resource = resource;
         }
 
-        /*
-         * Overrides the bukkit scheduler to register the start and delay of the run
+        /**
+         * Schedules the task and decays the resource to the delay
+         * 
+         * @param Plugin The Contraptions Plugin
+         * @param delay The delay until the task is executed in ticks
+         * @param period The period in ticks with which the task is executed
          */
         @Override
         public synchronized BukkitTask runTaskTimer(Plugin plugin, long delay, long period) throws IllegalArgumentException, IllegalStateException {
@@ -86,7 +129,10 @@ public class AreaTransferGadget {
             this.period = (int) period;
             return super.runTaskTimer(plugin, delay, period);
         }
-
+        
+        /**
+         * Transfers the resource and then checks that the contraption is valid
+         */
         @Override
         public void run() {
             areaTransfer(contraption, resource, period);
