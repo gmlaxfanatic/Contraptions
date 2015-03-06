@@ -1,0 +1,43 @@
+{
+    "Factory": {
+        "FactoryA": {
+            "DecayGadget": {
+                "rate": 1
+            },
+            "GenerationGadget": {
+                "itemstacks":
+                        [{
+                                "material": "MATERIAL_NAME",
+                                "amount": 1,
+                                "durability": 0,
+                                "lore": "LORE"
+                            }, {
+                                "material": "MATERIAL_NAME",
+                                "amount": 1,
+                                "durability": 0,
+                                "lore": "LORE"
+                            }]
+
+                ,
+                "rate": 1
+            },
+            "ProductionGadget": {
+                "itemstacks":
+                        [{
+                                "material": "MATERIAL_NAME",
+                                "amount": 1,
+                                "durability": 0,
+                                "lore": "LORE"
+                            }, {
+                                "material": "MATERIAL_NAME",
+                                "amount": 1,
+                                "durability": 0,
+                                "lore": "LORE"
+                            }]
+
+                ,
+                "rate": 1
+            }
+        }
+    }
+}
