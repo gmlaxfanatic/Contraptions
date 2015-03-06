@@ -29,7 +29,14 @@ public class ContraptionManager {
         return contraptions.get(location);
         
     }
-        
+    
+    /*
+     * Gets contraptions located within a sqaure around the given location
+    */
+    public Set<Contraption> getContraptions (Location location, int radius) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     /*
      * Iterates through all ContraptionProperties and attempts to create a factory
      * based at the contraption

@@ -1,6 +1,5 @@
 package com.untamedears.contraptions.gadgets;
 
-import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class GenerationGadget {
     public boolean generate(int amount, Inventory inventory, Resource resource) {
         int numberOfSets = (int) Math.ceil(amount/(double)conversion);
         if(InventoryHelpers.removeMultiple(inventory, itemStacks, numberOfSets)) {
-            resource.changeResource(numberOfSets*conversion);
+            resource.change(numberOfSets*conversion);
             return true;
         }
         return false;

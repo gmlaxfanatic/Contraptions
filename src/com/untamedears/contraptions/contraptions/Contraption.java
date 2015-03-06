@@ -2,6 +2,7 @@ package com.untamedears.contraptions.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.ContraptionManager;
+import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
@@ -81,5 +82,13 @@ public class Contraption {
 
     public ContraptionManager getContraptionManager() {
         return properties.getContraptionManager();
+    }
+    
+    public boolean hasResource(String resourceID) {
+        return false;
+    }
+    
+    public Resource getResource(String resourceID) {
+        return null;
     }
 }

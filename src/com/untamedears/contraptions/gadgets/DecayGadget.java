@@ -20,7 +20,7 @@ public class DecayGadget {
         this.rate = rate;
     }
     
-    public BukkitTask startDecay(Contraption contraption, Resource resource) {
+    public BukkitTask run(Contraption contraption, Resource resource) {
         return (new DecayRunnable(contraption,resource)).runTaskTimerAsynchronously(ContraptionPlugin.getContraptionPlugin(), 1000, 1000);
     }
     
@@ -29,7 +29,7 @@ public class DecayGadget {
      * a good state
      */
     private void decay(Resource resource, int amount) {
-        resource.changeResource(-amount);
+        resource.change(-amount);
     }    
     
     class DecayRunnable extends BukkitRunnable

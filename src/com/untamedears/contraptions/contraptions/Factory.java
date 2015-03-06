@@ -10,8 +10,8 @@ public class Factory extends Contraption {
 
     public Factory(FactoryProperties properties, Location location) {
         super(properties, location);
-        energy = new Resource(0,52594800);
-        tasks.add(properties.getDecayGadget().startDecay(this, energy));
+        energy = new Resource(0);
+        tasks.add(properties.getDecayGadget().run(this, energy));
     }
     
     @Override
@@ -32,16 +32,27 @@ public class Factory extends Contraption {
             getContraptionManager().destroy(this);
         }
         //If the energy has gone negative attempt to repower
-        if(energy.getResource() < 0){
+        if(energy.get() < 0){
             //Check if there are enough items in the factory to repower it
-            if(getProperties().getGenerationGadget().canGenerate(-energy.getResource(), getInventory(), energy)) {
+            if(getProperties().getGenerationGadget().canGenerate(-energy.get(), getInventory(), energy)) {
                 //repower the factory
-                getProperties().getGenerationGadget().generate(-energy.getResource(), getInventory(), energy);
+                getProperties().getGenerationGadget().generate(-energy.get(), getInventory(), energy);
             }
         }
         //If contraption ran out of energy destroy it
-        if(energy.getResource() < 0) {
+        if(energy.get() < 0) {
             getContraptionManager().destroy(this);
         }
     }
+    
+    @Override
+    public boolean hasResource(String resourceID) {
+        return resourceID.equals("energy");
+    }
+    
+    @Override
+    public Resource getResource(String resourceID) {
+        return resourceID.equals("energy") ? energy : null;
+    }
+    
 }

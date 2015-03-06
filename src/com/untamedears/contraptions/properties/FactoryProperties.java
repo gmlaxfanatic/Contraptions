@@ -7,6 +7,7 @@ import com.untamedears.contraptions.gadgets.DecayGadget;
 import com.untamedears.contraptions.gadgets.GenerationGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
+import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,27 +43,26 @@ public class FactoryProperties extends ContraptionProperties {
     @Override
     public Contraption createContraption(Location location) {
         //Fails if there is an incorrect block type
-        if(!location.getBlock().getState().getType().equals(material)){
-           throw new IllegalArgumentException("Invalid block for contraption") ;
+        if (!location.getBlock().getState().getType().equals(material)) {
+            throw new IllegalArgumentException("Invalid block for contraption");
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
-        if(InventoryHelpers.exactlyContained(inventory, match)) {
+        if (InventoryHelpers.exactlyContained(inventory, match)) {
             InventoryHelpers.remove(inventory, match);
             return new Factory(this, location);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Ingrediants do not match");
         }
     }
-    
+
     public GenerationGadget getGenerationGadget() {
         return generationGadget;
     }
-    
+
     public ProductionGadget getProductionGadget() {
         return productionGadget;
     }
-    
+
     public DecayGadget getDecayGadget() {
         return decayGadget;
     }

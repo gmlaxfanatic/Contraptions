@@ -2,6 +2,7 @@ package com.untamedears.contraptions.properties;
 
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.utility.Resource;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -32,5 +33,4 @@ public abstract class ContraptionProperties {
     public Material getMaterial() {
         return material;
     }
-
 }
