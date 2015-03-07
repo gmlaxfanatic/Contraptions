@@ -2,6 +2,9 @@ package com.untamedears.contraptions;
 
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.properties.ContraptionProperties;
+import com.untamedears.contraptions.properties.FactoryProperties;
+import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,17 +13,47 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class ContraptionManager {
 
     Plugin plugin;
-    Set<ContraptionProperties> contraptionProperties;
+    Map<String,ContraptionProperties> contraptionProperties;
     Map<Location, Contraption> contraptions;
 
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
-        contraptions = new HashMap<Location, Contraption>();
+        //There has gotta be a better way to do this
+        
+        try {
+            contraptionProperties = loadProperties(new File(plugin.getDataFolder(),"config.json"));
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    /**
+     * Loads the ContraptionProperties from the Config File
+     * <p>
+     * @param contraptionProperties
+     */
+    private static Map<String,ContraptionProperties> loadProperties(File file) {
+        Map<String,ContraptionProperties> contraptionProperties = new HashMap<String,ContraptionProperties>();
+        try{
+            JSONTokener tokener = new JSONTokener(new FileReader(file));
+            JSONObject jsonObject = new JSONObject(tokener);
+            JSONObject factories = jsonObject.getJSONObject("Factory");
+            for(String ID:factories.keySet()){
+                contraptionProperties.put(ID, FactoryProperties.fromConfig(factories.getJSONObject(ID)));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contraptionProperties;
     }
 
     /*
@@ -32,11 +65,11 @@ public class ContraptionManager {
 
     }
 
-    /** 
+    /**
      * Gets contraptions located within a square around the given location
-     *
+     * <p>
      * @param location Central location
-     * @param radius Square radius from which to search
+     * @param radius   Square radius from which to search
      * @return Set of contraptions in radius
      */
     public Set<Contraption> getContraptions(Location location, int radius) {

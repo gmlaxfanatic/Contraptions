@@ -64,7 +64,7 @@ public class ProductionGadget {
     }
 
     /**
-     * Eexcuted the Production function
+     * Executed the Production function
      * 
      * @param inventory
      * @return

@@ -7,13 +7,13 @@ import com.untamedears.contraptions.gadgets.DecayGadget;
 import com.untamedears.contraptions.gadgets.GenerationGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
-import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.json.JSONObject;
 
 /*
  * A Factory Block
@@ -35,6 +35,10 @@ public class FactoryProperties extends ContraptionProperties {
         this.productionGadget = new ProductionGadget(inputs, outputs);
         generationGadget = new GenerationGadget(powerItems, 4320000);
         this.powerItems = powerItems;
+    }
+    
+    public static FactoryProperties fromConfig(JSONObject jsonObject) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
