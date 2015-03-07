@@ -37,6 +37,7 @@ public class FactoryProperties extends ContraptionProperties {
         this.powerItems = powerItems;
     }
     
+    @Override
     public String getType() {
         return "Factory";
     }
