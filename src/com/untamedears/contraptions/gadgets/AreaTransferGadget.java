@@ -2,18 +2,27 @@ package com.untamedears.contraptions.gadgets;
 
 import com.untamedears.contraptions.ContraptionPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
-import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.JSONObject;
 
 /**
- *
- * @author Brian
+ * A gadget which will transfer a resource over time
+ * <p>
+ * This gadget transfers a resource from a contraption to all of the
+ * contraptions surrounding it within a particular radius
+ * <p>
+ * Format of JSON object should be as follows:
+ * <pre>
+ * {
+ *   "resourceID": "RESOURCE_ID",
+ *   "radius": 1,
+ *   "rate": 1
+ * }
+ * </pre>
  */
 public class AreaTransferGadget {
 
@@ -26,7 +35,7 @@ public class AreaTransferGadget {
 
     /**
      * Creates an AreaTransferGadget
-     *
+     * <p>
      * @param resourceID String representing the resource this effects
      * @param radius     Square radius over which this effects contraptions
      * @param rate       Rate in 1/tick with which resources transfer from this
@@ -38,13 +47,22 @@ public class AreaTransferGadget {
         this.rate = rate;
     }
 
-    public static GenerationGadget fromJSON(JSONObject jsonObject) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Creates a new AreaTransferGadget from a JSON config
+     * <p>
+     * @param jsonObject Contains the configuration information
+     * @return The configured AreaTransferGadget
+     */
+    public static AreaTransferGadget fromJSON(JSONObject jsonObject) {
+        String resourceID = jsonObject.getString("resourceID");
+        int radius = jsonObject.getInt("radius");
+        double rate = jsonObject.getDouble("rate");
+        return new AreaTransferGadget(resourceID, radius, rate);
     }
 
     /**
      * Transfers a resource from a contraption to surrounding Contraptions
-     *
+     * <p>
      * @param contraption Contraption being transfered from
      * @param resource    Resource being transfered from
      * @param time        # ticks of transfer to occur
@@ -61,7 +79,7 @@ public class AreaTransferGadget {
 
     /**
      * Transfers from one resource to another with maximums and minimums
-     *
+     * <p>
      * @param fromResource The resource that is being transferred from
      * @param toResource   The resource that is being transferred to
      * @param amount       The amount being transfered
@@ -77,7 +95,7 @@ public class AreaTransferGadget {
 
     /**
      * Creates a runnable associated with this gadget for a specific contraption
-     *
+     * <p>
      * @param contraption Contraption associated with runnable
      * @param resource    Resource associated with runnable
      * @return The Task that was scheduled to run
@@ -88,7 +106,7 @@ public class AreaTransferGadget {
 
     /**
      * Gets contraptions given this AreaTransferWidgets radius
-     *
+     * <p>
      * @param contraption The contraption around which to get other contraptions
      * @return The Contraptions surrounding the given contraption
      */
@@ -104,12 +122,12 @@ public class AreaTransferGadget {
         Resource resource;
         //Keeps track of the period of the task
         int period;
-        
+
         /**
          * Creates an AreaTransferRunnable
-         * 
+         * <p>
          * @param contraption Contraption associated with the AreaTransfer
-         * @param resource Resource that is being transferred
+         * @param resource    Resource that is being transferred
          */
         public AreaTransferRunnable(Contraption contraption, Resource resource) {
             this.contraption = contraption;
@@ -118,9 +136,9 @@ public class AreaTransferGadget {
 
         /**
          * Schedules the task and decays the resource to the delay
-         * 
+         * <p>
          * @param Plugin The Contraptions Plugin
-         * @param delay The delay until the task is executed in ticks
+         * @param delay  The delay until the task is executed in ticks
          * @param period The period in ticks with which the task is executed
          */
         @Override
@@ -129,7 +147,7 @@ public class AreaTransferGadget {
             this.period = (int) period;
             return super.runTaskTimer(plugin, delay, period);
         }
-        
+
         /**
          * Transfers the resource and then checks that the contraption is valid
          */

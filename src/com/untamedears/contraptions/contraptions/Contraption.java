@@ -8,11 +8,12 @@ import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitTask;
+import org.json.JSONObject;
 
 /**
  * Represents a Contraption in the minecraft world
  */
-public class Contraption {
+public abstract class Contraption {
 
     Location location;
     ContraptionProperties properties;
@@ -22,6 +23,15 @@ public class Contraption {
         this.location = location;
         this.properties = properties;
     }
+    
+    public JSONObject save() {
+        return properties.save(this);
+    }
+    
+    public JSONObject getResources(){
+        return new JSONObject();
+    }
+
 
     protected ContraptionProperties getProperties() {
         return properties;
@@ -47,6 +57,10 @@ public class Contraption {
         if (!isValid()) {
             getContraptionManager().destroy(this);
         }
+    }
+    
+    public void update(Resource resource) {
+        update();
     }
 
     /*

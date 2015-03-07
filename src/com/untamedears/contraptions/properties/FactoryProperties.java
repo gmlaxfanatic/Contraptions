@@ -29,14 +29,18 @@ public class FactoryProperties extends ContraptionProperties {
     DecayGadget decayGadget;
     Set<ItemStack> powerItems;
 
-    public FactoryProperties(ContraptionManager contraptionManager, Set<ItemStack> match, Set<ItemStack> inputs, Set<ItemStack> outputs, Set<ItemStack> powerItems) {
-        super(contraptionManager, Material.CHEST);
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, Set<ItemStack> match, Set<ItemStack> inputs, Set<ItemStack> outputs, Set<ItemStack> powerItems) {
+        super(contraptionManager, ID, Material.CHEST);
         this.match = match;
         this.productionGadget = new ProductionGadget(inputs, outputs);
         generationGadget = new GenerationGadget(powerItems, 4320000);
         this.powerItems = powerItems;
     }
-
+    
+    public String getType() {
+        return "Factory";
+    }
+    
     /*
      * Creates a factory contraption
      */
