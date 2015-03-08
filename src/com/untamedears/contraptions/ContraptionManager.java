@@ -27,12 +27,15 @@ public class ContraptionManager {
         this.plugin = plugin;
         //There has gotta be a better way to do this
 
+
+    }
+    public void init() {
+        
         try {
             contraptionProperties = loadProperties(new File(plugin.getDataFolder(), "config.json"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -40,19 +43,19 @@ public class ContraptionManager {
      * <p>
      * @param contraptionProperties
      */
-    private static Map<String, ContraptionProperties> loadProperties(File file) {
-        Map<String, ContraptionProperties> contraptionProperties = new HashMap<String, ContraptionProperties>();
+    private Map<String, ContraptionProperties> loadProperties(File file) {
+        Map<String, ContraptionProperties> newContraptionProperties = new HashMap<String, ContraptionProperties>();
         try {
             JSONTokener tokener = new JSONTokener(new FileReader(file));
             JSONObject jsonObject = new JSONObject(tokener);
             JSONObject factories = jsonObject.getJSONObject("Factory");
             for (String ID : factories.keySet()) {
-                contraptionProperties.put(ID, FactoryProperties.fromConfig(factories.getJSONObject(ID)));
+                newContraptionProperties.put(ID, FactoryProperties.fromConfig(this,ID,factories.getJSONObject(ID)));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return contraptionProperties;
+        return newContraptionProperties;
     }
 
     /*

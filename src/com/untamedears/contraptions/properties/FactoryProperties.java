@@ -30,36 +30,39 @@ public class FactoryProperties extends ContraptionProperties {
     GenerationGadget generationGadget;
     DecayGadget decayGadget;
 
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, Set<ItemStack> match, Set<ItemStack> inputs, Set<ItemStack> outputs, Set<ItemStack> powerItems) {
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
         super(contraptionManager, ID, Material.CHEST);
-        matchGadget = new MatchGadget(match);
-        productionGadget = new ProductionGadget(inputs, outputs);
-        generationGadget = new GenerationGadget(powerItems, 4320000);
+        this.matchGadget = matchGadget;
+        this.productionGadget = productionGadget;
+        this.generationGadget = generationGadget;
     }
-    
-    public static FactoryProperties fromConfig(JSONObject jsonObject) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
+        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
+        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
+        GenerationGadget generationGadget = GenerationGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
+        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, generationGadget);
     }
-    
+
     @Override
     public String getType() {
         return "Factory";
     }
-    
+
     /**
      * Creates a Factory Contraptions
-     * 
+     * <p>
      * @param location Location to attempt creation
      * @return Created Contraption if successful
      */
     @Override
     public Contraption createContraption(Location location) {
-        if(!validBlock(location)){
+        if (!validBlock(location)) {
             return null;
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
-        if (matchGadget.matches(inventory)&&matchGadget.consume(inventory)) {
-            return new Factory(this,location);
+        if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
+            return new Factory(this, location);
         }
         return null;
     }
