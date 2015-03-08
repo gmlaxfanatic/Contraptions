@@ -3,6 +3,7 @@ package com.untamedears.contraptions;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.properties.FactoryProperties;
+import com.untamedears.contraptions.utlity.Response;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -19,17 +20,16 @@ import org.json.JSONTokener;
 public class ContraptionManager {
 
     Plugin plugin;
-    Map<String,ContraptionProperties> contraptionProperties;
+    Map<String, ContraptionProperties> contraptionProperties;
     Map<Location, Contraption> contraptions;
 
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
         //There has gotta be a better way to do this
-        
+
         try {
-            contraptionProperties = loadProperties(new File(plugin.getDataFolder(),"config.json"));
-        }
-        catch(Exception e) {
+            contraptionProperties = loadProperties(new File(plugin.getDataFolder(), "config.json"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -40,17 +40,16 @@ public class ContraptionManager {
      * <p>
      * @param contraptionProperties
      */
-    private static Map<String,ContraptionProperties> loadProperties(File file) {
-        Map<String,ContraptionProperties> contraptionProperties = new HashMap<String,ContraptionProperties>();
-        try{
+    private static Map<String, ContraptionProperties> loadProperties(File file) {
+        Map<String, ContraptionProperties> contraptionProperties = new HashMap<String, ContraptionProperties>();
+        try {
             JSONTokener tokener = new JSONTokener(new FileReader(file));
             JSONObject jsonObject = new JSONObject(tokener);
             JSONObject factories = jsonObject.getJSONObject("Factory");
-            for(String ID:factories.keySet()){
+            for (String ID : factories.keySet()) {
                 contraptionProperties.put(ID, FactoryProperties.fromConfig(factories.getJSONObject(ID)));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return contraptionProperties;
@@ -94,17 +93,23 @@ public class ContraptionManager {
      * Iterates through all ContraptionProperties and attempts to create a factory
      * based at the contraption
      */
-    public void createContraption(Location location) {
+    public Response createContraption(Location location) {
+        boolean matchedBlock = false;
         Contraption contraption;
-        for (ContraptionProperties contraptionProperty : contraptionProperties) {
-            try {
+        for (ContraptionProperties contraptionProperty : contraptionProperties.values()) {
+            if (contraptionProperty.validBlock(location)) {
+                matchedBlock = true;
                 contraption = contraptionProperty.createContraption(location);
-                //These lines only execute if there are no errors in contraption creation
-                contraptions.put(location, contraption);
-                return;
-            } catch (Exception e) {
-
+                if (contraption != null) {
+                    contraptions.put(location, contraption);
+                    return new Response(true, "Sucessfully create contrapion " + contraption.getName());
+                }
             }
+        }
+        if (matchedBlock) {
+            return new Response(false, "Block is correct, but other conditions are not");
+        } else {
+            return new Response(false, "Incorrect block");
         }
 
     }

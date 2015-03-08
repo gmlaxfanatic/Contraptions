@@ -15,6 +15,7 @@ public abstract class ContraptionProperties {
     ContraptionManager contraptionManager;
     protected Material material;
     String ID;
+    String name;
 
     public ContraptionProperties(ContraptionManager contraptionManager, String ID, Material material) {
         this.contraptionManager = contraptionManager;

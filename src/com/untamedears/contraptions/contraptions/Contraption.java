@@ -105,4 +105,8 @@ public abstract class Contraption {
     public Resource getResource(String resourceID) {
         return null;
     }
+    
+    public String getName() {
+        return "No Name";
+    }
 }
