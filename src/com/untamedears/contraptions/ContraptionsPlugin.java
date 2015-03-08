@@ -13,10 +13,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  * interactive blocks to be added to the minecraft world in an efficient manner
  * giving rise to emergent constructions of complex machinery.
  */
-public class ContraptionPlugin extends JavaPlugin {
+public class ContraptionsPlugin extends JavaPlugin {
 
-    static ContraptionPlugin contraptionPlugin;
-    ContraptionManager contraptionManager;
+    static ContraptionsPlugin contraptionPlugin;
+    ContraptionsManager contraptionManager;
 
     /**
      * Initializes the manager and loads config and save files
@@ -24,10 +24,12 @@ public class ContraptionPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         contraptionPlugin = this;
-        contraptionManager = new ContraptionManager(this);
+        contraptionManager = new ContraptionsManager(this);
         try {
             File propertiesFile = new File(getDataFolder(), "config.json");
+            ContraptionsPlugin.toConsole(getDataFolder().getCanonicalPath());
             if (!propertiesFile.exists()) {
+                propertiesFile.getParentFile().mkdirs();
                 propertiesFile.createNewFile();
             }
             contraptionManager.loadProperties(propertiesFile);
@@ -37,9 +39,12 @@ public class ContraptionPlugin extends JavaPlugin {
         try {
             File contraptionsFile = new File(getDataFolder(), "savefile.json");
             if (!contraptionsFile.exists()) {
+                contraptionsFile.getParentFile().mkdirs();
                 contraptionsFile.createNewFile();
+                contraptionManager.loadContraptions();
+            } else {
+                contraptionManager.loadContraptions(contraptionsFile);
             }
-            contraptionManager.loadContraptions(contraptionsFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +68,7 @@ public class ContraptionPlugin extends JavaPlugin {
      */
     public void registerEvents() {
         try {
-            getServer().getPluginManager().registerEvents(new ContraptionListener(contraptionManager), this);
+            getServer().getPluginManager().registerEvents(new ContraptionsListener(contraptionManager), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +79,7 @@ public class ContraptionPlugin extends JavaPlugin {
      * <p>
      * @return The single instance of this plugin
      */
-    public static ContraptionPlugin getContraptionPlugin() {
+    public static ContraptionsPlugin getContraptionPlugin() {
         return contraptionPlugin;
     }
 

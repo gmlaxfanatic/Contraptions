@@ -1,6 +1,6 @@
 package com.untamedears.contraptions.properties;
 
-import com.untamedears.contraptions.ContraptionManager;
+import com.untamedears.contraptions.ContraptionsManager;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.contraptions.Factory;
 import com.untamedears.contraptions.gadgets.GrowGadget;
@@ -30,14 +30,14 @@ public class FactoryProperties extends ContraptionProperties {
     GenerationGadget generationGadget;
     GrowGadget decayGadget;
 
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
+    public FactoryProperties(ContraptionsManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
         super(contraptionManager, ID, Material.CHEST);
         this.matchGadget = matchGadget;
         this.productionGadget = productionGadget;
         this.generationGadget = generationGadget;
     }
 
-    public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
+    public static FactoryProperties fromConfig(ContraptionsManager contraptionManager, String ID, JSONObject jsonObject) {
         MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
         ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
         GenerationGadget generationGadget = GenerationGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));

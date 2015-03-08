@@ -1,7 +1,7 @@
 package com.untamedears.contraptions.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
-import com.untamedears.contraptions.ContraptionManager;
+import com.untamedears.contraptions.ContraptionsManager;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.Response;
 import java.util.Set;
@@ -118,7 +118,7 @@ public abstract class Contraption {
         return null;
     }
 
-    public ContraptionManager getContraptionManager() {
+    public ContraptionsManager getContraptionManager() {
         return properties.getContraptionManager();
     }
 

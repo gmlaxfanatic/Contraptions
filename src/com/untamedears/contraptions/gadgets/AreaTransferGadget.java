@@ -1,6 +1,6 @@
 package com.untamedears.contraptions.gadgets;
 
-import com.untamedears.contraptions.ContraptionPlugin;
+import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import java.util.Set;
@@ -101,7 +101,7 @@ public class AreaTransferGadget {
      * @return The Task that was scheduled to run
      */
     public BukkitTask run(Contraption contraption, Resource resource) {
-        return (new AreaTransferRunnable(contraption, resource)).runTaskTimerAsynchronously(ContraptionPlugin.getContraptionPlugin(), 1000, 1000);
+        return (new AreaTransferRunnable(contraption, resource)).runTaskTimerAsynchronously(ContraptionsPlugin.getContraptionPlugin(), 1000, 1000);
     }
 
     /**

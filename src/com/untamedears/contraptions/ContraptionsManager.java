@@ -28,7 +28,7 @@ import org.json.JSONWriter;
 /**
  * Manages access, loading, and saving of Contraptions
  */
-public class ContraptionManager {
+public class ContraptionsManager {
 
     Plugin plugin;
     Map<String, ContraptionProperties> contraptionProperties;
@@ -39,7 +39,7 @@ public class ContraptionManager {
      * <p>
      * @param plugin
      */
-    public ContraptionManager(Plugin plugin) {
+    public ContraptionsManager(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -62,7 +62,7 @@ public class ContraptionManager {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Loads the Contraptions from a file
      * <p>
@@ -95,7 +95,7 @@ public class ContraptionManager {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     contraptions.put(contraption.getLocation(), contraption);
                 } else {
-                    ContraptionPlugin.toConsole("Factory ID not found. ID = " + ID);
+                    ContraptionsPlugin.toConsole("Factory ID not found. ID = " + ID);
                 }
 
             }
@@ -104,6 +104,13 @@ public class ContraptionManager {
         }
     }
 
+    /**
+     * Called if there is no savefile.json to load
+     */
+    public void loadContraptions() {
+        contraptions = new HashMap<Location, Contraption>();
+    }
+    
     /**
      * Saves all the current Contraptions to a file
      * <p>

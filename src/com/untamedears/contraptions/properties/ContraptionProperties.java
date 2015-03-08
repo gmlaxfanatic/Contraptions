@@ -1,7 +1,7 @@
 package com.untamedears.contraptions.properties;
 
-import com.untamedears.contraptions.ContraptionManager;
-import com.untamedears.contraptions.ContraptionPlugin;
+import com.untamedears.contraptions.ContraptionsManager;
+import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
@@ -22,7 +22,7 @@ import org.json.JSONObject;
  */
 public abstract class ContraptionProperties {
 
-    ContraptionManager contraptionManager;
+    ContraptionsManager contraptionManager;
     protected Material material;
     String ID;
     String name;
@@ -35,7 +35,7 @@ public abstract class ContraptionProperties {
      *                           Contraption specification
      * @param material           The material these contraptions are made from
      */
-    public ContraptionProperties(ContraptionManager contraptionManager, String ID, Material material) {
+    public ContraptionProperties(ContraptionsManager contraptionManager, String ID, Material material) {
         this.contraptionManager = contraptionManager;
         this.ID = ID;
         this.material = material;
@@ -67,7 +67,7 @@ public abstract class ContraptionProperties {
 
     public Contraption loadContraption(JSONObject jsonObject) {
         JSONArray locationArray = jsonObject.getJSONArray("Location");
-        Location location = new Location(ContraptionPlugin.getContraptionPlugin().getServer().getWorld(locationArray.getString(0)),
+        Location location = new Location(ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(locationArray.getString(0)),
                 locationArray.getInt(1), locationArray.getInt(2), locationArray.getInt(3));
         Contraption contraption = newContraption(location);
         contraption.loadResources(jsonObject.getJSONObject("Resources"));
@@ -78,7 +78,7 @@ public abstract class ContraptionProperties {
         return block.getState().getType().equals(material);
     }
 
-    public ContraptionManager getContraptionManager() {
+    public ContraptionsManager getContraptionManager() {
         return contraptionManager;
     }
 

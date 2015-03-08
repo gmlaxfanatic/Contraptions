@@ -1,6 +1,6 @@
 package com.untamedears.contraptions.gadgets;
 
-import com.untamedears.contraptions.ContraptionPlugin;
+import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import org.bukkit.plugin.Plugin;
@@ -49,7 +49,7 @@ public class GrowGadget {
      * @return The GrowGadget Runnable
      */
     public BukkitTask run(Resource resource, Resource scaler) {
-        return (new GrowRunnable(resource, scaler)).runTaskTimerAsynchronously(ContraptionPlugin.getContraptionPlugin(), 1000, 1000);
+        return (new GrowRunnable(resource, scaler)).runTaskTimerAsynchronously(ContraptionsPlugin.getContraptionPlugin(), 1000, 1000);
     }
 
     /**
