@@ -1,5 +1,6 @@
 package com.untamedears.contraptions.contraptions;
 
+import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import org.bukkit.Location;

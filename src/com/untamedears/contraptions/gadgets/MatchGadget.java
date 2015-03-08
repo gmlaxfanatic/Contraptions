@@ -68,11 +68,6 @@ public class MatchGadget {
      * @return IF consuming was successful
      */
     public boolean consume(Inventory inventory) {
-        if (matches(inventory)) {
-            InventoryHelpers.remove(inventory, itemStacks);
-            return true;
-        }
-        return false;
+        return InventoryHelpers.remove(inventory, itemStacks);
     }
-
 }

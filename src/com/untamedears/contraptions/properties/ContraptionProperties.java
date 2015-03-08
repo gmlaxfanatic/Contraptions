@@ -39,6 +39,10 @@ public abstract class ContraptionProperties {
     
     public abstract String getType();
 
+    public boolean validBlock(Location location){
+        return location.getBlock().getState().getType().equals(material);
+    }
+    
     public ContraptionManager getContraptionManager() {
         return contraptionManager;
     }

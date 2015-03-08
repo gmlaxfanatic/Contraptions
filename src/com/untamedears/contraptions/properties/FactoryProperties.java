@@ -5,8 +5,10 @@ import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.contraptions.Factory;
 import com.untamedears.contraptions.gadgets.DecayGadget;
 import com.untamedears.contraptions.gadgets.GenerationGadget;
+import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
+import com.untamedears.contraptions.utlity.Response;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,18 +25,16 @@ import org.json.JSONObject;
  */
 public class FactoryProperties extends ContraptionProperties {
 
-    Set<ItemStack> match;
+    MatchGadget matchGadget;
     ProductionGadget productionGadget;
     GenerationGadget generationGadget;
     DecayGadget decayGadget;
-    Set<ItemStack> powerItems;
 
     public FactoryProperties(ContraptionManager contraptionManager, String ID, Set<ItemStack> match, Set<ItemStack> inputs, Set<ItemStack> outputs, Set<ItemStack> powerItems) {
         super(contraptionManager, ID, Material.CHEST);
-        this.match = match;
-        this.productionGadget = new ProductionGadget(inputs, outputs);
+        matchGadget = new MatchGadget(match);
+        productionGadget = new ProductionGadget(inputs, outputs);
         generationGadget = new GenerationGadget(powerItems, 4320000);
-        this.powerItems = powerItems;
     }
     
     public static FactoryProperties fromConfig(JSONObject jsonObject) {
@@ -46,22 +46,22 @@ public class FactoryProperties extends ContraptionProperties {
         return "Factory";
     }
     
-    /*
-     * Creates a factory contraption
+    /**
+     * Creates a Factory Contraptions
+     * 
+     * @param location Location to attempt creation
+     * @return Created Contraption if successful
      */
     @Override
     public Contraption createContraption(Location location) {
-        //Fails if there is an incorrect block type
-        if (!location.getBlock().getState().getType().equals(material)) {
-            throw new IllegalArgumentException("Invalid block for contraption");
+        if(!validBlock(location)){
+            return null;
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
-        if (InventoryHelpers.exactlyContained(inventory, match)) {
-            InventoryHelpers.remove(inventory, match);
-            return new Factory(this, location);
-        } else {
-            throw new IllegalArgumentException("Ingrediants do not match");
+        if (matchGadget.matches(inventory)&&matchGadget.consume(inventory)) {
+            return new Factory(this,location);
         }
+        return null;
     }
 
     public GenerationGadget getGenerationGadget() {
