@@ -2,8 +2,10 @@ package com.untamedears.contraptions.properties;
 
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.utlity.Response;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.json.JSONObject;
 
 /*
@@ -36,12 +38,12 @@ public abstract class ContraptionProperties {
      * Initializes the Contraption
      * confirms that all of the creation conditions are met
      */
-    public abstract Contraption createContraption(Location location);
+    public abstract Response createContraption(Location location);
     
     public abstract String getType();
 
-    public boolean validBlock(Location location){
-        return location.getBlock().getState().getType().equals(material);
+    public boolean validBlock(Block block){
+        return block.getState().getType().equals(material);
     }
     
     public ContraptionManager getContraptionManager() {

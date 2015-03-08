@@ -206,5 +206,8 @@ public class InventoryHelpers {
             inventory.addItem(itemClone);
         }
     }
-
+    
+    public static String toString(Set<ItemStack> itemStacks) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

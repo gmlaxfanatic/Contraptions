@@ -23,7 +23,7 @@ public class ContraptionListener implements Listener {
      */
     @EventHandler
     public void playerInteractionEvent(PlayerInteractEvent e) {
-
+        contraptionManager.handelInteraction(e);
     }
 
     @EventHandler

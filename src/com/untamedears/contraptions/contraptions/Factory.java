@@ -1,8 +1,9 @@
 package com.untamedears.contraptions.contraptions;
 
-import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
+import com.untamedears.contraptions.utility.InventoryHelpers;
+import com.untamedears.contraptions.utlity.Response;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
@@ -12,7 +13,7 @@ public class Factory extends Contraption {
 
     public Factory(FactoryProperties properties, Location location) {
         super(properties, location);
-        energy = new Resource(0,this);
+        energy = new Resource(0, this);
         tasks.add(properties.getDecayGadget().run(energy));
     }
 
@@ -24,9 +25,12 @@ public class Factory extends Contraption {
     }
 
     @Override
-    public boolean trigger() {
-        getProperties().getProductionGadget().produceGoods(getInventory());
-        return false;
+    public Response trigger() {
+        String prettyOutput = InventoryHelpers.toString(getProperties().getProductionGadget().getOutputs());
+        if (getProperties().getProductionGadget().produceGoods(getInventory())) {
+            return new Response(true, "Produced " + prettyOutput);
+        }
+        return new Response(false, "Cannot produce " + prettyOutput);
     }
 
     @Override

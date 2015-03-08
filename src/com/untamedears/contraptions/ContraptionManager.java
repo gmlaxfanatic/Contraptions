@@ -11,8 +11,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -26,11 +30,9 @@ public class ContraptionManager {
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
         //There has gotta be a better way to do this
-
-
     }
+
     public void init() {
-        
         try {
             contraptionProperties = loadProperties(new File(plugin.getDataFolder(), "config.json"));
         } catch (Exception e) {
@@ -50,7 +52,7 @@ public class ContraptionManager {
             JSONObject jsonObject = new JSONObject(tokener);
             JSONObject factories = jsonObject.getJSONObject("Factory");
             for (String ID : factories.keySet()) {
-                newContraptionProperties.put(ID, FactoryProperties.fromConfig(this,ID,factories.getJSONObject(ID)));
+                newContraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,15 +99,15 @@ public class ContraptionManager {
      * based at the contraption
      */
     public Response createContraption(Location location) {
+        Block block = location.getBlock();
         boolean matchedBlock = false;
-        Contraption contraption;
+        Response response;
         for (ContraptionProperties contraptionProperty : contraptionProperties.values()) {
-            if (contraptionProperty.validBlock(location)) {
+            if (contraptionProperty.validBlock(block)) {
                 matchedBlock = true;
-                contraption = contraptionProperty.createContraption(location);
-                if (contraption != null) {
-                    contraptions.put(location, contraption);
-                    return new Response(true, "Sucessfully create contrapion " + contraption.getName());
+                response = contraptionProperty.createContraption(location);
+                if (response.success) {
+                    return response;
                 }
             }
         }
@@ -115,6 +117,10 @@ public class ContraptionManager {
             return new Response(false, "Incorrect block");
         }
 
+    }
+    
+    public void registerContraption(Contraption cotraption) {
+        contraptions.put(cotraption.getLocation(), cotraption);        
     }
 
     /*
@@ -132,13 +138,6 @@ public class ContraptionManager {
     }
 
     /*
-     * Handles all events which may trigger a block
-     */
-    public void handleTriggeringEvent(Event e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /*
      * Handels instances of a block breaking
      * If a contraption existed at this block it is destroyed
      */
@@ -146,5 +145,30 @@ public class ContraptionManager {
         if (contraptions.containsKey(block.getLocation())) {
             destroy(contraptions.get(block.getLocation()));
         }
+    }
+
+    public void handelInteraction(PlayerInteractEvent e) {
+        //if the player left clicked a block
+        if (!e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            return;
+        }
+        Player player = e.getPlayer();
+        //If the player was holding a item matching the interaction material
+        if (!player.getItemInHand().getType().equals(Material.STICK)) {
+            return;
+        }
+        Location location = e.getClickedBlock().getLocation();
+        
+        Contraption contraption = getContraption(location);
+        //If a contraption doesn't exist on location
+        if(contraption==null) {
+            createContraption(location).conveyTo(player);
+        }
+        //If contraption exists at location
+        else {
+            contraption.trigger().conveyTo(player);
+        }
+        
+
     }
 }

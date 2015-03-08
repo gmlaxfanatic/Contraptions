@@ -3,6 +3,7 @@ package com.untamedears.contraptions.contraptions;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.utility.Resource;
+import com.untamedears.contraptions.utlity.Response;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
@@ -45,8 +46,8 @@ public abstract class Contraption {
      * Triggers the block to perform a generic action
      * returns whether the triggering was successful
      */
-    public boolean trigger() {
-        return true;
+    public Response trigger() {
+        return new Response(true,"Contraption did nothing");
     }
 
     /*

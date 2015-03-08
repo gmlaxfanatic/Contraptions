@@ -79,4 +79,10 @@ public class ProductionGadget {
         return false;
     }
     
+    public Set<ItemStack> getInputs() {
+        return inputs;
+    }
+    public Set<ItemStack> getOutputs() {
+        return outputs;
+    }
 }

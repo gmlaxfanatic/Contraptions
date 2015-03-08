@@ -56,15 +56,17 @@ public class FactoryProperties extends ContraptionProperties {
      * @return Created Contraption if successful
      */
     @Override
-    public Contraption createContraption(Location location) {
-        if (!validBlock(location)) {
-            return null;
+    public Response createContraption(Location location) {
+        if (!validBlock(location.getBlock())) {
+            return new Response(false, "Incorrect block for a Factory");
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
-            return new Factory(this, location);
+            Factory newFactory =  new Factory(this, location);
+            contraptionManager.registerContraption(newFactory);
+            return new Response(true,"Created a "+newFactory.getName()+" factory!");
         }
-        return null;
+        return new Response(false,"Incorrect items for a Factory");
     }
 
     public GenerationGadget getGenerationGadget() {
