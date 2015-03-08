@@ -1,10 +1,12 @@
 [
   {
-    "Type": "Factory",
-    "Properties": "FactoryTypeA",
+    "ID": "FactoryTypeA",
     "Location": [0, 0, 0],
     "Resources": {
       "resource1:": 0
     }
+  },
+  {
+    ...
   }
 ]

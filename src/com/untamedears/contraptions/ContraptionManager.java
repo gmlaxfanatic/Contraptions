@@ -14,10 +14,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -32,12 +32,22 @@ public class ContraptionManager {
         //There has gotta be a better way to do this
     }
 
-    public void init() {
+    public void onEnable() {
         try {
             contraptionProperties = loadProperties(new File(plugin.getDataFolder(), "config.json"));
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
+        try {
+            contraptions = loadContraptions(new File(plugin.getDataFolder(), "savefile.json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            contraptions = new HashMap<Location, Contraption>();
+        }
+    }
+    
+    public void onDisable() {
+        
     }
 
     /**
@@ -60,9 +70,50 @@ public class ContraptionManager {
         return newContraptionProperties;
     }
 
-    /*
+    /**
+     * Loads the Contraptions from a file
+     * <p>
+     * Contraptions should be formatted as followg:
+     * <pre>
+     * [
+     *   {
+     *     "ID": "FactoryTypeA",
+     *     "Location": [0, 0, 0],
+     *     "Resources": {
+     *       "resource1:": 0
+     *     }
+     *   },
+     *   {
+     *     ...
+     *   }
+     * ]
+     * </pre>
+     * <p>
+     * @param file File to be loaded
+     * @return New Map of Contraptions by Location
+     */
+    public Map<Location, Contraption> loadContraptions(File file) {
+        Map<Location, Contraption> newContraptions = new HashMap<Location, Contraption>();
+        try {
+            JSONTokener tokener = new JSONTokener(new FileReader(file));
+            JSONArray savedContraptions = new JSONArray(tokener);
+            for (int i = 0; i < savedContraptions.length(); i++) {
+                JSONObject savedContraption = savedContraptions.getJSONObject(i);
+                String ID = savedContraption.getString("ID");
+                Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
+                newContraptions.put(contraption.getLocation(), contraption);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newContraptions;
+    }
+
+    /**
      * Gets a Contraption associated with the given location
-     * If no Contraption exists null is returned
+     * <p>
+     * @param location The location to check
+     * @return Contraption at location or null
      */
     public Contraption getContraption(Location location) {
         return contraptions.get(location);
@@ -94,9 +145,11 @@ public class ContraptionManager {
         return contraptions;
     }
 
-    /*
-     * Iterates through all ContraptionProperties and attempts to create a factory
-     * based at the contraption
+    /**
+     * Creates a factory at the location
+     * <p>
+     * @param location The location to create a contraption
+     * @return The response related to the creation solution
      */
     public Response createContraption(Location location) {
         Block block = location.getBlock();
@@ -118,36 +171,45 @@ public class ContraptionManager {
         }
 
     }
-    
+
+    /**
+     * Regesiters a contraption with this manager
+     * <p>
+     * @param cotraption Contraption to register
+     */
     public void registerContraption(Contraption cotraption) {
-        contraptions.put(cotraption.getLocation(), cotraption);        
+        contraptions.put(cotraption.getLocation(), cotraption);
     }
 
-    /*
-     * Removes the contraption at a given location from being tracked by the manager
-     * Returns true if the contraption was removed
+    /**
+     * Completely eliminates the Contraption
+     * <p>
+     * @param contraption Contraption to be destroyed
      */
-    public boolean destroy(Contraption contraption) {
+    public void destroy(Contraption contraption) {
         if (contraptions.containsKey(contraption.getLocation())) {
             contraptions.remove(contraption.getLocation());
             contraption.destroy();
-            return true;
-        } else {
-            return false;
         }
     }
 
-    /*
-     * Handels instances of a block breaking
-     * If a contraption existed at this block it is destroyed
+    /**
+     * Handles blocks being broken
+     * <p>
+     * @param block Block which was broken
      */
-    public void handelBlockDestruction(Block block) {
+    public void handleBlockDestruction(Block block) {
         if (contraptions.containsKey(block.getLocation())) {
             destroy(contraptions.get(block.getLocation()));
         }
     }
 
-    public void handelInteraction(PlayerInteractEvent e) {
+    /**
+     * Responds to player interaction events
+     * <p>
+     * @param e The PlayerInteractionEvent
+     */
+    public void handleInteraction(PlayerInteractEvent e) {
         //if the player left clicked a block
         if (!e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             return;
@@ -158,17 +220,15 @@ public class ContraptionManager {
             return;
         }
         Location location = e.getClickedBlock().getLocation();
-        
+
         Contraption contraption = getContraption(location);
         //If a contraption doesn't exist on location
-        if(contraption==null) {
+        if (contraption == null) {
             createContraption(location).conveyTo(player);
-        }
-        //If contraption exists at location
+        } //If contraption exists at location
         else {
             contraption.trigger().conveyTo(player);
         }
-        
 
     }
 }

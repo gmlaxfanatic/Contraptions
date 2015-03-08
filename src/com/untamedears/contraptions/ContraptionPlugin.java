@@ -1,6 +1,5 @@
 package com.untamedears.contraptions;
 
-import com.untamedears.contraptions.ContraptionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ContraptionPlugin extends JavaPlugin
@@ -12,7 +11,10 @@ public class ContraptionPlugin extends JavaPlugin
     @Override
     public void onEnable()
     {
-
+        contraptionPlugin = this;
+        contraptionManager = new ContraptionManager(this);
+        contraptionManager.onEnable();
+        registerEvents();
     }
 
     @Override

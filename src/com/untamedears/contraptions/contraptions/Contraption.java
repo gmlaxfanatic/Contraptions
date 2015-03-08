@@ -32,6 +32,9 @@ public abstract class Contraption {
     public JSONObject getResources(){
         return new JSONObject();
     }
+    
+    public void loadResources(JSONObject jsonObject) {
+    }
 
 
     protected ContraptionProperties getProperties() {

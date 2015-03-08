@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 public class Factory extends Contraption {
 
+    static String ENERGY_KEY = "Energy";
     Resource energy;
 
     public Factory(FactoryProperties properties, Location location) {
@@ -20,8 +21,13 @@ public class Factory extends Contraption {
     @Override
     public JSONObject getResources() {
         JSONObject resources = new JSONObject();
-        resources.put("Energy", energy);
+        resources.put(ENERGY_KEY, energy);
         return resources;
+    }
+
+    @Override
+    public void loadResources(JSONObject jsonObject) {
+        energy = new Resource(jsonObject.getInt(ENERGY_KEY),this);
     }
 
     @Override
@@ -60,12 +66,12 @@ public class Factory extends Contraption {
 
     @Override
     public boolean hasResource(String resourceID) {
-        return resourceID.equals("energy");
+        return resourceID.equals(ENERGY_KEY);
     }
 
     @Override
     public Resource getResource(String resourceID) {
-        return resourceID.equals("energy") ? energy : null;
+        return resourceID.equals(ENERGY_KEY) ? energy : null;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.untamedears.contraptions;
 
-import com.untamedears.contraptions.ContraptionManager;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,12 +22,12 @@ public class ContraptionListener implements Listener {
      */
     @EventHandler
     public void playerInteractionEvent(PlayerInteractEvent e) {
-        contraptionManager.handelInteraction(e);
+        contraptionManager.handleInteraction(e);
     }
 
     @EventHandler
     public void blockBreakEvent(BlockBreakEvent e) {
-        contraptionManager.handelBlockDestruction(e.getBlock());
+        contraptionManager.handleBlockDestruction(e.getBlock());
     }
 
     /**
@@ -37,7 +36,7 @@ public class ContraptionListener implements Listener {
     @EventHandler
     public void explosionListener(EntityExplodeEvent e) {
         for (Block block : e.blockList()) {
-            contraptionManager.handelBlockDestruction(block);
+            contraptionManager.handleBlockDestruction(block);
         }
     }
 
@@ -46,6 +45,6 @@ public class ContraptionListener implements Listener {
      */
     @EventHandler
     public void burnListener(BlockBurnEvent e) {
-        contraptionManager.handelBlockDestruction(e.getBlock());
+        contraptionManager.handleBlockDestruction(e.getBlock());
     }
 }

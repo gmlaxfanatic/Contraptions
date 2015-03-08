@@ -44,6 +44,10 @@ public class FactoryProperties extends ContraptionProperties {
         return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, generationGadget);
     }
 
+    public Factory newContraption(Location location) {
+        return new Factory(this, location);
+    }
+
     @Override
     public String getType() {
         return "Factory";
@@ -62,11 +66,11 @@ public class FactoryProperties extends ContraptionProperties {
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
-            Factory newFactory =  new Factory(this, location);
+            Factory newFactory = new Factory(this, location);
             contraptionManager.registerContraption(newFactory);
-            return new Response(true,"Created a "+newFactory.getName()+" factory!");
+            return new Response(true, "Created a " + newFactory.getName() + " factory!");
         }
-        return new Response(false,"Incorrect items for a Factory");
+        return new Response(false, "Incorrect items for a Factory");
     }
 
     public GenerationGadget getGenerationGadget() {
