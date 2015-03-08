@@ -28,7 +28,7 @@ import org.json.JSONWriter;
 /**
  * Manages access, loading, and saving of Contraptions
  */
-public class ContraptionsManager {
+public class ContraptionManager {
 
     Plugin plugin;
     Map<String, ContraptionProperties> contraptionProperties;
@@ -39,7 +39,7 @@ public class ContraptionsManager {
      * <p>
      * @param plugin
      */
-    public ContraptionsManager(Plugin plugin) {
+    public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
     }
 

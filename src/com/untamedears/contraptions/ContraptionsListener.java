@@ -13,14 +13,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class ContraptionsListener implements Listener {
 
-    ContraptionsManager contraptionManager;
+    ContraptionManager contraptionManager;
 
     /**
      * Creates the listener
      *
      * @param contraptionManager The ContraptionManager which deals with events
      */
-    public ContraptionsListener(ContraptionsManager contraptionManager) {
+    public ContraptionsListener(ContraptionManager contraptionManager) {
         this.contraptionManager = contraptionManager;
     }
 

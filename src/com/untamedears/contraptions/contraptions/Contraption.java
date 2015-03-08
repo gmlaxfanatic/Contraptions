@@ -1,7 +1,7 @@
 package com.untamedears.contraptions.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
-import com.untamedears.contraptions.ContraptionsManager;
+import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.Response;
 import java.util.Set;
@@ -41,40 +41,73 @@ public abstract class Contraption {
     ContraptionProperties properties;
     Set<BukkitTask> tasks;
 
+    /**
+     * Creates a contraption
+     *
+     * @param properties Properties associated with the Contraption
+     * @param location   Location of the Contraption
+     */
     public Contraption(ContraptionProperties properties, Location location) {
         this.location = location;
         this.properties = properties;
     }
 
+    /**
+     * Saves the Contraption to a JSONObject
+     *
+     * @return JSONObject of the contraption
+     */
     public JSONObject save() {
         return properties.save(this);
     }
 
+    /**
+     * Gets a JSONObject representing the resources contained in the Contraption
+     *
+     * @return The JSONObject representing the resources contained in the
+     *         Contraption
+     */
     public JSONObject getResources() {
         return new JSONObject();
     }
 
+    /**
+     * Loads the resources from a JSONObject
+     *
+     * @param jsonObject JSONObject containing resource information
+     */
     public void loadResources(JSONObject jsonObject) {
     }
 
+    /**
+     * Gets the Properties object used by this Contraption
+     *
+     * @return The Properties object used by this Contraption
+     */
     protected ContraptionProperties getProperties() {
         return properties;
     }
 
+    /**
+     * Gets the Location of the Contraption
+     *
+     * @return The Location of the Contraption
+     */
     public Location getLocation() {
         return location;
     }
 
-    /*
-     * Triggers the block to perform a generic action
-     * returns whether the triggering was successful
+    /**
+     * Triggers the block to performs its action
+     *
+     * @return A Response describing the result of the triggering
      */
     public Response trigger() {
         return new Response(true, "Contraption did nothing");
     }
 
-    /*
-     Updates the state of the contraption
+    /**
+     * Updates the state of the contraption
      */
     public void update() {
         //Check energy, consume more if needed
@@ -83,19 +116,26 @@ public abstract class Contraption {
         }
     }
 
+    /**
+     * Updates the state of a contraption given that a resource has changed
+     *
+     * @param resource The changed resource
+     */
     public void update(Resource resource) {
         update();
     }
 
-    /*
+    /**
      * Checks if the material for this block is at the location
+     *
+     * @return If the Material is correct
      */
     public boolean isValid() {
         return location.getBlock().getType().equals(properties.getMaterial());
     }
 
-    /*
-     * Inactivates associated modules
+    /**
+     * Inactivates associated modules for the Contraption
      */
     public void destroy() {
         for (BukkitTask task : tasks) {
@@ -108,8 +148,10 @@ public abstract class Contraption {
         }
     }
 
-    /*
+    /**
+     * Gets the inventory of the contraption
      *
+     * @return The inventory of the contraption
      */
     public Inventory getInventory() {
         if (location.getBlock().getState() instanceof InventoryHolder) {
@@ -118,18 +160,42 @@ public abstract class Contraption {
         return null;
     }
 
-    public ContraptionsManager getContraptionManager() {
+    /**
+     * Gets the ContraptionManager
+     *
+     * @return the ContraptionManager
+     */
+    public ContraptionManager getContraptionManager() {
         return properties.getContraptionManager();
     }
 
+    /**
+     * Checks if the Contraptions has a resource of a particular ID
+     *
+     * @param resourceID The Resource ID, defined by the Contraption
+     *                   implementation
+     * @return Check if the Contraption has a resource of resourceID
+     */
     public boolean hasResource(String resourceID) {
         return false;
     }
 
+    /**
+     * Gets a specific resource from the Contraption
+     *
+     * @param resourceID The ID of the resource, as defined by the Contraption
+     *                   implmentation
+     * @return The Resource
+     */
     public Resource getResource(String resourceID) {
         return null;
     }
 
+    /**
+     * Gets the readible name of the Contraption
+     *
+     * @return The Contraption Name
+     */
     public String getName() {
         return "No Name";
     }

@@ -7,15 +7,28 @@ import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
+/**
+ * A Factory Contraption meant to replace the current ProductionFactory object in FactoryMod.
+ * It is created by placing a specific set of Items in a chest and tapping it with a stick.
+ * It then will start to lose energy slowly and requires fuel items to be placed in the chest to re-energize it.
+ * The factory allows the execution of a single recipe by placing the raw ingrediants in the chest and then 
+ * hitting the chest with a stick, which will allow the final produce to be made
+ */
 public class Factory extends Contraption {
 
     static String ENERGY_KEY = "Energy";
     Resource energy;
 
+    /**
+     * Creates a Factory Contraption
+     *
+     * @param properties The Factory Properties Object
+     * @param location   The Location of the Contraption
+     */
     public Factory(FactoryProperties properties, Location location) {
         super(properties, location);
         energy = new Resource(0, this);
-        tasks.add(properties.getDecayGadget().run(energy));
+        tasks.add(properties.getGrowGadget().run(energy));
     }
 
     @Override
@@ -27,7 +40,7 @@ public class Factory extends Contraption {
 
     @Override
     public void loadResources(JSONObject jsonObject) {
-        energy = new Resource(jsonObject.getDouble(ENERGY_KEY),this);
+        energy = new Resource(jsonObject.getDouble(ENERGY_KEY), this);
     }
 
     @Override
@@ -48,8 +61,8 @@ public class Factory extends Contraption {
     public void update(Resource resource) {
         //If a change in energy triggered this update, check that energy is good
         if (resource == energy) {
-            //If the energy has gone negative attempt to repower
-            if (energy.get() < 0) {
+            //If the energy has gone to less than 10% attempt to repower it
+            if (energy.get() < 1000) {
                 //Check if there are enough items in the factory to repower it
                 if (getProperties().getGenerationGadget().canGenerate(-energy.get(), getInventory())) {
                     //repower the factory

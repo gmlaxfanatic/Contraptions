@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ContraptionsPlugin extends JavaPlugin {
 
     static ContraptionsPlugin contraptionPlugin;
-    ContraptionsManager contraptionManager;
+    ContraptionManager contraptionManager;
 
     /**
      * Initializes the manager and loads config and save files
@@ -24,7 +24,7 @@ public class ContraptionsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         contraptionPlugin = this;
-        contraptionManager = new ContraptionsManager(this);
+        contraptionManager = new ContraptionManager(this);
         try {
             File propertiesFile = new File(getDataFolder(), "config.json");
             ContraptionsPlugin.toConsole(getDataFolder().getCanonicalPath());

@@ -1,43 +1,52 @@
 package com.untamedears.contraptions.properties;
 
-import com.untamedears.contraptions.ContraptionsManager;
-import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.contraptions.Factory;
 import com.untamedears.contraptions.gadgets.GrowGadget;
 import com.untamedears.contraptions.gadgets.GenerationGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
-import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
-import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
-/*
- * A Factory Block
- * These blocks take a cost to build
- * require energy to keep operational
- * and enable the production of on set of items from another
+/**
+ * The Properties associated with a Factory Contraption
  */
+
 public class FactoryProperties extends ContraptionProperties {
 
     MatchGadget matchGadget;
     ProductionGadget productionGadget;
     GenerationGadget generationGadget;
-    GrowGadget decayGadget;
+    GrowGadget growGadget;
 
-    public FactoryProperties(ContraptionsManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
+    /**
+     * Creates a FactoryProperties object
+     * @param contraptionManager The ContraptionManager
+     * @param ID The unique ID for this specification
+     * @param matchGadget The MatchGadget associated with this specification
+     * @param productionGadget The ProductionGadget associated with this specification
+     * @param generationGadget The GenerationGadget associated with this specification
+     */
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
         super(contraptionManager, ID, Material.CHEST);
         this.matchGadget = matchGadget;
         this.productionGadget = productionGadget;
         this.generationGadget = generationGadget;
     }
 
-    public static FactoryProperties fromConfig(ContraptionsManager contraptionManager, String ID, JSONObject jsonObject) {
+    /**
+     *Imports a FactoryProperties object from a configuration file
+     * @param contraptionManager The ContraptionManager
+     * @param ID The Unique ID of this specification
+     * @param jsonObject A JSONObject containing the specification
+     * @return The specified FactoryProperties file
+     */
+    public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
         MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
         ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
         GenerationGadget generationGadget = GenerationGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
@@ -74,16 +83,28 @@ public class FactoryProperties extends ContraptionProperties {
         return new Response(false, "Incorrect items for a Factory");
     }
 
+    /**
+     *Gets the GenerationGadget
+     * @return The GenerationGadget
+     */
     public GenerationGadget getGenerationGadget() {
         return generationGadget;
     }
 
+    /**
+     * Gets the ProductionGadget
+     * @return The ProductionGadget
+     */
     public ProductionGadget getProductionGadget() {
         return productionGadget;
     }
 
-    public GrowGadget getDecayGadget() {
-        return decayGadget;
+    /**
+     * Gets the GrowGadget
+     * @return The GrowGadget
+     */
+    public GrowGadget getGrowGadget() {
+        return growGadget;
     }
 
 }
