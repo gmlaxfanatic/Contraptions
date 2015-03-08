@@ -44,6 +44,7 @@ public class FactoryProperties extends ContraptionProperties {
         return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, generationGadget);
     }
 
+    @Override
     public Factory newContraption(Location location) {
         return new Factory(this, location);
     }
