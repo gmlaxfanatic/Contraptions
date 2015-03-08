@@ -3,7 +3,7 @@ package com.untamedears.contraptions.properties;
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.ContraptionPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
-import com.untamedears.contraptions.utlity.Response;
+import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

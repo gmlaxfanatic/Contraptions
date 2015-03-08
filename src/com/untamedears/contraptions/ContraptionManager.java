@@ -3,7 +3,7 @@ package com.untamedears.contraptions;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.properties.FactoryProperties;
-import com.untamedears.contraptions.utlity.Response;
+import com.untamedears.contraptions.utility.Response;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,9 +34,13 @@ public class ContraptionManager {
     Map<String, ContraptionProperties> contraptionProperties;
     Map<Location, Contraption> contraptions;
 
+    /**
+     * Creates a ContraptionManager
+     * <p>
+     * @param plugin
+     */
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
-        //There has gotta be a better way to do this
     }
 
     /**
@@ -47,8 +51,9 @@ public class ContraptionManager {
     public void loadProperties(File file) {
         contraptionProperties = new HashMap<String, ContraptionProperties>();
         try {
-            JSONTokener tokener = new JSONTokener(new FileReader(file));
-            JSONObject jsonObject = new JSONObject(tokener);
+            JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(file)));
+            //Go there all Contraption implementations here and load them individually
+            //Specifically loads Factory Contraptions
             JSONObject factories = jsonObject.getJSONObject("Factory");
             for (String ID : factories.keySet()) {
                 contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
@@ -82,13 +87,17 @@ public class ContraptionManager {
     public void loadContraptions(File file) {
         contraptions = new HashMap<Location, Contraption>();
         try {
-            JSONTokener tokener = new JSONTokener(new FileReader(file));
-            JSONArray savedContraptions = new JSONArray(tokener);
+            JSONArray savedContraptions = new JSONArray(new JSONTokener(new FileReader(file)));
             for (int i = 0; i < savedContraptions.length(); i++) {
                 JSONObject savedContraption = savedContraptions.getJSONObject(i);
                 String ID = savedContraption.getString("ID");
-                Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
-                contraptions.put(contraption.getLocation(), contraption);
+                if (!contraptionProperties.containsKey(ID)) {
+                    Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
+                    contraptions.put(contraption.getLocation(), contraption);
+                } else {
+                    ContraptionPlugin.toConsole("Factory ID not found. ID = " + ID);
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,7 +115,7 @@ public class ContraptionManager {
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
             jsonWriter.array();
-            for(Contraption contraption:contraptions.values()) {
+            for (Contraption contraption : contraptions.values()) {
                 jsonWriter.value(contraption.save());
             }
             jsonWriter.endArray();

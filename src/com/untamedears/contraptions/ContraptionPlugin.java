@@ -1,30 +1,54 @@
 package com.untamedears.contraptions;
 
 import java.io.File;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Contraptions goal is to provide a framework for adding increased
+ * functionality to blocks in minecraft. At its core it is meant to be highly
+ * flexible to the addition of new functional elements to individual minecraft
+ * blocks, allowing for the simple creation of a wide range of different kinds
+ * of interactive structures. This program will allow tens of thousands of
+ * interactive blocks to be added to the minecraft world in an efficient manner
+ * giving rise to emergent constructions of complex machinery.
+ */
 public class ContraptionPlugin extends JavaPlugin {
 
     static ContraptionPlugin contraptionPlugin;
     ContraptionManager contraptionManager;
 
+    /**
+     * Initializes the manager and loads config and save files
+     */
     @Override
     public void onEnable() {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
         try {
-            contraptionManager.loadProperties(new File(getDataFolder(), "config.json"));
+            File propertiesFile = new File(getDataFolder(), "config.json");
+            if (!propertiesFile.exists()) {
+                propertiesFile.createNewFile();
+            }
+            contraptionManager.loadProperties(propertiesFile);
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace();
         }
         try {
-            contraptionManager.loadContraptions(new File(getDataFolder(), "savefile.json"));
+            File contraptionsFile = new File(getDataFolder(), "savefile.json");
+            if (!contraptionsFile.exists()) {
+                contraptionsFile.createNewFile();
+            }
+            contraptionManager.loadContraptions(contraptionsFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
         registerEvents();
     }
 
+    /**
+     * Save the contraptions
+     */
     @Override
     public void onDisable() {
         try {
@@ -52,5 +76,14 @@ public class ContraptionPlugin extends JavaPlugin {
      */
     public static ContraptionPlugin getContraptionPlugin() {
         return contraptionPlugin;
+    }
+
+    /**
+     * Sends a message to the console
+     * <p>
+     * @param message The message
+     */
+    public static void toConsole(String message) {
+        Bukkit.getLogger().info("[Contraptions] " + message);
     }
 }

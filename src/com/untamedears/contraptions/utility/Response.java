@@ -1,4 +1,4 @@
-package com.untamedears.contraptions.utlity;
+package com.untamedears.contraptions.utility;
 
 import org.bukkit.entity.Player;
 

@@ -8,7 +8,7 @@ import com.untamedears.contraptions.gadgets.GenerationGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
-import com.untamedears.contraptions.utlity.Response;
+import com.untamedears.contraptions.utility.Response;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;

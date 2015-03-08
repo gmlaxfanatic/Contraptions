@@ -3,7 +3,7 @@ package com.untamedears.contraptions.contraptions;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utility.InventoryHelpers;
-import com.untamedears.contraptions.utlity.Response;
+import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
