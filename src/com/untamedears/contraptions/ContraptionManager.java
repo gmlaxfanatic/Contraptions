@@ -4,8 +4,11 @@ import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utlity.Response;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.json.JSONWriter;
 
 public class ContraptionManager {
 
@@ -45,9 +49,9 @@ public class ContraptionManager {
             contraptions = new HashMap<Location, Contraption>();
         }
     }
-    
+
     public void onDisable() {
-        
+
     }
 
     /**
@@ -107,6 +111,26 @@ public class ContraptionManager {
             e.printStackTrace();
         }
         return newContraptions;
+    }
+
+    /**
+     * Saves all the current Contraptions to a file
+     * <p>
+     * @param file File Contraptions are saved to
+     */
+    public void saveContraptions(File file) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
+            jsonWriter.array();
+            for(Contraption contraption:contraptions.values()) {
+                jsonWriter.value(contraption.save());
+            }
+            jsonWriter.endArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
