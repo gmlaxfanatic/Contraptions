@@ -3,7 +3,7 @@ package com.untamedears.contraptions.properties;
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.contraptions.Factory;
-import com.untamedears.contraptions.gadgets.DecayGadget;
+import com.untamedears.contraptions.gadgets.GrowGadget;
 import com.untamedears.contraptions.gadgets.GenerationGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
@@ -28,7 +28,7 @@ public class FactoryProperties extends ContraptionProperties {
     MatchGadget matchGadget;
     ProductionGadget productionGadget;
     GenerationGadget generationGadget;
-    DecayGadget decayGadget;
+    GrowGadget decayGadget;
 
     public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
         super(contraptionManager, ID, Material.CHEST);
@@ -82,7 +82,7 @@ public class FactoryProperties extends ContraptionProperties {
         return productionGadget;
     }
 
-    public DecayGadget getDecayGadget() {
+    public GrowGadget getDecayGadget() {
         return decayGadget;
     }
 

@@ -86,7 +86,7 @@ public class AreaTransferGadget {
      */
     public void safeTransfer(Resource fromResource, Resource toResource, int amount) {
         //Withdraw desired transfer amount from fromResource
-        int transferedResource = -fromResource.safeChange(-amount, 0, Integer.MAX_VALUE);
+        double transferedResource = -fromResource.safeChange(-amount, 0, Integer.MAX_VALUE);
         //Add as much of the widthdrawn amount as possible to toResource
         transferedResource -= toResource.safeChange(transferedResource, 0, Integer.MAX_VALUE);
         //Refund fromResource for untransferred amount

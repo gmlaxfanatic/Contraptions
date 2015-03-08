@@ -68,8 +68,8 @@ public class GenerationGadget {
      * @param inventory The inventory to pull ItemStacks from
      * @return Check if there are enough ItemStacks to generate amount
      */
-    public boolean canGenerate(int amount, Inventory inventory) {
-        int amountAvailible = InventoryHelpers.amountAvailable(inventory, itemStacks);
+    public boolean canGenerate(double amount, Inventory inventory) {
+        double amountAvailible = InventoryHelpers.amountAvailable(inventory, itemStacks);
         return amountAvailible * conversion >= amount;
     }
 
@@ -81,8 +81,8 @@ public class GenerationGadget {
      * @param resource  The resource to generate
      * @return If there were enough ItemStacks to generate amount
      */
-    public boolean generate(int amount, Inventory inventory, Resource resource) {
-        int numberOfSets = (int) Math.ceil(amount / (double) conversion);
+    public boolean generate(double amount, Inventory inventory, Resource resource) {
+        int numberOfSets = (int) Math.ceil(amount / conversion);
         if (InventoryHelpers.removeMultiple(inventory, itemStacks, numberOfSets)) {
             resource.change(numberOfSets * conversion);
             return true;

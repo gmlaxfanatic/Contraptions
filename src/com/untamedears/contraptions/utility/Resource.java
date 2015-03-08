@@ -4,28 +4,28 @@ import com.untamedears.contraptions.contraptions.Contraption;
 
 public class Resource {
 
-    int amount;
+    double amount;
     Contraption contraption;
 
-    public Resource(int amount, Contraption contraption) {
+    public Resource(double amount, Contraption contraption) {
         this.amount = amount;
         this.contraption = contraption;
     }
 
-    public void set(int amount) {
+    public void set(double amount) {
         this.amount = amount;
         contraption.update(this);
     }
 
-    public void change(int change) {
+    public void change(double change) {
         set(amount + change);
     }
     /*
      Changes the resource with a floor to which it will not lower the resource below
      */
 
-    public int safeChange(int change, int minimum, int maximum) {
-        int oldAmount = amount;
+    public double safeChange(double change, double minimum, double maximum) {
+        double oldAmount = amount;
         if (change >= 0) {
             if (amount > maximum) {
                 return 0;
@@ -53,7 +53,7 @@ public class Resource {
         }
     }
 
-    public int get() {
+    public double get() {
         return amount;
     }
 }

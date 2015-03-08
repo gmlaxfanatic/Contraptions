@@ -27,7 +27,7 @@ public class Factory extends Contraption {
 
     @Override
     public void loadResources(JSONObject jsonObject) {
-        energy = new Resource(jsonObject.getInt(ENERGY_KEY),this);
+        energy = new Resource(jsonObject.getDouble(ENERGY_KEY),this);
     }
 
     @Override
