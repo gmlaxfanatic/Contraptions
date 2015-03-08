@@ -25,6 +25,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.JSONWriter;
 
+/**
+ * Manages access, loading, and saving of Contraptions
+ */
 public class ContraptionManager {
 
     Plugin plugin;
@@ -36,42 +39,23 @@ public class ContraptionManager {
         //There has gotta be a better way to do this
     }
 
-    public void onEnable() {
-        try {
-            contraptionProperties = loadProperties(new File(plugin.getDataFolder(), "config.json"));
-        } catch (Exception e) {
-            throw e;
-        }
-        try {
-            contraptions = loadContraptions(new File(plugin.getDataFolder(), "savefile.json"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            contraptions = new HashMap<Location, Contraption>();
-        }
-    }
-
-    public void onDisable() {
-
-    }
-
     /**
      * Loads the ContraptionProperties from the Config File
      * <p>
-     * @param contraptionProperties
+     * @param file File containing the properties
      */
-    private Map<String, ContraptionProperties> loadProperties(File file) {
-        Map<String, ContraptionProperties> newContraptionProperties = new HashMap<String, ContraptionProperties>();
+    public void loadProperties(File file) {
+        contraptionProperties = new HashMap<String, ContraptionProperties>();
         try {
             JSONTokener tokener = new JSONTokener(new FileReader(file));
             JSONObject jsonObject = new JSONObject(tokener);
             JSONObject factories = jsonObject.getJSONObject("Factory");
             for (String ID : factories.keySet()) {
-                newContraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
+                contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return newContraptionProperties;
     }
 
     /**
@@ -94,10 +78,9 @@ public class ContraptionManager {
      * </pre>
      * <p>
      * @param file File to be loaded
-     * @return New Map of Contraptions by Location
      */
-    public Map<Location, Contraption> loadContraptions(File file) {
-        Map<Location, Contraption> newContraptions = new HashMap<Location, Contraption>();
+    public void loadContraptions(File file) {
+        contraptions = new HashMap<Location, Contraption>();
         try {
             JSONTokener tokener = new JSONTokener(new FileReader(file));
             JSONArray savedContraptions = new JSONArray(tokener);
@@ -105,12 +88,11 @@ public class ContraptionManager {
                 JSONObject savedContraption = savedContraptions.getJSONObject(i);
                 String ID = savedContraption.getString("ID");
                 Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
-                newContraptions.put(contraption.getLocation(), contraption);
+                contraptions.put(contraption.getLocation(), contraption);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return newContraptions;
     }
 
     /**
