@@ -30,6 +30,7 @@ import org.json.JSONObject;
  *         "lore": "LORE"
  *       },...
  *       }]
+ * }
  * </pre>
  */
 

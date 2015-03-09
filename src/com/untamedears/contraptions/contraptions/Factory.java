@@ -64,9 +64,9 @@ public class Factory extends Contraption {
             //If the energy has gone to less than 10% attempt to repower it
             if (energy.get() < 1000) {
                 //Check if there are enough items in the factory to repower it
-                if (getProperties().getGenerationGadget().canGenerate(-energy.get(), getInventory())) {
+                if (getProperties().getConversionGadget().canGenerate(-energy.get(), getInventory())) {
                     //repower the factory
-                    getProperties().getGenerationGadget().generate(-energy.get(), getInventory(), energy);
+                    getProperties().getConversionGadget().generate(-energy.get(), getInventory(), energy);
                 }
             }
             //If contraption ran out of energy destroy it

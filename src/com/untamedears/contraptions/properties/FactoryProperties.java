@@ -3,7 +3,7 @@ package com.untamedears.contraptions.properties;
 import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.contraptions.Factory;
 import com.untamedears.contraptions.gadgets.GrowGadget;
-import com.untamedears.contraptions.gadgets.GenerationGadget;
+import com.untamedears.contraptions.gadgets.ConversionGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.Response;
@@ -21,7 +21,7 @@ public class FactoryProperties extends ContraptionProperties {
 
     MatchGadget matchGadget;
     ProductionGadget productionGadget;
-    GenerationGadget generationGadget;
+    ConversionGadget conversionGadget;
     GrowGadget growGadget;
 
     /**
@@ -30,13 +30,13 @@ public class FactoryProperties extends ContraptionProperties {
      * @param ID The unique ID for this specification
      * @param matchGadget The MatchGadget associated with this specification
      * @param productionGadget The ProductionGadget associated with this specification
-     * @param generationGadget The GenerationGadget associated with this specification
+     * @param conversionGadget The ConversionGadget associated with this specification
      */
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, GenerationGadget generationGadget) {
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget) {
         super(contraptionManager, ID, Material.CHEST);
         this.matchGadget = matchGadget;
         this.productionGadget = productionGadget;
-        this.generationGadget = generationGadget;
+        this.conversionGadget = conversionGadget;
     }
 
     /**
@@ -47,10 +47,10 @@ public class FactoryProperties extends ContraptionProperties {
      * @return The specified FactoryProperties file
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
-        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
-        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
-        GenerationGadget generationGadget = GenerationGadget.fromJSON(jsonObject.getJSONObject("MatchGadget"));
-        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, generationGadget);
+        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("match_gadget"));
+        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("production_gadget"));
+        ConversionGadget conversionGadget = ConversionGadget.fromJSON(jsonObject.getJSONObject("conversion_gadget"));
+        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget);
     }
 
     @Override
@@ -84,11 +84,11 @@ public class FactoryProperties extends ContraptionProperties {
     }
 
     /**
-     *Gets the GenerationGadget
-     * @return The GenerationGadget
+     *Gets the ConversionGadget
+     * @return The ConversionGadget
      */
-    public GenerationGadget getGenerationGadget() {
-        return generationGadget;
+    public ConversionGadget getConversionGadget() {
+        return conversionGadget;
     }
 
     /**

@@ -38,11 +38,7 @@ public class ContraptionsPlugin extends JavaPlugin {
         }
         try {
             File contraptionsFile = new File(getDataFolder(), "savefile.json");
-            if (!contraptionsFile.exists()) {
-                contraptionsFile.getParentFile().mkdirs();
-                contraptionsFile.createNewFile();
-                contraptionManager.loadContraptions();
-            } else {
+            if (contraptionsFile.exists()) {
                 contraptionManager.loadContraptions(contraptionsFile);
             }
         } catch (Exception e) {

@@ -1,11 +1,8 @@
 {
   "Factory": {
     "FactoryA": {
-      "DecayGadget": {
-        "rate": 1
-      },
-      "GenerationGadget": {
-        "itemstacks":
+      "match_gadget": {
+          "inputs":
           [{
               "material": "MATERIAL_NAME",
               "amount": 1,
@@ -13,17 +10,37 @@
               "name": "DISPLAY_NAME",
               "lore": "LORE"
             }, {
+              "material": "MATERIAL_NAME"
+            }]
+      },
+      "generation_gadget": {
+        "inputs":
+          [{
+              "material": "MATERIAL_NAME",
+              "amount": 1,
+              "durability": 0,
+              "name": "DISPLAY_NAME",
+              "lore": "LORE"
+            }, {
+              "material": "MATERIAL_NAME"
+            }]
+        ,
+        "conversion": 1
+      },
+      "produciton_gadget": {
+        "inputs":
+          [{
               "material": "MATERIAL_NAME",
               "amount": 1,
               "durability": 0,
               "lore": "LORE"
-            }]
-
-        ,
-        "conversion": 1
-      },
-      "ProductionGadget": {
-        "itemstacks":
+            }, {
+              "material": "MATERIAL_NAME",
+              "amount": 1,
+              "durability": 0,
+              "lore": "LORE"
+            }],
+        "outputs":
           [{
               "material": "MATERIAL_NAME",
               "amount": 1,
@@ -35,9 +52,6 @@
               "durability": 0,
               "lore": "LORE"
             }]
-
-        ,
-        "rate": 1
       }
     }
   }

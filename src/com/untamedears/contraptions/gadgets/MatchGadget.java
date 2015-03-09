@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * A gadget which only consumes ItemStacks if they are the only ones present
  * <p>
- * This can be used to specify a contraption being build
+ * This can be used to specify a contraption being built
  * <p>
  * It can be imported from a JSON object in the following format
  * <pre>
@@ -32,7 +32,7 @@ public class MatchGadget {
     Set<ItemStack> itemStacks;
 
     /**
-     * Creates a GenerationGadget
+     * Creates a MatchGadget
      * <p>
      * @param itemStacks The ItemStacks consumed
      */
@@ -62,10 +62,10 @@ public class MatchGadget {
     }
 
     /**
-     * Consumes ItemSets to generate a resource
+     * Consumes ItemSets
      * <p>
      * @param inventory The inventory from which to draw ItemStacks
-     * @return IF consuming was successful
+     * @return If consuming was successful
      */
     public boolean consume(Inventory inventory) {
         return InventoryHelpers.remove(inventory, itemStacks);

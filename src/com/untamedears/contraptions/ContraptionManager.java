@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -55,6 +58,7 @@ public class ContraptionManager {
             //Go there all Contraption implementations here and load them individually
             //Specifically loads Factory Contraptions
             JSONObject factories = jsonObject.getJSONObject("Factory");
+
             for (String ID : factories.keySet()) {
                 contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
             }
@@ -62,7 +66,7 @@ public class ContraptionManager {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Loads the Contraptions from a file
      * <p>
@@ -110,7 +114,7 @@ public class ContraptionManager {
     public void loadContraptions() {
         contraptions = new HashMap<Location, Contraption>();
     }
-    
+
     /**
      * Saves all the current Contraptions to a file
      * <p>
