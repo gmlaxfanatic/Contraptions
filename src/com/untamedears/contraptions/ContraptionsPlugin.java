@@ -27,13 +27,18 @@ public class ContraptionsPlugin extends JavaPlugin {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
         try {
-            File propertiesFile = new File(getDataFolder(), "config.json");
-            ContraptionsPlugin.toConsole(getDataFolder().getCanonicalPath());
-            if (!propertiesFile.exists()) {
-                propertiesFile.getParentFile().mkdirs();
-                propertiesFile.createNewFile();
+            //Gets config folder
+            File configFolder = new File(getDataFolder() + "/configs");
+            //If it doesn't exist create it
+            if (!configFolder.exists()) {
+                configFolder.getParentFile().mkdirs();
+                configFolder.createNewFile();
             }
-            contraptionManager.loadProperties(propertiesFile);
+            //Load all files in the configs folder
+            for (final File configFile : configFolder.listFiles()) {
+                ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
+                contraptionManager.loadProperties(configFile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

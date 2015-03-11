@@ -47,6 +47,7 @@ public class ContraptionManager {
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
         reinforcementManager = Citadel.getReinforcementManager();
+        contraptionProperties = new HashMap<String, ContraptionProperties>();
     }
 
     /**
@@ -55,7 +56,6 @@ public class ContraptionManager {
      * @param file File containing the properties
      */
     public void loadProperties(File file) {
-        contraptionProperties = new HashMap<String, ContraptionProperties>();
         try {
             JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(file)));
             //Go there all Contraption implementations here and load them individually
