@@ -1,7 +1,6 @@
 package com.untamedears.contraptions;
 
 import com.untamedears.contraptions.contraptions.Contraption;
-import com.untamedears.contraptions.events.ContraptionEvent;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utility.Response;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.JSONWriter;
+import vg.civcraft.mc.citadel.Citadel;
+import vg.civcraft.mc.citadel.ReinforcementManager;
+import vg.civcraft.mc.citadel.reinforcement.PlayerReinforcement;
+import vg.civcraft.mc.namelayer.permission.PermissionType;
 
 /**
  * Manages access, loading, and saving of Contraptions
@@ -35,6 +37,7 @@ public class ContraptionManager {
     Plugin plugin;
     Map<String, ContraptionProperties> contraptionProperties;
     Map<Location, Contraption> contraptions;
+    ReinforcementManager reinforcementManager;
 
     /**
      * Creates a ContraptionManager
@@ -43,6 +46,7 @@ public class ContraptionManager {
      */
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
+        reinforcementManager = Citadel.getReinforcementManager();
     }
 
     /**
@@ -184,11 +188,15 @@ public class ContraptionManager {
             if (contraptionProperty.validBlock(block)) {
                 matchedBlock = true;
                 response = contraptionProperty.createContraption(location);
-                if (response.success) {
-                    Contraption contraption = getContraption(location);
-                    String eventMessage = String.format("Created %s at (%d, %d, %d) by player %s", contraption.getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), player.getUniqueId());
-                    ContraptionEvent event = new ContraptionEvent(eventMessage, contraption, player);
-                    Bukkit.getPluginManager().callEvent(event);
+                if (response.getSuccess()) {
+                    //Publish creation to console for logging
+                    StringBuilder alert = new StringBuilder();
+                    alert.append("Created ").append(response.getContraption().getName());
+                    alert.append(" belonging to group ").append(response.getContraption().getGroup());
+                    alert.append(" at (").append(location.getBlockX()).append(" ").append(location.getBlockY()).append(" ").append(location.getBlockZ());
+                    alert.append(") by player ").append(player.getUniqueId());
+                    ContraptionsPlugin.toConsole(alert.toString());
+                    
                     return response;
                 }
             }
@@ -216,12 +224,11 @@ public class ContraptionManager {
      * @param contraption Contraption to be destroyed
      */
     public void destroy(Contraption contraption) {
-        Location location  = contraption.getLocation();
+        Location location = contraption.getLocation();
         if (contraptions.containsKey(location)) {
             contraptions.remove(location);
             String eventMessage = String.format("Destroyed %s at (%d, %d, %d)", contraption.getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-            ContraptionEvent event = new ContraptionEvent(eventMessage, contraption);
-            Bukkit.getPluginManager().callEvent(event);
+            ContraptionsPlugin.toConsole(eventMessage);
             contraption.destroy();
         }
     }
@@ -253,6 +260,14 @@ public class ContraptionManager {
             return;
         }
         Location location = e.getClickedBlock().getLocation();
+        //Checks if permissions are active and block is reinforced
+        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(location)) {
+            if (((PlayerReinforcement) reinforcementManager.getReinforcement(location)).isAccessible(player, PermissionType.CHESTS)) {
+                Response response = new Response(false, "You don't have permission to interact with Contraptions at this block");
+                response.conveyTo(player);
+                return;
+            }
+        }
         Contraption contraption = getContraption(location);
         //If a contraption doesn't exist on location
         if (contraption == null) {
@@ -262,5 +277,14 @@ public class ContraptionManager {
             contraption.trigger().conveyTo(player);
         }
 
+    }
+
+    /**
+     * Gets the reinforcement manager
+     *
+     * @return The ReinforcementManager
+     */
+    public ReinforcementManager getReinforcementManager() {
+        return reinforcementManager;
     }
 }

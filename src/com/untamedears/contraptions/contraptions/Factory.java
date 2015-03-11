@@ -51,9 +51,9 @@ public class Factory extends Contraption {
     public Response trigger() {
         String prettyOutput = InventoryHelpers.toString(getProperties().getProductionGadget().getOutputs());
         if (getProperties().getProductionGadget().produceGoods(getInventory())) {
-            return new Response(true, "Produced " + prettyOutput);
+            return new Response(true, "Produced " + prettyOutput, this);
         }
-        return new Response(false, "Cannot produce " + prettyOutput);
+        return new Response(false, "Cannot produce " + prettyOutput, this);
     }
 
     @Override

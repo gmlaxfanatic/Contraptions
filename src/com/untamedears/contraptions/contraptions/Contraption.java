@@ -2,6 +2,7 @@ package com.untamedears.contraptions.contraptions;
 
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.ContraptionManager;
+import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.Response;
 import java.util.Set;
@@ -10,10 +11,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.JSONObject;
+import vg.civcraft.mc.citadel.ReinforcementManager;
+import vg.civcraft.mc.citadel.reinforcement.PlayerReinforcement;
+import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.permission.PermissionType;
 
 /**
  * Represents a specific contraption in the minecraft world
- * 
+ *
  * A contraption is a single functionalized block in the minecraft world. How it
  * behaves is dictated by its code, and the gadgets contained within its
  * properties file. Its current state is defined by its resources, which are
@@ -21,7 +26,7 @@ import org.json.JSONObject;
  * have an associated implementation of a ContraptionProperties file, which
  * contains the shared information on that Contraption's implementation,
  * primarily its assorted gadgets.
- * 
+ *
  * A Contraption's code will piece together current gadgets, each of which have
  * specific functions, to form a coherent Contraption. The Contraptions state is
  * stored in its resources, access to which can be given to multiple gadgets,
@@ -30,7 +35,7 @@ import org.json.JSONObject;
  * gadgets, however complex and encapsulated functionality should be encoded as
  * additional gadgets for a Contraption to use, allowing greater flexibility for
  * future reuse by other Contraption implementations.
- * 
+ *
  * Some gadgets will also generate tasks specific to a contraption which run
  * over time. These tasks are also stored within the contraption to allow
  * cancellation upon Contraption destruction.
@@ -198,5 +203,18 @@ public abstract class Contraption {
      */
     public String getName() {
         return "No Name";
+    }
+
+    /**
+     * Gets the group associated with the reinforcement of this Contraptions
+     *
+     * @return The NameLayer Group for this Contraptions
+     */
+    public Group getGroup() {
+        ReinforcementManager reinforcementManager = getContraptionManager().getReinforcementManager();
+        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(location)) {
+            return ((PlayerReinforcement) reinforcementManager.getReinforcement(location)).getGroup();
+        }
+        return null;
     }
 }

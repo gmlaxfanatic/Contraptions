@@ -17,6 +17,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
     static ContraptionsPlugin contraptionPlugin;
     ContraptionManager contraptionManager;
+    public static boolean PERMISSIONS = false;
 
     /**
      * Initializes the manager and loads config and save files
@@ -68,16 +69,11 @@ public class ContraptionsPlugin extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-                try {
-            getServer().getPluginManager().registerEvents(new LoggingListener(), this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * Allows global access to this instance of plugin
-     * 
+     *
      * @return The single instance of this plugin
      */
     public static ContraptionsPlugin getContraptionPlugin() {
@@ -86,7 +82,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
     /**
      * Sends a message to the console
-     * 
+     *
      * @param message The message
      */
     public static void toConsole(String message) {
