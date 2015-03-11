@@ -68,6 +68,11 @@ public class ContraptionsPlugin extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
+                try {
+            getServer().getPluginManager().registerEvents(new LoggingListener(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
