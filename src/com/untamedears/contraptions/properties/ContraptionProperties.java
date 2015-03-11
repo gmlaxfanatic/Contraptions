@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 /**
  * Specifies the properties of a Contraption's implementation
- * <p>
+ * 
  * A Contraption's properties define how all Contraptions of that type behave.
  * Each Contraption implementation will have a accompanying properties
  * implementation which specifies for the Contraption its material, ID, common
@@ -29,7 +29,7 @@ public abstract class ContraptionProperties {
 
     /**
      * Creates a new instance of Contraption properties
-     * <p>
+     * 
      * @param contraptionManager The ContraptionManager object
      * @param ID                 A unique string associated with this
      *                           Contraption specification

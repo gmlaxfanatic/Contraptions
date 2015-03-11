@@ -25,7 +25,7 @@ public class Response {
      * @param player The player to massage
      */
     public void conveyTo(Player player) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        player.sendMessage(message);
     }
 
 }

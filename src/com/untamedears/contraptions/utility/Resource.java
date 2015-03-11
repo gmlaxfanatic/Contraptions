@@ -27,8 +27,18 @@ public class Resource {
      * @param amount Amount to set the resource to
      */
     public void set(double amount) {
-        this.amount = amount;
         contraption.update(this);
+    }
+
+    /**
+     * Sets the resource without updating the associated Contraption
+     *
+     * Primarily used to prevent loops
+     *
+     * @param amount
+     */
+    public void setUnsafe(double amount) {
+
     }
 
     /**
@@ -41,7 +51,7 @@ public class Resource {
     }
 
     /**
-     * Changes the resource while garunteeing it will stay in a given range
+     * Changes the resource while gauranteeing it will stay in a given range
      *
      * @param change  Amount to change the resource by
      * @param minimum Minimum value of the resource

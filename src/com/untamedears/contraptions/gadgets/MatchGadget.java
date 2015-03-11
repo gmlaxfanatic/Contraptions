@@ -8,9 +8,9 @@ import org.json.JSONObject;
 
 /**
  * A gadget which only consumes ItemStacks if they are the only ones present
- * <p>
+ * 
  * This can be used to specify a contraption being built
- * <p>
+ * 
  * It can be imported from a JSON object in the following format
  * <pre>
  * {
@@ -33,7 +33,7 @@ public class MatchGadget {
 
     /**
      * Creates a MatchGadget
-     * <p>
+     * 
      * @param itemStacks The ItemStacks consumed
      */
     public MatchGadget(Set<ItemStack> itemStacks) {
@@ -42,7 +42,7 @@ public class MatchGadget {
 
     /**
      * Imports a MatchGadget from a JSONObject
-     * <p>
+     * 
      * @param jsonObject The JSONObject containing the information
      * @return A MatchGadget with the properties contained in the JSONObject
      */
@@ -53,7 +53,7 @@ public class MatchGadget {
 
     /**
      * Given an inventory checks exactly ItemStacks is contained
-     * <p>
+     * 
      * @param inventory The inventory to pull ItemStacks from
      * @return Checks if ItemStacks are exactly in the Inventory
      */
@@ -63,7 +63,7 @@ public class MatchGadget {
 
     /**
      * Consumes ItemSets
-     * <p>
+     * 
      * @param inventory The inventory from which to draw ItemStacks
      * @return If consuming was successful
      */

@@ -11,7 +11,7 @@ public class ContraptionException extends Exception {
 
     /**
      * Constructs a ContraptionException with an explanatory message.
-     * <p>
+     * 
      * @param message Detail about the reason for the exception.
      */
     public ContraptionException(String message) {
@@ -20,7 +20,7 @@ public class ContraptionException extends Exception {
 
     /**
      * Constructs a new ContraptionException with the specified cause.
-     * <p>
+     * 
      * @param cause The cause.
      */
     public ContraptionException(Throwable cause) {
@@ -31,7 +31,7 @@ public class ContraptionException extends Exception {
     /**
      * Returns the cause of this exception or null if the cause is nonexistent
      * or unknown.
-     * <p>
+     * 
      * @return the cause of this exception or null if the cause is nonexistent
      *         or unknown.
      */

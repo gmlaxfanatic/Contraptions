@@ -65,7 +65,7 @@ public class FactoryProperties extends ContraptionProperties {
 
     /**
      * Creates a Factory Contraptions
-     * <p>
+     * 
      * @param location Location to attempt creation
      * @return Created Contraption if successful
      */

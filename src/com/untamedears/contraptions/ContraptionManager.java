@@ -39,7 +39,7 @@ public class ContraptionManager {
 
     /**
      * Creates a ContraptionManager
-     * <p>
+     * 
      * @param plugin
      */
     public ContraptionManager(Plugin plugin) {
@@ -48,7 +48,7 @@ public class ContraptionManager {
 
     /**
      * Loads the ContraptionProperties from the Config File
-     * <p>
+     * 
      * @param file File containing the properties
      */
     public void loadProperties(File file) {
@@ -69,7 +69,7 @@ public class ContraptionManager {
 
     /**
      * Loads the Contraptions from a file
-     * <p>
+     * 
      * Contraptions should be formatted as followg:
      * <pre>
      * [
@@ -85,7 +85,7 @@ public class ContraptionManager {
      *   }
      * ]
      * </pre>
-     * <p>
+     * 
      * @param file File to be loaded
      */
     public void loadContraptions(File file) {
@@ -117,7 +117,7 @@ public class ContraptionManager {
 
     /**
      * Saves all the current Contraptions to a file
-     * <p>
+     * 
      * @param file File Contraptions are saved to
      */
     public void saveContraptions(File file) {
@@ -137,7 +137,7 @@ public class ContraptionManager {
 
     /**
      * Gets a Contraption associated with the given location
-     * <p>
+     * 
      * @param location The location to check
      * @return Contraption at location or null
      */
@@ -148,7 +148,7 @@ public class ContraptionManager {
 
     /**
      * Gets contraptions located within a square around the given location
-     * <p>
+     * 
      * @param location Central location
      * @param radius   Square radius from which to search
      * @return Set of contraptions in radius
@@ -173,7 +173,7 @@ public class ContraptionManager {
 
     /**
      * Creates a factory at the location
-     * <p>
+     * 
      * @param location The location to create a contraption
      * @return The response related to the creation solution
      */
@@ -200,7 +200,7 @@ public class ContraptionManager {
 
     /**
      * Regesiters a contraption with this manager
-     * <p>
+     * 
      * @param cotraption Contraption to register
      */
     public void registerContraption(Contraption cotraption) {
@@ -209,7 +209,7 @@ public class ContraptionManager {
 
     /**
      * Completely eliminates the Contraption
-     * <p>
+     * 
      * @param contraption Contraption to be destroyed
      */
     public void destroy(Contraption contraption) {
@@ -221,7 +221,7 @@ public class ContraptionManager {
 
     /**
      * Handles blocks being broken
-     * <p>
+     * 
      * @param block Block which was broken
      */
     public void handleBlockDestruction(Block block) {
@@ -232,7 +232,7 @@ public class ContraptionManager {
 
     /**
      * Responds to player interaction events
-     * <p>
+     * 
      * @param e The PlayerInteractionEvent
      */
     public void handleInteraction(PlayerInteractEvent e) {
@@ -246,7 +246,6 @@ public class ContraptionManager {
             return;
         }
         Location location = e.getClickedBlock().getLocation();
-
         Contraption contraption = getContraption(location);
         //If a contraption doesn't exist on location
         if (contraption == null) {

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 /**
  * Represents a specific contraption in the minecraft world
- * <p>
+ * 
  * A contraption is a single functionalized block in the minecraft world. How it
  * behaves is dictated by its code, and the gadgets contained within its
  * properties file. Its current state is defined by its resources, which are
@@ -21,7 +21,7 @@ import org.json.JSONObject;
  * have an associated implementation of a ContraptionProperties file, which
  * contains the shared information on that Contraption's implementation,
  * primarily its assorted gadgets.
- * <p>
+ * 
  * A Contraption's code will piece together current gadgets, each of which have
  * specific functions, to form a coherent Contraption. The Contraptions state is
  * stored in its resources, access to which can be given to multiple gadgets,
@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * gadgets, however complex and encapsulated functionality should be encoded as
  * additional gadgets for a Contraption to use, allowing greater flexibility for
  * future reuse by other Contraption implementations.
- * <p>
+ * 
  * Some gadgets will also generate tasks specific to a contraption which run
  * over time. These tasks are also stored within the contraption to allow
  * cancellation upon Contraption destruction.

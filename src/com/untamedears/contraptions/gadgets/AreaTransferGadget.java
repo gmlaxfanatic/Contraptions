@@ -11,10 +11,10 @@ import org.json.JSONObject;
 
 /**
  * A gadget which will transfer a resource over time
- * <p>
+ * 
  * This gadget transfers a resource from a contraption to all of the
  * contraptions surrounding it within a particular radius
- * <p>
+ * 
  * Format of JSON object should be as follows:
  * <pre>
  * {
@@ -35,7 +35,7 @@ public class AreaTransferGadget {
 
     /**
      * Creates an AreaTransferGadget
-     * <p>
+     * 
      * @param resourceID String representing the resource this effects
      * @param radius     Square radius over which this effects contraptions
      * @param rate       Rate in 1/tick with which resources transfer from this
@@ -49,7 +49,7 @@ public class AreaTransferGadget {
 
     /**
      * Creates a new AreaTransferGadget from a JSON config
-     * <p>
+     * 
      * @param jsonObject Contains the configuration information
      * @return The configured AreaTransferGadget
      */
@@ -62,7 +62,7 @@ public class AreaTransferGadget {
 
     /**
      * Transfers a resource from a contraption to surrounding Contraptions
-     * <p>
+     * 
      * @param contraption Contraption being transfered from
      * @param resource    Resource being transfered from
      * @param time        # ticks of transfer to occur
@@ -79,7 +79,7 @@ public class AreaTransferGadget {
 
     /**
      * Transfers from one resource to another with maximums and minimums
-     * <p>
+     * 
      * @param fromResource The resource that is being transferred from
      * @param toResource   The resource that is being transferred to
      * @param amount       The amount being transfered
@@ -95,7 +95,7 @@ public class AreaTransferGadget {
 
     /**
      * Creates a runnable associated with this gadget for a specific contraption
-     * <p>
+     * 
      * @param contraption Contraption associated with runnable
      * @param resource    Resource associated with runnable
      * @return The Task that was scheduled to run
@@ -106,7 +106,7 @@ public class AreaTransferGadget {
 
     /**
      * Gets contraptions given this AreaTransferWidgets radius
-     * <p>
+     * 
      * @param contraption The contraption around which to get other contraptions
      * @return The Contraptions surrounding the given contraption
      */
@@ -125,7 +125,7 @@ public class AreaTransferGadget {
 
         /**
          * Creates an AreaTransferRunnable
-         * <p>
+         * 
          * @param contraption Contraption associated with the AreaTransfer
          * @param resource    Resource that is being transferred
          */
@@ -136,7 +136,7 @@ public class AreaTransferGadget {
 
         /**
          * Schedules the task and decays the resource to the delay
-         * <p>
+         * 
          * @param Plugin The Contraptions Plugin
          * @param delay  The delay until the task is executed in ticks
          * @param period The period in ticks with which the task is executed

@@ -72,7 +72,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
     /**
      * Allows global access to this instance of plugin
-     * <p>
+     * 
      * @return The single instance of this plugin
      */
     public static ContraptionsPlugin getContraptionPlugin() {
@@ -81,7 +81,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
     /**
      * Sends a message to the console
-     * <p>
+     * 
      * @param message The message
      */
     public static void toConsole(String message) {

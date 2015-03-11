@@ -2,27 +2,17 @@
   "Factory": {
     "FactoryA": {
       "match_gadget": {
-          "itemstacks":
+        "itemstacks":
           [{
-              "material": "CHEST",
-              "amount": 1,
-              "durability": 0,
-              "name": "DISPLAY_NAME",
-              "lore": "LORE"
+              "material": "STONE"
             }, {
-              "material": "CHEST"
+              "material": "STICK"
             }]
       },
       "conversion_gadget": {
         "inputs":
           [{
-              "material": "CHEST",
-              "amount": 1,
-              "durability": 0,
-              "name": "DISPLAY_NAME",
-              "lore": "LORE"
-            }, {
-              "material": "CHEST"
+              "material": "STONE"
             }]
         ,
         "conversion": 1
@@ -30,21 +20,16 @@
       "production_gadget": {
         "inputs":
           [{
-              "material": "CHEST",
+              "material": "STONE",
               "amount": 1,
-              "durability": 0,
-              "lore": "LORE"
-            }, {
-              "material": "CHEST",
-              "amount": 1,
-              "durability": 0,
-              "lore": "LORE"
+              "durability": 0
             }],
         "outputs":
           [{
               "material": "CHEST",
               "amount": 1,
               "durability": 0,
+              "display_name":"DISPLAY_NAME",
               "lore": "LORE"
             }]
       }
