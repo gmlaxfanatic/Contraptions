@@ -1,7 +1,6 @@
 package com.untamedears.contraptions.gadgets;
 
 import com.untamedears.contraptions.ContraptionsPlugin;
-import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;

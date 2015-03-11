@@ -1,7 +1,9 @@
 {
-  "Factory": {
-    "FactoryA": {
-      "match_gadget": {
+  "factory": {
+    "factory_a": {
+      "name": "FACTORY_NAME",
+      "description": "DESCRIPTIOON",
+      "building_materials": {
         "itemstacks":
           [{
               "material": "STONE"
@@ -9,15 +11,7 @@
               "material": "STICK"
             }]
       },
-      "conversion_gadget": {
-        "inputs":
-          [{
-              "material": "STONE"
-            }]
-        ,
-        "conversion": 1
-      },
-      "production_gadget": {
+      "recipe": {
         "inputs":
           [{
               "material": "STONE",
@@ -29,10 +23,22 @@
               "material": "CHEST",
               "amount": 1,
               "durability": 0,
-              "display_name":"DISPLAY_NAME",
+              "display_name": "DISPLAY_NAME",
               "lore": "LORE"
             }]
+      },
+      "repairs": {
+        "inputs":
+          [{
+              "material": "STONE"
+            }]
+        ,
+        "conversion": 1
+      },
+      "repair_bounds": {
+        "max": 51840000
       }
+
     }
   }
 }

@@ -5,6 +5,7 @@ import com.untamedears.contraptions.contraptions.Factory;
 import com.untamedears.contraptions.gadgets.GrowGadget;
 import com.untamedears.contraptions.gadgets.ConversionGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
+import com.untamedears.contraptions.gadgets.MinMaxGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
@@ -16,41 +17,48 @@ import org.json.JSONObject;
 /**
  * The Properties associated with a Factory Contraption
  */
-
 public class FactoryProperties extends ContraptionProperties {
 
     MatchGadget matchGadget;
     ProductionGadget productionGadget;
     ConversionGadget conversionGadget;
     GrowGadget growGadget;
+    MinMaxGadget minMaxGadget;
 
     /**
      * Creates a FactoryProperties object
+     *
      * @param contraptionManager The ContraptionManager
-     * @param ID The unique ID for this specification
-     * @param matchGadget The MatchGadget associated with this specification
-     * @param productionGadget The ProductionGadget associated with this specification
-     * @param conversionGadget The ConversionGadget associated with this specification
+     * @param ID                 The unique ID for this specification
+     * @param matchGadget        The MatchGadget associated with this
+     *                           specification
+     * @param productionGadget   The ProductionGadget associated with this
+     *                           specification
+     * @param conversionGadget   The ConversionGadget associated with this
+     *                           specification
      */
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget) {
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget, MinMaxGadget minMaxGadget) {
         super(contraptionManager, ID, Material.CHEST);
         this.matchGadget = matchGadget;
         this.productionGadget = productionGadget;
         this.conversionGadget = conversionGadget;
+        this.minMaxGadget = minMaxGadget;
     }
 
     /**
-     *Imports a FactoryProperties object from a configuration file
+     * Imports a FactoryProperties object from a configuration file
+     *
      * @param contraptionManager The ContraptionManager
-     * @param ID The Unique ID of this specification
-     * @param jsonObject A JSONObject containing the specification
+     * @param ID                 The Unique ID of this specification
+     * @param jsonObject         A JSONObject containing the specification
      * @return The specified FactoryProperties file
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
-        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("match_gadget"));
-        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("production_gadget"));
-        ConversionGadget conversionGadget = ConversionGadget.fromJSON(jsonObject.getJSONObject("conversion_gadget"));
-        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget);
+        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("building_materials"));
+        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("recipe"));
+        ConversionGadget conversionGadget = ConversionGadget.fromJSON(jsonObject.getJSONObject("repairs"));
+        MinMaxGadget minMaxGadget = MinMaxGadget.fromJSON(jsonObject.getJSONObject("repair_bounds"));
+        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget, minMaxGadget);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class FactoryProperties extends ContraptionProperties {
 
     /**
      * Creates a Factory Contraptions
-     * 
+     *
      * @param location Location to attempt creation
      * @return Created Contraption if successful
      */
@@ -84,7 +92,8 @@ public class FactoryProperties extends ContraptionProperties {
     }
 
     /**
-     *Gets the ConversionGadget
+     * Gets the ConversionGadget
+     *
      * @return The ConversionGadget
      */
     public ConversionGadget getConversionGadget() {
@@ -93,6 +102,7 @@ public class FactoryProperties extends ContraptionProperties {
 
     /**
      * Gets the ProductionGadget
+     *
      * @return The ProductionGadget
      */
     public ProductionGadget getProductionGadget() {
@@ -101,10 +111,20 @@ public class FactoryProperties extends ContraptionProperties {
 
     /**
      * Gets the GrowGadget
+     *
      * @return The GrowGadget
      */
     public GrowGadget getGrowGadget() {
         return growGadget;
+    }
+
+    /**
+     * Gets the MinMaxGadget
+     *
+     * @return The MinMaxGadget
+     */
+    public MinMaxGadget getMinMaxGadget() {
+        return minMaxGadget;
     }
 
 }
