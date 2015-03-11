@@ -1,6 +1,7 @@
 package com.untamedears.contraptions;
 
 import com.untamedears.contraptions.contraptions.Contraption;
+import com.untamedears.contraptions.events.ContraptionEvent;
 import com.untamedears.contraptions.properties.ContraptionProperties;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utility.Response;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,7 +38,7 @@ public class ContraptionManager {
 
     /**
      * Creates a ContraptionManager
-     * <p>
+     *
      * @param plugin
      */
     public ContraptionManager(Plugin plugin) {
@@ -45,7 +47,7 @@ public class ContraptionManager {
 
     /**
      * Loads the ContraptionProperties from the Config File
-     * <p>
+     *
      * @param file File containing the properties
      */
     public void loadProperties(File file) {
@@ -55,6 +57,7 @@ public class ContraptionManager {
             //Go there all Contraption implementations here and load them individually
             //Specifically loads Factory Contraptions
             JSONObject factories = jsonObject.getJSONObject("Factory");
+
             for (String ID : factories.keySet()) {
                 contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
             }
@@ -62,10 +65,10 @@ public class ContraptionManager {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Loads the Contraptions from a file
-     * <p>
+     *
      * Contraptions should be formatted as followg:
      * <pre>
      * [
@@ -81,7 +84,7 @@ public class ContraptionManager {
      *   }
      * ]
      * </pre>
-     * <p>
+     *
      * @param file File to be loaded
      */
     public void loadContraptions(File file) {
@@ -110,10 +113,10 @@ public class ContraptionManager {
     public void loadContraptions() {
         contraptions = new HashMap<Location, Contraption>();
     }
-    
+
     /**
      * Saves all the current Contraptions to a file
-     * <p>
+     *
      * @param file File Contraptions are saved to
      */
     public void saveContraptions(File file) {
@@ -133,7 +136,7 @@ public class ContraptionManager {
 
     /**
      * Gets a Contraption associated with the given location
-     * <p>
+     *
      * @param location The location to check
      * @return Contraption at location or null
      */
@@ -144,7 +147,7 @@ public class ContraptionManager {
 
     /**
      * Gets contraptions located within a square around the given location
-     * <p>
+     *
      * @param location Central location
      * @param radius   Square radius from which to search
      * @return Set of contraptions in radius
@@ -169,11 +172,11 @@ public class ContraptionManager {
 
     /**
      * Creates a factory at the location
-     * <p>
+     *
      * @param location The location to create a contraption
      * @return The response related to the creation solution
      */
-    public Response createContraption(Location location) {
+    public Response createContraption(Location location, Player player) {
         Block block = location.getBlock();
         boolean matchedBlock = false;
         Response response;
@@ -182,6 +185,10 @@ public class ContraptionManager {
                 matchedBlock = true;
                 response = contraptionProperty.createContraption(location);
                 if (response.success) {
+                    Contraption contraption = getContraption(location);
+                    String eventMessage = String.format("Created %s at (%d, %d, %d) by player %s", contraption.getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), player.getUniqueId());
+                    ContraptionEvent event = new ContraptionEvent(eventMessage, contraption, player);
+                    Bukkit.getPluginManager().callEvent(event);
                     return response;
                 }
             }
@@ -195,8 +202,8 @@ public class ContraptionManager {
     }
 
     /**
-     * Regesiters a contraption with this manager
-     * <p>
+     * Registers a contraption with this manager
+     *
      * @param cotraption Contraption to register
      */
     public void registerContraption(Contraption cotraption) {
@@ -205,19 +212,23 @@ public class ContraptionManager {
 
     /**
      * Completely eliminates the Contraption
-     * <p>
+     *
      * @param contraption Contraption to be destroyed
      */
     public void destroy(Contraption contraption) {
-        if (contraptions.containsKey(contraption.getLocation())) {
-            contraptions.remove(contraption.getLocation());
+        Location location  = contraption.getLocation();
+        if (contraptions.containsKey(location)) {
+            contraptions.remove(location);
+            String eventMessage = String.format("Destroyed %s at (%d, %d, %d)", contraption.getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+            ContraptionEvent event = new ContraptionEvent(eventMessage, contraption);
+            Bukkit.getPluginManager().callEvent(event);
             contraption.destroy();
         }
     }
 
     /**
      * Handles blocks being broken
-     * <p>
+     *
      * @param block Block which was broken
      */
     public void handleBlockDestruction(Block block) {
@@ -228,7 +239,7 @@ public class ContraptionManager {
 
     /**
      * Responds to player interaction events
-     * <p>
+     *
      * @param e The PlayerInteractionEvent
      */
     public void handleInteraction(PlayerInteractEvent e) {
@@ -242,11 +253,10 @@ public class ContraptionManager {
             return;
         }
         Location location = e.getClickedBlock().getLocation();
-
         Contraption contraption = getContraption(location);
         //If a contraption doesn't exist on location
         if (contraption == null) {
-            createContraption(location).conveyTo(player);
+            createContraption(location, player).conveyTo(player);
         } //If contraption exists at location
         else {
             contraption.trigger().conveyTo(player);

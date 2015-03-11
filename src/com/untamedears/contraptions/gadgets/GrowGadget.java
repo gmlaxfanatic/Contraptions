@@ -1,7 +1,6 @@
 package com.untamedears.contraptions.gadgets;
 
 import com.untamedears.contraptions.ContraptionsPlugin;
-import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Resource;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -10,7 +9,7 @@ import org.json.JSONObject;
 
 /**
  * A widget which will grow a resource over time
- * <p>
+ * 
  * Format of JSON object should be as follows:
  * <pre>
  * {
@@ -33,7 +32,7 @@ public class GrowGadget {
 
     /**
      * Creates a runnable associated with this gadget with constant growth
-     * <p>
+     * 
      * @param resource Resource being grown
      * @return The GrowGadget Runnable
      */
@@ -43,7 +42,7 @@ public class GrowGadget {
 
     /**
      * Creates a runnable associated with this gadget with scaled growth
-     * <p>
+     * 
      * @param scaler   Scaler to growth rate
      * @param resource Resource being grown
      * @return The GrowGadget Runnable
@@ -54,7 +53,7 @@ public class GrowGadget {
 
     /**
      * Imports a GrowGadget from a JSONObject
-     * <p>
+     * 
      * @param jsonObject The JSONObject containing the information
      * @return A GrowGadget with the properties contained in the JSONObject
      */
@@ -65,7 +64,7 @@ public class GrowGadget {
 
     /**
      * Grows the resource by amount
-     * <p>
+     * 
      * @param resorce The resource being Grown
      * @param amount  A signed amount to change the resource by
      */
@@ -89,7 +88,7 @@ public class GrowGadget {
 
         /**
          * The GrowGadget runnable associated with a contraption
-         * <p>
+         * 
          * @param resource The resource being grown
          * @param scaler   A resource that scales the growth rate
          */
@@ -100,7 +99,7 @@ public class GrowGadget {
 
         /**
          * Schedules the task and grows the resource to the delay
-         * <p>
+         * 
          * @param Plugin The Contraptions Plugin
          * @param delay  The delay until the task is executed in ticks
          * @param period The period in ticks with which the task is executed

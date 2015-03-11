@@ -38,11 +38,7 @@ public class ContraptionsPlugin extends JavaPlugin {
         }
         try {
             File contraptionsFile = new File(getDataFolder(), "savefile.json");
-            if (!contraptionsFile.exists()) {
-                contraptionsFile.getParentFile().mkdirs();
-                contraptionsFile.createNewFile();
-                contraptionManager.loadContraptions();
-            } else {
+            if (contraptionsFile.exists()) {
                 contraptionManager.loadContraptions(contraptionsFile);
             }
         } catch (Exception e) {
@@ -72,11 +68,16 @@ public class ContraptionsPlugin extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
+                try {
+            getServer().getPluginManager().registerEvents(new LoggingListener(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Allows global access to this instance of plugin
-     * <p>
+     * 
      * @return The single instance of this plugin
      */
     public static ContraptionsPlugin getContraptionPlugin() {
@@ -85,7 +86,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
     /**
      * Sends a message to the console
-     * <p>
+     * 
      * @param message The message
      */
     public static void toConsole(String message) {

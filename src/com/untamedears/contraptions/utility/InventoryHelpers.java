@@ -17,15 +17,10 @@ public class InventoryHelpers {
     /**
      * Generates an ItemSet from a JSONArray
      *
-     * The JSON object should have the following format
-     * [{
-     *      "material": "MATERIAL_NAME",
-     *      "amount": 1,
-     *      "durability": 0,
-     *      "name": "DISPLAY_NAME",
-     *      "lore": "LORE"
-     *  },...
-     *  }]
+     * The JSON object should have the following format [{ "material":
+     * "MATERIAL_NAME", "amount": 1, "durability": 0, "name": "DISPLAY_NAME",
+     * "lore": "LORE" },... }]
+     *
      * @param jsonItemSet An array of ItemStacks represented as JSON objects
      * @return A set of parsed ItemStacks
      */
@@ -206,7 +201,13 @@ public class InventoryHelpers {
             inventory.addItem(itemClone);
         }
     }
-    
+
+    public static void putMultiple(Inventory inventory, Set<ItemStack> itemStacks, int multiple) {
+        for (int i = 0; i < multiple; i++) {
+            putIn(inventory, itemStacks);
+        }
+    }
+
     public static String toString(Set<ItemStack> itemStacks) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
