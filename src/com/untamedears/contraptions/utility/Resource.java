@@ -13,7 +13,7 @@ public class Resource {
     /**
      * Creates the resource
      *
-     * @param amount      Starting amount of the Resource
+     * @param amount Starting amount of the Resource
      * @param contraption Associated contraption
      */
     public Resource(double amount, Contraption contraption) {
@@ -26,7 +26,8 @@ public class Resource {
      *
      * @param amount Amount to set the resource to
      */
-    public void set(double amount) {
+    public void setAndUpdate(double amount) {
+        this.amount = amount;
         contraption.update(this);
     }
 
@@ -37,8 +38,8 @@ public class Resource {
      *
      * @param amount
      */
-    public void setUnsafe(double amount) {
-
+    public void set(double amount) {
+        this.amount = amount;
     }
 
     /**
@@ -49,11 +50,20 @@ public class Resource {
     public void change(double change) {
         set(amount + change);
     }
+    
+        /**
+     * Changes the resource by change and updates the contraption
+     *
+     * @param change Amount to change the resource by
+     */
+    public void changeAndUpdate(double change) {
+        setAndUpdate(amount + change);
+    }
 
     /**
      * Changes the resource while gauranteeing it will stay in a given range
      *
-     * @param change  Amount to change the resource by
+     * @param change Amount to change the resource by
      * @param minimum Minimum value of the resource
      * @param maximum Maximum value of the resource
      * @return The amount the resource was unable to change
@@ -65,9 +75,9 @@ public class Resource {
                 return 0;
             } else {
                 if (amount + change <= maximum) {
-                    set(amount + change);
+                    setAndUpdate(amount + change);
                 } else {
-                    set(maximum);
+                    setAndUpdate(maximum);
                 }
                 return oldAmount - amount;
 
@@ -77,9 +87,9 @@ public class Resource {
                 return 0;
             } else {
                 if (amount + change >= minimum) {
-                    set(amount + change);
+                    setAndUpdate(amount + change);
                 } else {
-                    set(maximum);
+                    setAndUpdate(maximum);
                 }
                 return oldAmount - amount;
 

@@ -51,12 +51,12 @@ public abstract class ContraptionProperties {
     public JSONObject save(Contraption contraption) {
         JSONObject saveJSON = new JSONObject();
         saveJSON.put("Type", getType());
-        saveJSON.put("Properties", getID());
+        saveJSON.put("ID", getID());
         String location = "[" + contraption.getLocation().getWorld().getUID() + ","
                 + contraption.getLocation().getBlockX() + ","
                 + contraption.getLocation().getBlockY() + ","
                 + contraption.getLocation().getBlockZ() + "]";
-        saveJSON.put("Location", location);
+        saveJSON.put("Location", new JSONArray(location));
         saveJSON.put("Resources", contraption.getResources());
         return saveJSON;
     }
@@ -91,6 +91,7 @@ public abstract class ContraptionProperties {
      * @return The loaded Contraption
      */
     public Contraption loadContraption(JSONObject jsonObject) {
+        ContraptionsPlugin.toConsole(jsonObject.toString());
         JSONArray locationArray = jsonObject.getJSONArray("Location");
         Location location = new Location(ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(locationArray.getString(0)),
                 locationArray.getInt(1), locationArray.getInt(2), locationArray.getInt(3));

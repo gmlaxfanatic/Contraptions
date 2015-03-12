@@ -209,6 +209,7 @@ public class InventoryHelpers {
     }
 
     public static String toString(Set<ItemStack> itemStacks) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "Not Supported";
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 }

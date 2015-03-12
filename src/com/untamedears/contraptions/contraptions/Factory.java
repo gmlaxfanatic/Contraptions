@@ -38,7 +38,7 @@ public class Factory extends Contraption {
     @Override
     public JSONObject getResources() {
         JSONObject resources = new JSONObject();
-        resources.put(ENERGY_KEY, energy);
+        resources.put(ENERGY_KEY, energy.get());
         return resources;
     }
 

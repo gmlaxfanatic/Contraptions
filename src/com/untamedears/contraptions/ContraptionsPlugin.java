@@ -31,13 +31,16 @@ public class ContraptionsPlugin extends JavaPlugin {
             File configFolder = new File(getDataFolder() + "/configs");
             //If it doesn't exist create it
             if (!configFolder.exists()) {
-                configFolder.getParentFile().mkdirs();
-                configFolder.createNewFile();
+                configFolder.mkdirs();
             }
             //Load all files in the configs folder
             for (final File configFile : configFolder.listFiles()) {
-                ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
-                contraptionManager.loadProperties(configFile);
+                try {
+                    ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
+                    contraptionManager.loadProperties(configFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

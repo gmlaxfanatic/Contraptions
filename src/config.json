@@ -27,6 +27,9 @@
               "lore": "LORE"
             }]
       },
+      "breakdown": {
+          "rate":1
+      },
       "repairs": {
         "inputs":
           [{

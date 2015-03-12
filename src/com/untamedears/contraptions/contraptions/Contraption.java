@@ -5,6 +5,7 @@ import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.Response;
+import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
@@ -14,7 +15,6 @@ import org.json.JSONObject;
 import vg.civcraft.mc.citadel.ReinforcementManager;
 import vg.civcraft.mc.citadel.reinforcement.PlayerReinforcement;
 import vg.civcraft.mc.namelayer.group.Group;
-import vg.civcraft.mc.namelayer.permission.PermissionType;
 
 /**
  * Represents a specific contraption in the minecraft world
@@ -55,6 +55,7 @@ public abstract class Contraption {
     public Contraption(ContraptionProperties properties, Location location) {
         this.location = location;
         this.properties = properties;
+        tasks = new HashSet<BukkitTask>();
     }
 
     /**

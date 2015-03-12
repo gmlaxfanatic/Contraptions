@@ -8,7 +8,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -46,8 +48,11 @@ public class ContraptionManager {
      */
     public ContraptionManager(Plugin plugin) {
         this.plugin = plugin;
-        reinforcementManager = Citadel.getReinforcementManager();
+        if (ContraptionsPlugin.PERMISSIONS) {
+            reinforcementManager = Citadel.getReinforcementManager();
+        }
         contraptionProperties = new HashMap<String, ContraptionProperties>();
+        contraptions = new HashMap<Location, Contraption>();
     }
 
     /**
@@ -60,10 +65,12 @@ public class ContraptionManager {
             JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(file)));
             //Go there all Contraption implementations here and load them individually
             //Specifically loads Factory Contraptions
-            JSONObject factories = jsonObject.getJSONObject("Factory");
+            if (jsonObject.has("factory")) {
+                JSONObject factories = jsonObject.getJSONObject("factory");
 
-            for (String ID : factories.keySet()) {
-                contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
+                for (String ID : factories.keySet()) {
+                    contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,13 +99,12 @@ public class ContraptionManager {
      * @param file File to be loaded
      */
     public void loadContraptions(File file) {
-        contraptions = new HashMap<Location, Contraption>();
         try {
             JSONArray savedContraptions = new JSONArray(new JSONTokener(new FileReader(file)));
             for (int i = 0; i < savedContraptions.length(); i++) {
                 JSONObject savedContraption = savedContraptions.getJSONObject(i);
                 String ID = savedContraption.getString("ID");
-                if (!contraptionProperties.containsKey(ID)) {
+                if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     contraptions.put(contraption.getLocation(), contraption);
                 } else {
@@ -112,19 +118,14 @@ public class ContraptionManager {
     }
 
     /**
-     * Called if there is no savefile.json to load
-     */
-    public void loadContraptions() {
-        contraptions = new HashMap<Location, Contraption>();
-    }
-
-    /**
      * Saves all the current Contraptions to a file
      *
      * @param file File Contraptions are saved to
      */
     public void saveContraptions(File file) {
         try {
+            ContraptionsPlugin.toConsole("Saving File");
+
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
@@ -133,6 +134,8 @@ public class ContraptionManager {
                 jsonWriter.value(contraption.save());
             }
             jsonWriter.endArray();
+            bufferedWriter.flush();
+            fileOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,7 +156,7 @@ public class ContraptionManager {
      * Gets contraptions located within a square around the given location
      *
      * @param location Central location
-     * @param radius   Square radius from which to search
+     * @param radius Square radius from which to search
      * @return Set of contraptions in radius
      */
     public Set<Contraption> getContraptions(Location location, int radius) {
@@ -196,7 +199,7 @@ public class ContraptionManager {
                     alert.append(" at (").append(location.getBlockX()).append(" ").append(location.getBlockY()).append(" ").append(location.getBlockZ());
                     alert.append(") by player ").append(player.getUniqueId());
                     ContraptionsPlugin.toConsole(alert.toString());
-                    
+
                     return response;
                 }
             }

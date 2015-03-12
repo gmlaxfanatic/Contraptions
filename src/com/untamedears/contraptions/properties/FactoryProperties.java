@@ -37,11 +37,12 @@ public class FactoryProperties extends ContraptionProperties {
      * @param conversionGadget   The ConversionGadget associated with this
      *                           specification
      */
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget, MinMaxGadget minMaxGadget) {
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
         super(contraptionManager, ID, Material.CHEST);
         this.matchGadget = matchGadget;
         this.productionGadget = productionGadget;
         this.conversionGadget = conversionGadget;
+        this.growGadget = growGadget;
         this.minMaxGadget = minMaxGadget;
     }
 
@@ -57,8 +58,9 @@ public class FactoryProperties extends ContraptionProperties {
         MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("building_materials"));
         ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("recipe"));
         ConversionGadget conversionGadget = ConversionGadget.fromJSON(jsonObject.getJSONObject("repairs"));
+        GrowGadget growGadget = GrowGadget.fromJSON(jsonObject.getJSONObject("breakdown"));
         MinMaxGadget minMaxGadget = MinMaxGadget.fromJSON(jsonObject.getJSONObject("repair_bounds"));
-        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget, minMaxGadget);
+        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget, growGadget, minMaxGadget);
     }
 
     @Override

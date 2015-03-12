@@ -53,10 +53,10 @@ public class MinMaxGadget {
     public double update(Resource resource) {
         double resoucreAmount = resource.get();
         if (resoucreAmount < min) {
-            resource.setUnsafe(min);
+            resource.set(min);
             return min - resoucreAmount;
         } else if (resoucreAmount > max) {
-            resource.setUnsafe(max);
+            resource.set(max);
             return resoucreAmount - max;
         } else {
             return 0;
