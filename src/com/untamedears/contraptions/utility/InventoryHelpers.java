@@ -1,9 +1,16 @@
 package com.untamedears.contraptions.utility;
 
+import com.untamedears.contraptions.ContraptionsPlugin;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -13,6 +20,25 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class InventoryHelpers {
+
+    public static Map<ItemStack, String> prettyNames;
+
+    public static void loadPrettyNames(File file) {
+        prettyNames = new HashMap<ItemStack, String>();
+        // Read Items
+        try {
+            BufferedReader CSVFile = new BufferedReader(new FileReader(file));
+            String dataRow = CSVFile.readLine();
+            while (dataRow != null) {
+                String[] dataArray = dataRow.split(",");
+                prettyNames.put(new ItemStack(Material.getMaterial(Integer.valueOf(dataArray[2]).intValue()), 1, Short.valueOf(dataArray[3])), dataArray[0]);
+                dataRow = CSVFile.readLine();
+            }
+            CSVFile.close();
+        } catch (IOException ex) {
+            ContraptionsPlugin.toConsole("Failed to load materials.csv");
+        }
+    }
 
     /**
      * Generates an ItemSet from a JSONArray
@@ -209,7 +235,20 @@ public class InventoryHelpers {
     }
 
     public static String toString(Set<ItemStack> itemStacks) {
-        return "Not Supported";
-        //throw new UnsupportedOperationException("Not supported yet.");
+        String output = "";
+        for (ItemStack itemStack : itemStacks) {
+            ItemStack key = itemStack.clone();
+            key.setAmount(1);
+            if (prettyNames.containsKey(key)) {
+                output += itemStack.getAmount() + " " + prettyNames.get(key) + ",";
+            } else {
+                output += itemStack.getAmount() + " " + itemStack.getType().name() + ":" + itemStack.getDurability() + ",";
+            }
+        }
+        //Remove trailing ","
+        if (output.length() != 0) {
+            output = output.substring(0, output.length() - 1);
+        }
+        return output;
     }
 }

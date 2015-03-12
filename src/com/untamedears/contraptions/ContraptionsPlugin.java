@@ -1,5 +1,6 @@
 package com.untamedears.contraptions;
 
+import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.io.File;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,8 @@ public class ContraptionsPlugin extends JavaPlugin {
     public void onEnable() {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
+        toConsole("Loading materials.csv");
+        InventoryHelpers.loadPrettyNames(new File(getDataFolder() + "materials.csv"));
         try {
             //Gets config folder
             File configFolder = new File(getDataFolder() + "/configs");
