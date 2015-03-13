@@ -2,8 +2,12 @@ package com.untamedears.contraptions;
 
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.JSONObject;
 
 /**
  * Contraptions goal is to provide a framework for adding increased
@@ -27,27 +31,38 @@ public class ContraptionsPlugin extends JavaPlugin {
     public void onEnable() {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
+        //Load in pretty item names
         toConsole("Loading materials.csv");
         InventoryHelpers.loadPrettyNames(new File(getDataFolder() + "materials.csv"));
+        //Loading Property Files
+        File configFolder = new File(getDataFolder() + "/configs");
+        if (!configFolder.exists()) {
+            configFolder.mkdirs();
+        }
+        //Load all files in the configs folder
+        for (File configFile : configFolder.listFiles()) {
+            ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
+            contraptionManager.loadProperties(configFile);
+        }
         try {
-            //Gets config folder
-            File configFolder = new File(getDataFolder() + "/configs");
-            //If it doesn't exist create it
-            if (!configFolder.exists()) {
-                configFolder.mkdirs();
-            }
-            //Load all files in the configs folder
-            for (final File configFile : configFolder.listFiles()) {
-                try {
-                    ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
-                    contraptionManager.loadProperties(configFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            //Create temp file to store lost Contraptions
+            File tempFile = File.createTempFile("lost_cotraptions", ".tmp", getDataFolder());
         } catch (Exception e) {
+            toConsole("Failed to create temporary lost_contraptions.tmp file");
             e.printStackTrace();
         }
+        
+        Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
+        //Loading Contraptions
+        File contraptionsFile = new File(getDataFolder(), "savefile.json");
+        if (contraptionsFile.exists()) {
+            lostContraptions.addAll(contraptionManager.loadContraptions(contraptionsFile));
+        }
+        /*
+         Loading Lost Contraptions, these are contraptions that once existed buth then their property file disappeared
+         The most likely cause of this is a properties file failing to load
+         */
+        //Loading Contraptions
         try {
             File contraptionsFile = new File(getDataFolder(), "savefile.json");
             if (contraptionsFile.exists()) {

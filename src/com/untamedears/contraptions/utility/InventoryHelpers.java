@@ -234,12 +234,26 @@ public class InventoryHelpers {
         }
     }
 
+    /**
+     * Convert a ItemSet to a pretty string
+     *
+     * If the item has a custom DisplayName it uses that, then if it has an
+     * entry in the pretty name lookup table use that, otherwise use bukkit
+     * name
+     *
+     * @param itemStacks ItemStakcs to convert to string
+     * @return Pretty String representing ItemStacks
+     */
     public static String toString(Set<ItemStack> itemStacks) {
         String output = "";
         for (ItemStack itemStack : itemStacks) {
             ItemStack key = itemStack.clone();
             key.setAmount(1);
-            if (prettyNames.containsKey(key)) {
+            
+            if (itemStack.hasItemMeta()&&itemStack.getItemMeta().hasDisplayName()){
+                output +=itemStack.getAmount() + " " + itemStack.getItemMeta().getDisplayName() + ",";
+            }
+            else if (prettyNames.containsKey(key)) {
                 output += itemStack.getAmount() + " " + prettyNames.get(key) + ",";
             } else {
                 output += itemStack.getAmount() + " " + itemStack.getType().name() + ":" + itemStack.getDurability() + ",";

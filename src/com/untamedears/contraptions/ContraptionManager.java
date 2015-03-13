@@ -6,11 +6,11 @@ import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utility.Response;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -67,13 +67,12 @@ public class ContraptionManager {
             //Specifically loads Factory Contraptions
             if (jsonObject.has("factory")) {
                 JSONObject factories = jsonObject.getJSONObject("factory");
-
                 for (String ID : factories.keySet()) {
                     contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            ContraptionsPlugin.toConsole("Could not load properties file: "+file.getName());
         }
     }
 
@@ -98,7 +97,8 @@ public class ContraptionManager {
      *
      * @param file File to be loaded
      */
-    public void loadContraptions(File file) {
+    public Set<JSONObject> loadContraptions(File file) {
+        Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
         try {
             JSONArray savedContraptions = new JSONArray(new JSONTokener(new FileReader(file)));
             for (int i = 0; i < savedContraptions.length(); i++) {
@@ -108,29 +108,32 @@ public class ContraptionManager {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     contraptions.put(contraption.getLocation(), contraption);
                 } else {
+                    lostContraptions.add(savedContraption);
                     ContraptionsPlugin.toConsole("Factory ID not found. ID = " + ID);
                 }
 
             }
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            ContraptionsPlugin.toConsole("Failed to load contraption save file: "+file.getName());
             e.printStackTrace();
         }
+        return lostContraptions;
     }
-
+    
     /**
      * Saves all the current Contraptions to a file
      *
      * @param file File Contraptions are saved to
      */
-    public void saveContraptions(File file) {
+    public void saveContraptions(Collection<Contraption> contraptions, File file) {
         try {
-            ContraptionsPlugin.toConsole("Saving File");
+            ContraptionsPlugin.toConsole("Saving ontraptions");
 
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
             jsonWriter.array();
-            for (Contraption contraption : contraptions.values()) {
+            for (Contraption contraption : contraptions) {
                 jsonWriter.value(contraption.save());
             }
             jsonWriter.endArray();
