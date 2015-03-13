@@ -51,10 +51,10 @@ public class ContraptionsPlugin extends JavaPlugin {
             toConsole("Failed to create temporary lost_contraptions.tmp file");
             e.printStackTrace();
         }
-        
+
         Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
         //Loading Contraptions
-        File contraptionsFile = new File(getDataFolder(), "savefile.json");
+        File contraptionsFile = new File(getDataFolder(), "constraptions.json");
         if (contraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(contraptionsFile));
         }
@@ -63,14 +63,12 @@ public class ContraptionsPlugin extends JavaPlugin {
          The most likely cause of this is a properties file failing to load
          */
         //Loading Contraptions
-        try {
-            File contraptionsFile = new File(getDataFolder(), "savefile.json");
-            if (contraptionsFile.exists()) {
-                contraptionManager.loadContraptions(contraptionsFile);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        File lostContraptionsFile = new File(getDataFolder(), "lost_contraptions.json");
+        if (lostContraptionsFile.exists()) {
+            lostContraptions.addAll(contraptionManager.loadContraptions(lostContraptionsFile));
         }
+        
+        
         registerEvents();
     }
 
