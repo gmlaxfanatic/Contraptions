@@ -7,6 +7,7 @@ import com.untamedears.contraptions.gadgets.ConversionGadget;
 import com.untamedears.contraptions.gadgets.MatchGadget;
 import com.untamedears.contraptions.gadgets.MinMaxGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
+import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,11 +56,11 @@ public class FactoryProperties extends ContraptionProperties {
      * @return The specified FactoryProperties file
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
-        MatchGadget matchGadget = MatchGadget.fromJSON(jsonObject.getJSONObject("building_materials"));
+        MatchGadget matchGadget = new MatchGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("building_materials")));
         ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("recipe"));
-        ConversionGadget conversionGadget = ConversionGadget.fromJSON(jsonObject.getJSONObject("repairs"));
-        GrowGadget growGadget = GrowGadget.fromJSON(jsonObject.getJSONObject("breakdown"));
-        MinMaxGadget minMaxGadget = MinMaxGadget.fromJSON(jsonObject.getJSONObject("repair_bounds"));
+        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")),jsonObject.getDouble("repair_amount"));
+        GrowGadget growGadget = new GrowGadget(jsonObject.getDouble("breakdown_rate"));
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE,jsonObject.getDouble("max_repair"));
         return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget, growGadget, minMaxGadget);
     }
 

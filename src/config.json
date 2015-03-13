@@ -3,14 +3,11 @@
     "factory_a": {
       "name": "FACTORY_NAME",
       "description": "DESCRIPTIOON",
-      "building_materials": {
-        "itemstacks":
-          [{
-              "material": "STONE"
-            }, {
-              "material": "STICK"
-            }]
-      },
+      "building_materials": [{
+          "material": "STONE"
+        }, {
+          "material": "STICK"
+        }],
       "recipe": {
         "inputs":
           [{
@@ -27,20 +24,13 @@
               "lore": "LORE"
             }]
       },
-      "breakdown": {
-          "rate":1
-      },
-      "repairs": {
-        "inputs":
-          [{
-              "material": "STONE"
-            }]
-        ,
-        "conversion": 1
-      },
-      "repair_bounds": {
-        "max": 51840000
-      }
+      "breakdown_rate": 1,
+      "repair_materials":
+        [{
+            "material": "STONE"
+          }],
+      "repair_amount": 1,
+      "max_repair": 51840000
 
     }
   }
