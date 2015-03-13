@@ -33,5 +33,23 @@
       "max_repair": 51840000
 
     }
+  },
+  "generator": {
+    "generator_a": {
+      "name": "GENERATOR NAME",
+      "descrition": "DESCRIPTION",
+      "building_materials": [{
+          "material": "STONE"
+        }, {
+          "material": "STICK"
+        }],
+      "breakdown_rate": 1,
+      "repair_materials":
+        [{
+            "material": "STONE"
+          }],
+      "repair_amount": 1,
+      "max_repair": 51840000
+    }
   }
 }
