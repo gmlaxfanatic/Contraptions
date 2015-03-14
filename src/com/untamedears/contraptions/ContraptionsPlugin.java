@@ -1,11 +1,14 @@
 package com.untamedears.contraptions;
 
-import com.untamedears.contraptions.contraptions.Contraption;
+import static com.untamedears.contraptions.ContraptionsPlugin.toConsole;
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
@@ -32,6 +35,7 @@ public class ContraptionsPlugin extends JavaPlugin {
      * Initializes the manager and loads config and save files
      */
     @Override
+    @SuppressWarnings("CallToPrintStackTrace")
     public void onEnable() {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
@@ -57,6 +61,12 @@ public class ContraptionsPlugin extends JavaPlugin {
         if (contraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(contraptionsFile));
         }
+        //Copy contraptions file over to old file
+        try {
+            replaceOldFile(contraptionsFile);
+        } catch (IOException e) {
+            toConsole("Failed to replace " + contraptionsFile.getName());
+        }
         /*
          * Loading Lost Contraptions, these are contraptions that once existed
          * but then their property file disappeared The most likely cause of
@@ -66,6 +76,12 @@ public class ContraptionsPlugin extends JavaPlugin {
         File lostContraptionsFile = new File(getDataFolder(), "lost_contraptions.json");
         if (lostContraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(lostContraptionsFile));
+        }
+        //Copy lost contraptions file to old version
+        try {
+            replaceOldFile(lostContraptionsFile);
+        } catch (IOException e) {
+            toConsole("Failed to replace " + lostContraptionsFile.getName());
         }
         //Save new Set of lost Contraptions
         try {
@@ -108,6 +124,28 @@ public class ContraptionsPlugin extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new ContraptionsListener(contraptionManager), this);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void replaceOldFile(File sourceFile) throws IOException {
+        File destFile = new File(sourceFile.getCanonicalPath() + ".old");
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
         }
     }
 
