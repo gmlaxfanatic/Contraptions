@@ -5,6 +5,7 @@ import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.utility.Response;
+import com.untamedears.contraptions.utility.SoundType;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Location;
@@ -152,6 +153,7 @@ public abstract class Contraption {
             }
 
         }
+        SoundType.DESTRUCTION.play(location);
     }
 
     /**

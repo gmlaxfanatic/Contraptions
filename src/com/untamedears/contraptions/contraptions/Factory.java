@@ -4,6 +4,7 @@ import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
+import com.untamedears.contraptions.utility.SoundType;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
@@ -51,6 +52,7 @@ public class Factory extends Contraption {
     public Response trigger() {
         String prettyOutput = InventoryHelpers.toString(getProperties().getProductionGadget().getOutputs());
         if (getProperties().getProductionGadget().produceGoods(getInventory())) {
+            SoundType.PRODUCTION.play(location);
             return new Response(true, "Produced " + prettyOutput, this);
         }
         return new Response(false, "Cannot produce " + prettyOutput, this);

@@ -9,6 +9,7 @@ import com.untamedears.contraptions.gadgets.MinMaxGadget;
 import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
+import com.untamedears.contraptions.utility.SoundType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -89,6 +90,7 @@ public class FactoryProperties extends ContraptionProperties {
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
             Factory newFactory = new Factory(this, location);
             contraptionManager.registerContraption(newFactory);
+            SoundType.CREATION.play(location);
             return new Response(true, "Created a " + newFactory.getName() + " factory!", newFactory);
         }
         return new Response(false, "Incorrect items for a Factory");
