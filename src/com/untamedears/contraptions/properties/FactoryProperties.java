@@ -26,11 +26,11 @@ public class FactoryProperties extends ContraptionProperties {
     GrowGadget growGadget;
     MinMaxGadget minMaxGadget;
 
-    /**
+   /**
      * Creates a FactoryProperties object
      *
      * @param contraptionManager The ContraptionManager
-     * @param ID                 The unique ID for this specification
+    * @param ID                 The unique ID for this specification
      * @param matchGadget        The MatchGadget associated with this
      *                           specification
      * @param productionGadget   The ProductionGadget associated with this

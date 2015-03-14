@@ -38,7 +38,8 @@ public class ContraptionsPlugin extends JavaPlugin {
 
         //Load in pretty item names
         toConsole("Loading materials.csv");
-        InventoryHelpers.loadPrettyNames(new File(getDataFolder() + "materials.csv"));
+        this.saveResource("materials.csv", true);
+        InventoryHelpers.loadPrettyNames(new File(getDataFolder() + "/materials.csv"));
 
         //Loading Property Files
         File configFolder = new File(getDataFolder() + "/configs");
@@ -52,7 +53,7 @@ public class ContraptionsPlugin extends JavaPlugin {
 
         //Loading Contraptions
         Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
-        File contraptionsFile = new File(getDataFolder(), "constraptions.json");
+        File contraptionsFile = new File(getDataFolder(), "contraptions.json");
         if (contraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(contraptionsFile));
         }
@@ -72,7 +73,11 @@ public class ContraptionsPlugin extends JavaPlugin {
             FileOutputStream fileOutputStream = new FileOutputStream(lostContraptionsFile);
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
-            jsonWriter.value(lostContraptions);
+            jsonWriter.array();
+            for (JSONObject contraption : lostContraptions) {
+                jsonWriter.value(contraption);
+            }
+            jsonWriter.endArray();
             bufferedWriter.flush();
             fileOutputStream.close();
         } catch (Exception e) {
@@ -89,7 +94,7 @@ public class ContraptionsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
-            contraptionManager.saveContraptions(new File(getDataFolder(), "savefile.json"));
+            contraptionManager.saveContraptions(new File(getDataFolder(), "contraptions.json"));
         } catch (Exception e) {
             e.printStackTrace();
         }

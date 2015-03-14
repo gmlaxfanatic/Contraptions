@@ -11,9 +11,7 @@
       "recipe": {
         "inputs":
           [{
-              "material": "STONE",
-              "amount": 1,
-              "durability": 0
+              "material": "STONE"
             }],
         "outputs":
           [{

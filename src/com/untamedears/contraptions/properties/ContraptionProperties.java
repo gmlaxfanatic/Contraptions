@@ -4,6 +4,7 @@ import com.untamedears.contraptions.ContraptionManager;
 import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.Response;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -52,6 +53,9 @@ public abstract class ContraptionProperties {
         JSONObject saveJSON = new JSONObject();
         saveJSON.put("Type", getType());
         saveJSON.put("ID", getID());
+        ContraptionsPlugin.toConsole(contraption.getLocation().toString());
+        
+        ContraptionsPlugin.toConsole(contraption.getLocation().getWorld().toString());
         String location = "[" + contraption.getLocation().getWorld().getUID() + ","
                 + contraption.getLocation().getBlockX() + ","
                 + contraption.getLocation().getBlockY() + ","
@@ -93,7 +97,7 @@ public abstract class ContraptionProperties {
     public Contraption loadContraption(JSONObject jsonObject) {
         ContraptionsPlugin.toConsole(jsonObject.toString());
         JSONArray locationArray = jsonObject.getJSONArray("Location");
-        Location location = new Location(ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(locationArray.getString(0)),
+        Location location = new Location(ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(UUID.fromString(locationArray.getString(0))),
                 locationArray.getInt(1), locationArray.getInt(2), locationArray.getInt(3));
         Contraption contraption = newContraption(location);
         contraption.loadResources(jsonObject.getJSONObject("Resources"));

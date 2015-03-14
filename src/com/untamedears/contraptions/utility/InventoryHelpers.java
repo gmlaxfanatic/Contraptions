@@ -36,6 +36,7 @@ public class InventoryHelpers {
             }
             CSVFile.close();
         } catch (IOException ex) {
+            ex.printStackTrace();
             ContraptionsPlugin.toConsole("Failed to load materials.csv");
         }
     }
@@ -60,7 +61,7 @@ public class InventoryHelpers {
                 throw new IllegalArgumentException("Illegal Material name");
             }
             int amount = jsonItemStack.has("amount") ? jsonItemStack.getInt("amount") : 1;
-            short durability = jsonItemStack.has("durability") ? (short) jsonItemStack.getInt("amount") : (short) 0;
+            short durability = jsonItemStack.has("durability") ? (short) jsonItemStack.getInt("durability") : (short) 0;
             String displayName = jsonItemStack.has("name") ? jsonItemStack.getString("name") : null;
             String lore = jsonItemStack.has("lore") ? jsonItemStack.getString("lore") : null;
             ItemStack itemStack = new ItemStack(material, amount, durability);
@@ -84,9 +85,9 @@ public class InventoryHelpers {
     /**
      * Checks if all of the itemstacks are available in the inventory
      *
-     * @param inventory  The inventory to examen
+     * @param inventory The inventory to examen
      * @param itemStacks A set of ItemStacks that are requred to be in the
-     *                   inventoyr
+     * inventoyr
      * @return Checks if the ItemStacks are in the inventory
      */
     public static boolean allIn(Inventory inventory, Set<ItemStack> itemStacks) {
@@ -238,8 +239,7 @@ public class InventoryHelpers {
      * Convert a ItemSet to a pretty string
      *
      * If the item has a custom DisplayName it uses that, then if it has an
-     * entry in the pretty name lookup table use that, otherwise use bukkit
-     * name
+     * entry in the pretty name lookup table use that, otherwise use bukkit name
      *
      * @param itemStacks ItemStakcs to convert to string
      * @return Pretty String representing ItemStacks
@@ -249,14 +249,15 @@ public class InventoryHelpers {
         for (ItemStack itemStack : itemStacks) {
             ItemStack key = itemStack.clone();
             key.setAmount(1);
-            
-            if (itemStack.hasItemMeta()&&itemStack.getItemMeta().hasDisplayName()){
-                output +=itemStack.getAmount() + " " + itemStack.getItemMeta().getDisplayName() + ",";
-            }
-            else if (prettyNames.containsKey(key)) {
-                output += itemStack.getAmount() + " " + prettyNames.get(key) + ",";
+
+            if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
+                output += itemStack.getAmount() + " " + itemStack.getItemMeta().getDisplayName() + ",";
             } else {
-                output += itemStack.getAmount() + " " + itemStack.getType().name() + ":" + itemStack.getDurability() + ",";
+                if (prettyNames.containsKey(key)) {
+                    output += itemStack.getAmount() + " " + prettyNames.get(key) + ",";
+                } else {
+                    output += itemStack.getAmount() + " " + itemStack.getType().name() + ":" + itemStack.getDurability() + ",";
+                }
             }
         }
         //Remove trailing ","

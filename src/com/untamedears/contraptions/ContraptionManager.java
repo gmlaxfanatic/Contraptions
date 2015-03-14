@@ -104,9 +104,12 @@ public class ContraptionManager {
             for (int i = 0; i < savedContraptions.length(); i++) {
                 JSONObject savedContraption = savedContraptions.getJSONObject(i);
                 String ID = savedContraption.getString("ID");
+                ContraptionsPlugin.toConsole("Loading Factory with ID "+ID);
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
+                    
                     contraptions.put(contraption.getLocation(), contraption);
+                    ContraptionsPlugin.toConsole("Loaded Factory: "+contraption.save().toString(2));
                 } else {
                     lostContraptions.add(savedContraption);
                     ContraptionsPlugin.toConsole("Factory ID not found. ID = " + ID);
@@ -127,7 +130,7 @@ public class ContraptionManager {
      */
     public void saveContraptions(File file) {
         try {
-            ContraptionsPlugin.toConsole("Saving Contraptions...l");
+            ContraptionsPlugin.toConsole("Saving Contraptions...");
 
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
