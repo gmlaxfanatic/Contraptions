@@ -1,5 +1,6 @@
 package com.untamedears.contraptions.contraptions;
 
+import com.untamedears.contraptions.ContraptionsPlugin;
 import com.untamedears.contraptions.properties.FactoryProperties;
 import com.untamedears.contraptions.properties.GeneratorProperties;
 import com.untamedears.contraptions.utility.Resource;
@@ -12,9 +13,10 @@ public class Generator extends Contraption{
     static String TERRITORY_KEY = "territory";
     Resource energy;
     Resource territory;
+    Resource generated;
 
     /**
-     * Creates a Factory Contraption
+     * Creates a Generator Contraption
      *
      * @param properties The Factory Properties Object
      * @param location   The Location of the Contraption
@@ -23,7 +25,9 @@ public class Generator extends Contraption{
         super(properties, location);
         energy = new Resource(0, this);
         territory = new Resource(0,this);
+        generated = new Resource(0,this);
         tasks.add(properties.getGrowGadget().run(energy));
+        tasks.add(properties.getConversionGadget().getConvertToItemStacksRunnable(this, generated));
     }
 
     @Override
@@ -53,9 +57,9 @@ public class Generator extends Contraption{
             //If the energy has gone to less than 10% attempt to repower it
             if (energy.get() < getProperties().getMinMaxGadget().getMax() * 0.1) {
                 //Check if there are enough items in the factory to repower it
-                if (getProperties().getConversionGadget().canGenerate(-energy.get(), getInventory())) {
+                if (getProperties().getConversionGadget().canConvertToResource(-energy.get(), getInventory())) {
                     //repower the factory
-                    getProperties().getConversionGadget().generate(-energy.get(), getInventory(), energy);
+                    getProperties().getConversionGadget().convertToResource(-energy.get(), getInventory(), energy);
                 }
             }
             //If contraption ran out of energy destroy it
