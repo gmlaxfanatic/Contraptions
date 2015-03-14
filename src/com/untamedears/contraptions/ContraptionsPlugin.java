@@ -1,13 +1,17 @@
 package com.untamedears.contraptions;
 
+import com.untamedears.contraptions.contraptions.Contraption;
 import com.untamedears.contraptions.utility.InventoryHelpers;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
+import org.json.JSONWriter;
 
 /**
  * Contraptions goal is to provide a framework for adding increased
@@ -31,9 +35,11 @@ public class ContraptionsPlugin extends JavaPlugin {
     public void onEnable() {
         contraptionPlugin = this;
         contraptionManager = new ContraptionManager(this);
+
         //Load in pretty item names
         toConsole("Loading materials.csv");
         InventoryHelpers.loadPrettyNames(new File(getDataFolder() + "materials.csv"));
+
         //Loading Property Files
         File configFolder = new File(getDataFolder() + "/configs");
         if (!configFolder.exists()) {
@@ -41,34 +47,39 @@ public class ContraptionsPlugin extends JavaPlugin {
         }
         //Load all files in the configs folder
         for (File configFile : configFolder.listFiles()) {
-            ContraptionsPlugin.toConsole("Loading properties from " + configFile.getName());
             contraptionManager.loadProperties(configFile);
         }
-        try {
-            //Create temp file to store lost Contraptions
-            File tempFile = File.createTempFile("lost_cotraptions", ".tmp", getDataFolder());
-        } catch (Exception e) {
-            toConsole("Failed to create temporary lost_contraptions.tmp file");
-            e.printStackTrace();
-        }
 
-        Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
         //Loading Contraptions
+        Set<JSONObject> lostContraptions = new HashSet<JSONObject>();
         File contraptionsFile = new File(getDataFolder(), "constraptions.json");
         if (contraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(contraptionsFile));
         }
         /*
-         Loading Lost Contraptions, these are contraptions that once existed buth then their property file disappeared
-         The most likely cause of this is a properties file failing to load
+         * Loading Lost Contraptions, these are contraptions that once existed
+         * but then their property file disappeared The most likely cause of
+         * this is a properties file failing to load
          */
-        //Loading Contraptions
+        //Try to load lost Contraptions
         File lostContraptionsFile = new File(getDataFolder(), "lost_contraptions.json");
         if (lostContraptionsFile.exists()) {
             lostContraptions.addAll(contraptionManager.loadContraptions(lostContraptionsFile));
         }
-        
-        
+        //Save new Set of lost Contraptions
+        try {
+            ContraptionsPlugin.toConsole("Saving lost contraptions...");
+            FileOutputStream fileOutputStream = new FileOutputStream(lostContraptionsFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
+            jsonWriter.value(lostContraptions);
+            bufferedWriter.flush();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            toConsole("Failed to save lost contraptions");
+            e.printStackTrace();
+        }
+        //Register Listeners
         registerEvents();
     }
 

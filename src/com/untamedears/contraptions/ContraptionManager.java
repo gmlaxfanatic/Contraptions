@@ -125,15 +125,15 @@ public class ContraptionManager {
      *
      * @param file File Contraptions are saved to
      */
-    public void saveContraptions(Collection<Contraption> contraptions, File file) {
+    public void saveContraptions(File file) {
         try {
-            ContraptionsPlugin.toConsole("Saving ontraptions");
+            ContraptionsPlugin.toConsole("Saving Contraptions...l");
 
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
             jsonWriter.array();
-            for (Contraption contraption : contraptions) {
+            for (Contraption contraption : contraptions.values()) {
                 jsonWriter.value(contraption.save());
             }
             jsonWriter.endArray();
