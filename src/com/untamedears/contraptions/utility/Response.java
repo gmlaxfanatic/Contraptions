@@ -1,6 +1,9 @@
 package com.untamedears.contraptions.utility;
 
 import com.untamedears.contraptions.contraptions.Contraption;
+import net.minecraft.server.v1_8_R1.ChatSerializer;
+import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,8 +29,8 @@ public class Response {
     /**
      * Creates a Response
      *
-     * @param success     Whether the action was successful
-     * @param message     A message associated with the action
+     * @param success Whether the action was successful
+     * @param message A message associated with the action
      * @param contraption Associated contraption
      */
     public Response(boolean success, String message, Contraption contraption) {
@@ -66,7 +69,7 @@ public class Response {
      * Gets the Contraption associated with the response
      *
      * @return The Contraption associated with the response, null if there is
-     *         none
+     * none
      */
     public Contraption getContraption() {
         return contraption;
@@ -78,7 +81,7 @@ public class Response {
      * @param player The player to massage
      */
     public void conveyTo(Player player) {
-        player.sendMessage(message);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
     }
 
 }

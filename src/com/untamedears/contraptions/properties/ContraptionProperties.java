@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 /**
  * Specifies the properties of a Contraption's implementation
- * 
+ *
  * A Contraption's properties define how all Contraptions of that type behave.
  * Each Contraption implementation will have a accompanying properties
  * implementation which specifies for the Contraption its material, ID, common
@@ -30,15 +30,15 @@ public abstract class ContraptionProperties {
 
     /**
      * Creates a new instance of Contraption properties
-     * 
+     *
      * @param contraptionManager The ContraptionManager object
-     * @param ID                 A unique string associated with this
-     *                           Contraption specification
-     * @param material           The material these contraptions are made from
+     * @param ID A unique string associated with this Contraption specification
+     * @param material The material these contraptions are made from
      */
-    public ContraptionProperties(ContraptionManager contraptionManager, String ID, Material material) {
+    public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name, Material material) {
         this.contraptionManager = contraptionManager;
         this.ID = ID;
+        this.name = name;
         this.material = material;
 
     }
@@ -54,7 +54,7 @@ public abstract class ContraptionProperties {
         saveJSON.put("Type", getType());
         saveJSON.put("ID", getID());
         ContraptionsPlugin.toConsole(contraption.getLocation().toString());
-        
+
         ContraptionsPlugin.toConsole(contraption.getLocation().getWorld().toString());
         String location = "[" + contraption.getLocation().getWorld().getUID() + ","
                 + contraption.getLocation().getBlockX() + ","
@@ -139,5 +139,14 @@ public abstract class ContraptionProperties {
      */
     public Material getMaterial() {
         return material;
+    }
+
+    /**
+     * Gets the name of the Contraption
+     *
+     * @return The Name of the Contraption
+     */
+    public String getName() {
+        return name;
     }
 }

@@ -1,11 +1,12 @@
 package com.untamedears.contraptions.contraptions;
 
+import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.Resource;
 import com.untamedears.contraptions.properties.FactoryProperties;
-import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
 import com.untamedears.contraptions.utility.SoundType;
 import org.bukkit.Location;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -47,15 +48,32 @@ public class Factory extends Contraption {
     public void loadResources(JSONObject jsonObject) {
         energy = new Resource(jsonObject.getDouble(ENERGY_KEY), this);
     }
-
+    
     @Override
     public Response trigger() {
-        String prettyOutput = InventoryHelpers.toString(getProperties().getProductionGadget().getOutputs());
-        if (getProperties().getProductionGadget().produceGoods(getInventory())) {
-            SoundType.PRODUCTION.play(location);
-            return new Response(true, "Produced " + prettyOutput, this);
+        JSONArray message = new JSONArray();
+        message.put((new JSONObject()).put("text","You are using a "+properties.getName()+". Click on a recipe to use it:").put("color", "gray"));
+        message.put((new JSONObject()).put("text", "\\n|").put("color","gray"));
+        for(ProductionGadget productionGadget: getProperties().getProductionGadgets()) {
+            JSONObject recipe = new JSONObject();
+            recipe.put("text", productionGadget.getName());
+            recipe.put("color", "yellow");
+            JSONObject clickEvent = new JSONObject();
+            clickEvent.put("action","run_command");
+            clickEvent.put("value", "/say hi");
+            recipe.put("clickEvent", clickEvent);
+            message.put(recipe);
+            message.put((new JSONObject()).put("text", "|").put("color","gray"));
         }
-        return new Response(false, "Cannot produce " + prettyOutput, this);
+        return new Response(true, message.toString(),this);
+    }
+    
+    public Response trigger(int i) {
+        if (getProperties().getProductionGadgets().get(i).produceGoods(getInventory())) {
+            SoundType.PRODUCTION.play(location);
+            return new Response(true, "Produced ", this);
+        }
+        return new Response(false, "Cannot produce ", this);
     }
 
     @Override
@@ -68,14 +86,6 @@ public class Factory extends Contraption {
         //If a change in energy triggered this update, check that energy is good
         if (resource == energy) {
             getProperties().getMinMaxGadget().update(resource);
-            //If the energy has gone to less than 10% attempt to repower it
-            if (energy.get() < getProperties().getMinMaxGadget().getMax() * 0.1) {
-                //Check if there are enough items in the factory to repower it
-                if (getProperties().getConversionGadget().canConvertToResource(-energy.get(), getInventory())) {
-                    //repower the factory
-                    getProperties().getConversionGadget().convertToResource(-energy.get(), getInventory(), energy);
-                }
-            }
             //If contraption ran out of energy destroy it
             if (energy.get() < 0) {
                 getContraptionManager().destroy(this);

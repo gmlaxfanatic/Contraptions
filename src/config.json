@@ -8,7 +8,8 @@
         }, {
           "material": "STICK"
         }],
-      "recipe": {
+      "recipes": {
+        "Boots":{
         "inputs":
           [{
               "material": "STONE"
@@ -20,8 +21,21 @@
               "durability": 0,
               "display_name": "DISPLAY_NAME",
               "lore": "LORE"
+            }]},
+        "Boots2":{
+        "inputs":
+          [{
+              "material": "CHEST"
+            }],
+        "outputs":
+          [{
+              "material": "CHEST",
+              "amount": 1,
+              "durability": 0,
+              "display_name": "DISPLAY_NAME",
+              "lore": "LORE"
             }]
-      },
+      }},
       "breakdown_rate": 1,
       "repair_materials":
         [{

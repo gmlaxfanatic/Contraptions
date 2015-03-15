@@ -10,6 +10,9 @@ import com.untamedears.contraptions.gadgets.ProductionGadget;
 import com.untamedears.contraptions.utility.InventoryHelpers;
 import com.untamedears.contraptions.utility.Response;
 import com.untamedears.contraptions.utility.SoundType;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -22,27 +25,26 @@ import org.json.JSONObject;
 public class FactoryProperties extends ContraptionProperties {
 
     MatchGadget matchGadget;
-    ProductionGadget productionGadget;
+    List<ProductionGadget> productionGadgets;
     ConversionGadget conversionGadget;
     GrowGadget growGadget;
     MinMaxGadget minMaxGadget;
 
-   /**
+    /**
      * Creates a FactoryProperties object
      *
      * @param contraptionManager The ContraptionManager
-    * @param ID                 The unique ID for this specification
-     * @param matchGadget        The MatchGadget associated with this
-     *                           specification
-     * @param productionGadget   The ProductionGadget associated with this
-     *                           specification
-     * @param conversionGadget   The ConversionGadget associated with this
-     *                           specification
+     * @param ID The unique ID for this specification
+     * @param matchGadget The MatchGadget associated with this specification
+     * @param productionGadgets The ProductionGadget associated with this
+     * specification
+     * @param conversionGadget The ConversionGadget associated with this
+     * specification
      */
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, ProductionGadget productionGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, Material.CHEST);
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, List<ProductionGadget> productionGadgets, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
+        super(contraptionManager, ID, name, Material.CHEST);
         this.matchGadget = matchGadget;
-        this.productionGadget = productionGadget;
+        this.productionGadgets = productionGadgets;
         this.conversionGadget = conversionGadget;
         this.growGadget = growGadget;
         this.minMaxGadget = minMaxGadget;
@@ -52,17 +54,23 @@ public class FactoryProperties extends ContraptionProperties {
      * Imports a FactoryProperties object from a configuration file
      *
      * @param contraptionManager The ContraptionManager
-     * @param ID                 The Unique ID of this specification
-     * @param jsonObject         A JSONObject containing the specification
+     * @param ID The Unique ID of this specification
+     * @param jsonObject A JSONObject containing the specification
      * @return The specified FactoryProperties file
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
         MatchGadget matchGadget = new MatchGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("building_materials")));
-        ProductionGadget productionGadget = ProductionGadget.fromJSON(jsonObject.getJSONObject("recipe"));
-        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")),jsonObject.getDouble("repair_amount"));
+        List<ProductionGadget> productionGadgets = new ArrayList<ProductionGadget>();
+        Iterator<String> productionGadgetNames = jsonObject.getJSONObject("recipes").keys();
+        while(productionGadgetNames.hasNext()) {
+            String productionGadgetName = productionGadgetNames.next();
+            productionGadgets.add(ProductionGadget.fromJSON(productionGadgetName, jsonObject.getJSONObject("recipes").getJSONObject(productionGadgetName)));
+        }
+        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")), jsonObject.getDouble("repair_amount"));
         GrowGadget growGadget = new GrowGadget(jsonObject.getDouble("breakdown_rate"));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE,jsonObject.getDouble("max_repair"));
-        return new FactoryProperties(contraptionManager, ID, matchGadget, productionGadget, conversionGadget, growGadget, minMaxGadget);
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, jsonObject.getDouble("max_repair"));
+        return new FactoryProperties(contraptionManager, ID, name, matchGadget, productionGadgets, conversionGadget, growGadget, minMaxGadget);
     }
 
     @Override
@@ -106,12 +114,12 @@ public class FactoryProperties extends ContraptionProperties {
     }
 
     /**
-     * Gets the ProductionGadget
+     * Gets ProductionGadget List
      *
-     * @return The ProductionGadget
+     * @return The ProductionGadget List
      */
-    public ProductionGadget getProductionGadget() {
-        return productionGadget;
+    public List<ProductionGadget> getProductionGadgets() {
+        return productionGadgets;
     }
 
     /**

@@ -17,9 +17,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.json.JSONObject;
 
-public class GeneratorProperties extends ContraptionProperties{
-   MatchGadget matchGadget;
-   TerritoryGadget territoryGadget;
+public class GeneratorProperties extends ContraptionProperties {
+
+    MatchGadget matchGadget;
+    TerritoryGadget territoryGadget;
     ConversionGadget conversionGadget;
     GrowGadget growGadget;
     MinMaxGadget minMaxGadget;
@@ -28,16 +29,15 @@ public class GeneratorProperties extends ContraptionProperties{
      * Creates a GeneratorProperties object
      *
      * @param contraptionManager The ContraptionManager
-     * @param ID                 The unique ID for this specification
-     * @param matchGadget        The MatchGadget associated with this
-     *                           specification
-     * @param territoryGadget   The TerritoryGadget associated with this
-     *                           specification
-     * @param conversionGadget   The ConversionGadget associated with this
-     *                           specification
+     * @param ID The unique ID for this specification
+     * @param matchGadget The MatchGadget associated with this specification
+     * @param territoryGadget The TerritoryGadget associated with this
+     * specification
+     * @param conversionGadget The ConversionGadget associated with this
+     * specification
      */
-    public GeneratorProperties(ContraptionManager contraptionManager, String ID, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, Material.CHEST);
+    public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
+        super(contraptionManager, ID, name, Material.CHEST);
         this.matchGadget = matchGadget;
         this.territoryGadget = territoryGadget;
         this.conversionGadget = conversionGadget;
@@ -49,17 +49,18 @@ public class GeneratorProperties extends ContraptionProperties{
      * Imports a GeneratorProperties object from a configuration file
      *
      * @param contraptionManager The ContraptionManager
-     * @param ID                 The Unique ID of this specification
-     * @param jsonObject         A JSONObject containing the specification
+     * @param ID The Unique ID of this specification
+     * @param jsonObject A JSONObject containing the specification
      * @return The specified FactoryProperties file
      */
     public static GeneratorProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
         MatchGadget matchGadget = new MatchGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("building_materials")));
         TerritoryGadget territoryGadget = new TerritoryGadget();
-        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")),jsonObject.getDouble("repair_amount"));
+        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")), jsonObject.getDouble("repair_amount"));
         GrowGadget growGadget = new GrowGadget(jsonObject.getDouble("breakdown_rate"));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE,jsonObject.getDouble("max_repair"));
-        return new GeneratorProperties(contraptionManager, ID, matchGadget, territoryGadget, conversionGadget, growGadget, minMaxGadget);
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, jsonObject.getDouble("max_repair"));
+        return new GeneratorProperties(contraptionManager, ID, name, matchGadget, territoryGadget, conversionGadget, growGadget, minMaxGadget);
     }
 
     @Override
