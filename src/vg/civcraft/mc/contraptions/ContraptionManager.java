@@ -68,7 +68,13 @@ public class ContraptionManager {
             if (jsonObject.has("factory")) {
                 JSONObject factories = jsonObject.getJSONObject("factory");
                 for (String ID : factories.keySet()) {
-                    contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
+                    try{
+                        contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
+                    }
+                    catch (Exception e) {
+                        ContraptionsPlugin.toConsole("Failed to load Factory properties: "+ID);
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (FileNotFoundException e) {

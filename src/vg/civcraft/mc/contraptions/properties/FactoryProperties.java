@@ -13,10 +13,13 @@ import vg.civcraft.mc.contraptions.utility.SoundType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import vg.civcraft.mc.contraptions.utility.JSONHelpers;
 import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
 
 /**
@@ -60,16 +63,17 @@ public class FactoryProperties extends ContraptionProperties {
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
-        MatchGadget matchGadget = new MatchGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("building_materials")));
+        MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject,"building_materials"));
         List<ProductionGadget> productionGadgets = new ArrayList<ProductionGadget>();
         Iterator<String> productionGadgetNames = jsonObject.getJSONObject("recipes").keys();
         while(productionGadgetNames.hasNext()) {
             String productionGadgetName = productionGadgetNames.next();
             productionGadgets.add(ProductionGadget.fromJSON(productionGadgetName, jsonObject.getJSONObject("recipes").getJSONObject(productionGadgetName)));
         }
-        ConversionGadget conversionGadget = new ConversionGadget(InventoryHelpers.fromJSON(jsonObject.getJSONArray("repair_materials")), jsonObject.getDouble("repair_amount"));
-        GrowGadget growGadget = new GrowGadget(jsonObject.getDouble("breakdown_rate"));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, jsonObject.getDouble("max_repair"));
+        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials");
+        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int)(51840000*3.33333)));
+        GrowGadget growGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject,"max_repair",51840000));
         return new FactoryProperties(contraptionManager, ID, name, matchGadget, productionGadgets, conversionGadget, growGadget, minMaxGadget);
     }
 
