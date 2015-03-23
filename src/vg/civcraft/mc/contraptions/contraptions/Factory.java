@@ -6,7 +6,11 @@ import vg.civcraft.mc.contraptions.properties.FactoryProperties;
 import vg.civcraft.mc.contraptions.utility.Response;
 import vg.civcraft.mc.contraptions.utility.SoundType;
 import org.bukkit.Location;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONArray;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import vg.civcraft.mc.civmenu.CivMenu;
+import vg.civcraft.mc.civmenu.Menu;
+import vg.civcraft.mc.civmenu.MenuCommand;
 import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
 
 /**
@@ -20,7 +24,7 @@ import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
  * then hitting the chest with a stick, which will allow the final produce to be
  * made
  */
-public class Factory extends Contraption {
+public class Factory extends Contraption implements MenuCommand {
 
     static String ENERGY_KEY = "Energy";
     Resource energy;
@@ -48,32 +52,53 @@ public class Factory extends Contraption {
     public void loadResources(JSONObject jsonObject) {
         energy = new Resource(jsonObject.getDouble(ENERGY_KEY), this);
     }
-    
+
     @Override
     public Response trigger() {
-        JSONArray message = new JSONArray();
-        message.put((new JSONObject()).put("text","You are using a "+properties.getName()+". Click on a recipe to use it:").put("color", "gray"));
-        message.put((new JSONObject()).put("text", "\\n|").put("color","gray"));
-        for(ProductionGadget productionGadget: getProperties().getProductionGadgets()) {
-            JSONObject recipe = new JSONObject();
-            recipe.put("text", productionGadget.getName());
-            recipe.put("color", "yellow");
-            JSONObject clickEvent = new JSONObject();
-            clickEvent.put("action","run_command");
-            clickEvent.put("value", "/say hi");
-            recipe.put("clickEvent", clickEvent);
-            message.put(recipe);
-            message.put((new JSONObject()).put("text", "|").put("color","gray"));
+        /*
+         * Create a message with the following format 1 You are using a %name.
+         * Click on a recipe to use it 2 Recipe1 Recipe2 ... Repair
+         */
+        Menu menu = CivMenu.newMenu();
+        menu.addEntry("You are using a " + properties.getName() + ". Click on a recipe to use it:\n");
+        int index = 0;
+        for (ProductionGadget gadget : getProperties().getProductionGadgets()) {
+            menu.addEntry(gadget.getName())
+                    .setHover(new Object[]{"Convert: ", gadget.getInputs(), "\nTo: ", gadget.getOutputs()})
+                    .setCommand(menu,new String[]{Integer.toString(index)});
+            index++;
         }
-        return new Response(true, message.toString(),this);
+        menu.addEntry("Repair")
+                .setHover("Repair this Factory");
+        return new Response(true, menu, this);
     }
-    
-    public Response trigger(int i) {
-        if (getProperties().getProductionGadgets().get(i).produceGoods(getInventory())) {
-            SoundType.PRODUCTION.play(location);
-            return new Response(true, "Produced ", this);
+
+    public boolean execute(CommandSender sender, String args[]) {
+        if (!(sender instanceof Player)) {
+            return false;
         }
-        return new Response(false, "Cannot produce ", this);
+        if (args.length == 0) {
+            return false;
+        }
+        Player player = (Player) sender;
+        int index;
+        try {
+            index = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Menu menu = CivMenu.newMenu();
+        ProductionGadget gadget = getProperties().getProductionGadgets().get(index);
+        if (gadget.produceGoods(getInventory())) {
+            SoundType.PRODUCTION.play(location);
+            menu.addEntry("Produced ", gadget.getOutputs());
+            menu.send(player);
+            return true;
+        }
+        menu.addEntry("Cannot Produce ", gadget.getOutputs());
+        menu.send(player);
+        return false;
     }
 
     @Override

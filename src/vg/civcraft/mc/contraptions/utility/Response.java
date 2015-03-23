@@ -1,10 +1,9 @@
 package vg.civcraft.mc.contraptions.utility;
 
 import vg.civcraft.mc.contraptions.contraptions.Contraption;
-import net.minecraft.server.v1_8_R1.ChatSerializer;
-import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import vg.civcraft.mc.civmenu.CivMenu;
+import vg.civcraft.mc.civmenu.Menu;
 
 /**
  * Conveys a response to a triggered event
@@ -12,7 +11,7 @@ import org.bukkit.entity.Player;
 public class Response {
 
     boolean success;
-    String message;
+    Menu message;
     Contraption contraption;
 
     /**
@@ -23,17 +22,40 @@ public class Response {
      */
     public Response(boolean success, String message) {
         this.success = success;
+        this.message = CivMenu.newMenu(message);
+    }
+
+    /**
+     * Creates the Response
+     *
+     * @param success Whether the action was successful
+     * @param message A message associated with the action
+     */
+    public Response(boolean success, Menu message) {
+        this.success = success;
         this.message = message;
     }
 
     /**
      * Creates a Response
      *
-     * @param success Whether the action was successful
-     * @param message A message associated with the action
+     * @param success     Whether the action was successful
+     * @param message     A message associated with the action
      * @param contraption Associated contraption
      */
     public Response(boolean success, String message, Contraption contraption) {
+        this(success, message);
+        this.contraption = contraption;
+    }
+
+    /**
+     * Creates a Response
+     *
+     * @param success     Whether the action was successful
+     * @param message     A message associated with the action
+     * @param contraption Associated contraption
+     */
+    public Response(boolean success, Menu message, Contraption contraption) {
         this(success, message);
         this.contraption = contraption;
     }
@@ -45,15 +67,6 @@ public class Response {
      */
     public boolean getSuccess() {
         return success;
-    }
-
-    /**
-     * Gets the message associated with the response
-     *
-     * @return The message associated with the response
-     */
-    public String getMessage() {
-        return message;
     }
 
     /**
@@ -69,7 +82,7 @@ public class Response {
      * Gets the Contraption associated with the response
      *
      * @return The Contraption associated with the response, null if there is
-     * none
+     *         none
      */
     public Contraption getContraption() {
         return contraption;
@@ -81,7 +94,7 @@ public class Response {
      * @param player The player to massage
      */
     public void conveyTo(Player player) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
+        message.send(player);
     }
 
 }
