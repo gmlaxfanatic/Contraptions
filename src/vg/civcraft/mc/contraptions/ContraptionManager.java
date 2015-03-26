@@ -67,24 +67,23 @@ public class ContraptionManager {
             if (jsonObject.has("factory")) {
                 JSONObject factories = jsonObject.getJSONObject("factory");
                 for (String ID : factories.keySet()) {
-                    try{
+                    try {
                         contraptionProperties.put(ID, FactoryProperties.fromConfig(this, ID, factories.getJSONObject(ID)));
-                    }
-                    catch (Exception e) {
-                        ContraptionsPlugin.toConsole("Failed to load Factory properties: "+ID);
+                    } catch (Exception e) {
+                        ContraptionsPlugin.toConsole("Failed to load Factory properties: " + ID);
                         e.printStackTrace();
                     }
                 }
             }
         } catch (FileNotFoundException e) {
-            ContraptionsPlugin.toConsole("Could not load properties file: "+file.getName());
+            ContraptionsPlugin.toConsole("Could not load properties file: " + file.getName());
         }
     }
 
     /**
      * Loads the Contraptions from a file
      *
-     * Contraptions should be formatted as followg:
+     * Contraptions should be formatted as following:
      * <pre>
      * [
      *   {
@@ -109,12 +108,19 @@ public class ContraptionManager {
             for (int i = 0; i < savedContraptions.length(); i++) {
                 JSONObject savedContraption = savedContraptions.getJSONObject(i);
                 String ID = savedContraption.getString("ID");
-                ContraptionsPlugin.toConsole("Loading Factory with ID "+ID);
+                ContraptionsPlugin.toConsole("Loading Factory with ID " + ID);
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
-                    
-                    contraptions.put(contraption.getLocation(), contraption);
-                    ContraptionsPlugin.toConsole("Loaded Factory: "+contraption.save().toString(2));
+                    //If there isn't already a Contraption at the location load up the contraption
+                    if (!contraptions.containsKey(contraption.getLocation())) {
+                        contraptions.put(contraption.getLocation(), contraption);
+                        ContraptionsPlugin.toConsole("Loaded Factory: " + contraption.save().toString(2));
+                    }
+                    //If there is already a Contraption at that location permenantly delete that contraption
+                    //However log the information for larborous fixing that should never need to be done
+                    else {
+                        ContraptionsPlugin.toConsole("Deleting Factory due to location conflict:\n" + contraption.save().toString(2));
+                    }
                 } else {
                     lostContraptions.add(savedContraption);
                     ContraptionsPlugin.toConsole("Factory ID not found. ID = " + ID);
@@ -122,12 +128,12 @@ public class ContraptionManager {
 
             }
         } catch (FileNotFoundException e) {
-            ContraptionsPlugin.toConsole("Failed to load contraption save file: "+file.getName());
+            ContraptionsPlugin.toConsole("Failed to load contraption save file: " + file.getName());
             e.printStackTrace();
         }
         return lostContraptions;
     }
-    
+
     /**
      * Saves all the current Contraptions to a file
      *
@@ -167,7 +173,7 @@ public class ContraptionManager {
      * Gets contraptions located within a square around the given location
      *
      * @param location Central location
-     * @param radius Square radius from which to search
+     * @param radius   Square radius from which to search
      * @return Set of contraptions in radius
      */
     public Set<Contraption> getContraptions(Location location, int radius) {
