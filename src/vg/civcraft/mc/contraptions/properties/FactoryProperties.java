@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
 
 /**
@@ -62,14 +63,15 @@ public class FactoryProperties extends ContraptionProperties {
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
-        MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject,"building_materials"));
+        Set<ItemStack> matchGadgetItems = JSONHelpers.loadItemStacks(jsonObject,"building_materials");
+        MatchGadget matchGadget = new MatchGadget(matchGadgetItems);
         List<ProductionGadget> productionGadgets = new ArrayList<ProductionGadget>();
         Iterator<String> productionGadgetNames = jsonObject.getJSONObject("recipes").keys();
         while(productionGadgetNames.hasNext()) {
             String productionGadgetName = productionGadgetNames.next();
             productionGadgets.add(ProductionGadget.fromJSON(productionGadgetName, jsonObject.getJSONObject("recipes").getJSONObject(productionGadgetName)));
         }
-        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials");
+        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials",InventoryHelpers.multiply(matchGadgetItems,InventoryHelpers.lcm(matchGadgetItems)));
         ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int)(51840000*3.33333)));
         GrowGadget growGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
         MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject,"max_repair",51840000));

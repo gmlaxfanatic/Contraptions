@@ -85,9 +85,9 @@ public class InventoryHelpers {
     /**
      * Checks if all of the itemstacks are available in the inventory
      *
-     * @param inventory The inventory to examen
+     * @param inventory  The inventory to examen
      * @param itemStacks A set of ItemStacks that are requred to be in the
-     * inventoyr
+     *                   inventoyr
      * @return Checks if the ItemStacks are in the inventory
      */
     public static boolean allIn(Inventory inventory, Set<ItemStack> itemStacks) {
@@ -97,6 +97,37 @@ public class InventoryHelpers {
             }
         }
         return true;
+    }
+
+    public static int lcm(Set<ItemStack> itemStacks) {
+        int[] amounts = new int[1];
+        int index=0;
+        for(ItemStack itemStack:itemStacks){
+            amounts[index] = itemStack.getAmount();
+            index++;
+        }
+        return lcm(amounts);
+    }
+    
+    private static int lcm(int a, int b) {
+        return a * (b / gcd(a, b));
+    }
+
+    private static int gcd(int a, int b) {
+        while (b > 0) {
+            int temp = b;
+            b = a % b; // % is remainder
+            a = temp;
+        }
+        return a;
+    }
+
+    private static int lcm(int[] input) {
+        int result = input[0];
+        for (int i = 1; i < input.length; i++) {
+            result = lcm(result, input[i]);
+        }
+        return result;
     }
 
     /*
@@ -144,6 +175,16 @@ public class InventoryHelpers {
         return materialsToRemove == 0;
     }
 
+    public static Set<ItemStack> multiply(Set<ItemStack> itemStacks, double multiple) {
+        Set<ItemStack> newItemStacks = new HashSet<ItemStack>();
+        for(ItemStack itemStack:itemStacks) {
+            ItemStack itemStackClone = itemStack.clone();
+            itemStackClone.setAmount((int)Math.ceil(itemStack.getAmount()*multiple));
+            newItemStacks.add(itemStackClone);
+        }
+        return newItemStacks;
+    }
+    
     /*
      * Removes the same set of ItemStacks from an inventory multiple times
      */
@@ -168,16 +209,16 @@ public class InventoryHelpers {
     }
 
     /*
-     * Checks how many multiples of the provided ItemStack
-     * are in the inventory
+     * Checks how many multiples of the provided ItemStack are in the inventory
      */
     public static int amountAvailable(Inventory inventory, ItemStack itemStack) {
         int totalMaterial = 0;
         for (ItemStack currentItemStack : inventory) {
             if (currentItemStack != null) {
                 /*
-                 * For some reason I can't fathom the orientaion of the comparison
-                 * of the two ItemStacks in the following statement matters.
+                 * For some reason I can't fathom the orientaion of the
+                 * comparison of the two ItemStacks in the following statement
+                 * matters.
                  */
                 if (itemStack.isSimilar(currentItemStack)
                         || (itemStack.getType() == Material.NETHER_WARTS && currentItemStack.getType() == Material.NETHER_WARTS)) {
@@ -189,8 +230,7 @@ public class InventoryHelpers {
     }
 
     /*
-     * Checks to see if the inventory contains exactly
-     * the items provided
+     * Checks to see if the inventory contains exactly the items provided
      */
     public static boolean exactlyContained(Inventory inventory, Set<ItemStack> itemStacks) {
         boolean returnValue = true;
