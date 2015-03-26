@@ -8,8 +8,8 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONArray;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Specifies the properties of a Contraption's implementation

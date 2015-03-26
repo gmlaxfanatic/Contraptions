@@ -5,7 +5,7 @@ import vg.civcraft.mc.contraptions.utility.Resource;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  * A widget which will grow a resource over time

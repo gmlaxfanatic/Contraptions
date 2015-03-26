@@ -8,15 +8,14 @@ import vg.civcraft.mc.contraptions.gadgets.GrowGadget;
 import vg.civcraft.mc.contraptions.gadgets.MatchGadget;
 import vg.civcraft.mc.contraptions.gadgets.MinMaxGadget;
 import vg.civcraft.mc.contraptions.gadgets.TerritoryGadget;
-import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 import vg.civcraft.mc.contraptions.utility.Response;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
 
 public class GeneratorProperties extends ContraptionProperties {
 

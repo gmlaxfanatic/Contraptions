@@ -1,7 +1,7 @@
 package vg.civcraft.mc.contraptions.gadgets;
 
+import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.utility.Resource;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
 
 /**
  * A Gadget which bounds a resource to a minimum and maximum value

@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  * A gadget which will converts between ItemStacks and resources

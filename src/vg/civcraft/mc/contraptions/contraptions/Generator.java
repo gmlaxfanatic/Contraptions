@@ -1,11 +1,10 @@
 package vg.civcraft.mc.contraptions.contraptions;
 
-import vg.civcraft.mc.contraptions.ContraptionsPlugin;
 import vg.civcraft.mc.contraptions.properties.FactoryProperties;
 import vg.civcraft.mc.contraptions.properties.GeneratorProperties;
 import vg.civcraft.mc.contraptions.utility.Resource;
 import org.bukkit.Location;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONObject;
 
 public class Generator extends Contraption{
 

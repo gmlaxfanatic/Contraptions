@@ -1,10 +1,10 @@
 package vg.civcraft.mc.contraptions.gadgets;
 
-import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 import java.util.Set;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 
 /**
  * A gadget the produces a set of ItemStacks from another set of ItemStacks

@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONWriter;
+import org.json.JSONObject;
+import org.json.JSONWriter;
 
 /**
  * Contraptions goal is to provide a framework for adding increased

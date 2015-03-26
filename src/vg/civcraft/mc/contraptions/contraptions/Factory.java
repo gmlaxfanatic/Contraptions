@@ -8,10 +8,10 @@ import vg.civcraft.mc.contraptions.utility.SoundType;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.json.JSONObject;
 import vg.civcraft.mc.civmenu.CivMenu;
 import vg.civcraft.mc.civmenu.Menu;
 import vg.civcraft.mc.civmenu.MenuCommand;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
 
 /**
  * A Factory Contraption meant to replace the current ProductionFactory object

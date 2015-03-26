@@ -4,7 +4,7 @@ import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 import java.util.Set;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import vg.civcraft.mc.contraptions.utility.org.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  * A gadget which only consumes ItemStacks if they are the only ones present

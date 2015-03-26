@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>vg.civcraft.mc.civmenu</groupId>
+    <artifactId>Contraptions</artifactId>
+    <version>0.0.1</version>
+    <packaging>jar</packaging>
+    <url>https://github.com/gmlaxfanatic/CivMenu</url>
+    
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+ 
+    <build>
+        <sourceDirectory>${basedir}/src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>${basedir}/src</directory>
+                <includes>
+                    <include>*.csv</include>
+                    <include>*.json</include>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+  
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.10-R0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8-R0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
+        </dependency>
+        <dependency>
+            <groupId>vg.civcraft.mc.namelayer</groupId>
+            <artifactId>NameLayer</artifactId>
+            <version>2.3.1-85</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>vg.civcraft.mc.citadel</groupId>
+            <artifactId>Citadel</artifactId>
+            <version>3.0.12-40</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>vg.civcraft.mc.civmenu</groupId>
+            <artifactId>CivMenu</artifactId>
+            <version>0.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        
+    </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>NameLayer-repo</id>
+            <url>http://192.99.169.83:8080/plugin/repository/project/NameLayer-master/Build/85/repository/</url>
+        </repository>
+        <repository>
+            <id>Citadel-repo</id>
+            <url>http://192.99.169.83:8080/plugin/repository/project/Citadel-master/Build/40/repository/</url>
+        </repository>
+    </repositories>
+  
+</project>
