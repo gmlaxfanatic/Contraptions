@@ -5,13 +5,13 @@ import vg.civcraft.mc.contraptions.utility.Resource;
 import vg.civcraft.mc.contraptions.properties.FactoryProperties;
 import vg.civcraft.mc.contraptions.utility.Response;
 import vg.civcraft.mc.contraptions.utility.SoundType;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 import vg.civcraft.mc.civmenu.CivMenu;
 import vg.civcraft.mc.civmenu.Menu;
 import vg.civcraft.mc.civmenu.MenuCommand;
+import vg.civcraft.mc.contraptions.utility.Anchor;
 
 /**
  * A Factory Contraption meant to replace the current ProductionFactory object
@@ -33,10 +33,10 @@ public class Factory extends Contraption implements MenuCommand {
      * Creates a Factory Contraption
      *
      * @param properties The Factory Properties Object
-     * @param location   The Location of the Contraption
+     * @param Anchor   The Anchor of the Contraption
      */
-    public Factory(FactoryProperties properties, Location location) {
-        super(properties, location);
+    public Factory(FactoryProperties properties, Anchor anchor) {
+        super(properties, anchor);
         energy = new Resource(0, this);
         tasks.add(properties.getGrowGadget().run(energy));
     }
@@ -91,7 +91,7 @@ public class Factory extends Contraption implements MenuCommand {
         Menu menu = CivMenu.newMenu();
         ProductionGadget gadget = getProperties().getProductionGadgets().get(index);
         if (gadget.produceGoods(getInventory())) {
-            SoundType.PRODUCTION.play(location);
+            SoundType.PRODUCTION.play(anchor.getBukkitLocation());
             menu.addEntry("Produced ", gadget.getOutputs());
             menu.send(player);
             return true;

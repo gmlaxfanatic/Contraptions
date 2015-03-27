@@ -14,11 +14,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
 
@@ -38,6 +38,7 @@ public class FactoryProperties extends ContraptionProperties {
      *
      * @param contraptionManager The ContraptionManager
      * @param ID The unique ID for this specification
+     * @param name The displayed name of the Contraption
      * @param matchGadget The MatchGadget associated with this specification
      * @param productionGadgets The ProductionGadget associated with this
      * specification
@@ -45,7 +46,7 @@ public class FactoryProperties extends ContraptionProperties {
      * specification
      */
     public FactoryProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, List<ProductionGadget> productionGadgets, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, name, Material.CHEST);
+        super(contraptionManager, ID, name);
         this.matchGadget = matchGadget;
         this.productionGadgets = productionGadgets;
         this.conversionGadget = conversionGadget;
@@ -79,8 +80,8 @@ public class FactoryProperties extends ContraptionProperties {
     }
 
     @Override
-    public Factory newContraption(Location location) {
-        return new Factory(this, location);
+    public Factory newContraption(Anchor anchor) {
+        return new Factory(this, anchor);
     }
 
     @Override
@@ -95,15 +96,16 @@ public class FactoryProperties extends ContraptionProperties {
      * @return Created Contraption if successful
      */
     @Override
-    public Response createContraption(Location location) {
-        if (!validBlock(location.getBlock())) {
+    public Response createContraption(Anchor anchor) {
+        
+        if (structureGadget.exists(anchor)) {
             return new Response(false, "Incorrect block for a Factory");
         }
-        Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
+        Inventory inventory = ((InventoryHolder) anchor.getBukkitLocation().getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
-            Factory newFactory = new Factory(this, location);
+            Factory newFactory = new Factory(this, anchor);
             contraptionManager.registerContraption(newFactory);
-            SoundType.CREATION.play(location);
+            SoundType.CREATION.play(anchor.getBukkitLocation());
             return new Response(true, "Created a " + newFactory.getName() + " factory!", newFactory);
         }
         return new Response(false, "Incorrect items for a Factory");

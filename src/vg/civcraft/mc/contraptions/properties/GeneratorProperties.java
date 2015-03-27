@@ -9,12 +9,11 @@ import vg.civcraft.mc.contraptions.gadgets.MatchGadget;
 import vg.civcraft.mc.contraptions.gadgets.MinMaxGadget;
 import vg.civcraft.mc.contraptions.gadgets.TerritoryGadget;
 import vg.civcraft.mc.contraptions.utility.Response;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
 
 public class GeneratorProperties extends ContraptionProperties {
@@ -37,7 +36,7 @@ public class GeneratorProperties extends ContraptionProperties {
      * specification
      */
     public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, name, Material.CHEST);
+        super(contraptionManager, ID, name);
         this.matchGadget = matchGadget;
         this.territoryGadget = territoryGadget;
         this.conversionGadget = conversionGadget;
@@ -65,8 +64,8 @@ public class GeneratorProperties extends ContraptionProperties {
     }
 
     @Override
-    public Generator newContraption(Location location) {
-        return new Generator(this, location);
+    public Generator newContraption(Anchor anchor) {
+        return new Generator(this, anchor);
     }
 
     @Override
@@ -77,17 +76,17 @@ public class GeneratorProperties extends ContraptionProperties {
     /**
      * Creates a Factory Contraptions
      *
-     * @param location Location to attempt creation
+     * @param anchor Anchor to attempt creation
      * @return Created Contraption if successful
      */
     @Override
-    public Response createContraption(Location location) {
-        if (!validBlock(location.getBlock())) {
+    public Response createContraption(Anchor anchor) {
+        if (!structureGadget.exists(anchor)) {
             return new Response(false, "Incorrect block for a Factory");
         }
-        Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
+        Inventory inventory = ((InventoryHolder) anchor.getBukkitLocation().getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
-            Generator newGenerator = new Generator(this, location);
+            Generator newGenerator = new Generator(this, anchor);
             contraptionManager.registerContraption(newGenerator);
             return new Response(true, "Created a " + newGenerator.getName() + " factory!", newGenerator);
         }

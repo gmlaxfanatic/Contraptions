@@ -11,7 +11,7 @@ import vg.civcraft.mc.contraptions.ContraptionsPlugin;
 /**
  * Represents a location within a structure
  */
-class Offset {
+public class Offset {
 
     final int x;
     final int y;
@@ -24,7 +24,7 @@ class Offset {
      * @param y Y Coordinate
      * @param z Z Coordinate
      */
-    Offset(int x, int y, int z) {
+    public Offset(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -65,7 +65,7 @@ class Offset {
         for (Orientation orientation : Orientation.values()) {
             Offset orientatedOffset = this.orient(orientation);
             anchors.add(new Anchor(orientation, location.clone().subtract(orientatedOffset.toVector())));
-            ContraptionsPlugin.toConsole("Orientation " + orientation.name() + ". " + new Anchor(orientation, location.clone().subtract(orientatedOffset.toVector())).getLocation().toString());
+            ContraptionsPlugin.toConsole("Orientation " + orientation.name() + ". " + new Anchor(orientation, location.clone().subtract(orientatedOffset.toVector())).toString());
         }
         return anchors;
     }

@@ -3,8 +3,8 @@ package vg.civcraft.mc.contraptions.contraptions;
 import vg.civcraft.mc.contraptions.properties.FactoryProperties;
 import vg.civcraft.mc.contraptions.properties.GeneratorProperties;
 import vg.civcraft.mc.contraptions.utility.Resource;
-import org.bukkit.Location;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.utility.Anchor;
 
 public class Generator extends Contraption{
 
@@ -18,10 +18,10 @@ public class Generator extends Contraption{
      * Creates a Generator Contraption
      *
      * @param properties The Factory Properties Object
-     * @param location   The Location of the Contraption
+     * @param anchor The Anchor of the Contraption
      */
-    public Generator(GeneratorProperties properties, Location location) {
-        super(properties, location);
+    public Generator(GeneratorProperties properties, Anchor anchor) {
+        super(properties, anchor);
         energy = new Resource(0, this);
         territory = new Resource(0,this);
         generated = new Resource(0,this);

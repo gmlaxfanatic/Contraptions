@@ -1,5 +1,6 @@
 package vg.civcraft.mc.contraptions.contraptions;
 
+import java.util.Collection;
 import vg.civcraft.mc.contraptions.properties.ContraptionProperties;
 import vg.civcraft.mc.contraptions.ContraptionManager;
 import vg.civcraft.mc.contraptions.ContraptionsPlugin;
@@ -8,13 +9,14 @@ import vg.civcraft.mc.contraptions.utility.Response;
 import vg.civcraft.mc.contraptions.utility.SoundType;
 import java.util.HashSet;
 import java.util.Set;
-import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.JSONObject;
 import vg.civcraft.mc.citadel.ReinforcementManager;
 import vg.civcraft.mc.citadel.reinforcement.PlayerReinforcement;
+import vg.civcraft.mc.contraptions.utility.Anchor;
+import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.namelayer.group.Group;
 
 /**
@@ -43,7 +45,8 @@ import vg.civcraft.mc.namelayer.group.Group;
  */
 public abstract class Contraption {
 
-    Location location;
+    Anchor anchor;
+
     ContraptionProperties properties;
     Set<BukkitTask> tasks;
 
@@ -51,10 +54,10 @@ public abstract class Contraption {
      * Creates a contraption
      *
      * @param properties Properties associated with the Contraption
-     * @param location   Location of the Contraption
+     * @param anchor   Anchor of the Contraption
      */
-    public Contraption(ContraptionProperties properties, Location location) {
-        this.location = location;
+    public Contraption(ContraptionProperties properties, Anchor anchor) {
+        this.anchor = anchor;
         this.properties = properties;
         tasks = new HashSet<BukkitTask>();
     }
@@ -100,8 +103,15 @@ public abstract class Contraption {
      *
      * @return The Location of the Contraption
      */
-    public Location getLocation() {
-        return location;
+    public BlockLocation getLocation() {
+        return anchor.location;
+    }
+    /**
+     * Gets the Anchor of the Contraption
+     * @return Anchor of the Contraption
+     */
+    public Anchor getAnchor() {
+       return anchor; 
     }
 
     /**
@@ -138,7 +148,7 @@ public abstract class Contraption {
      * @return If the Material is correct
      */
     public boolean isValid() {
-        return location.getBlock().getType().equals(properties.getMaterial());
+        return properties.getStructureGadget().exists(anchor);
     }
 
     /**
@@ -153,7 +163,7 @@ public abstract class Contraption {
             }
 
         }
-        SoundType.DESTRUCTION.play(location);
+        SoundType.DESTRUCTION.play(anchor.getBukkitLocation());
     }
 
     /**
@@ -162,8 +172,8 @@ public abstract class Contraption {
      * @return The inventory of the contraption
      */
     public Inventory getInventory() {
-        if (location.getBlock().getState() instanceof InventoryHolder) {
-            return ((InventoryHolder) location.getBlock().getState()).getInventory();
+        if (anchor.getBukkitLocation().getBlock().getState() instanceof InventoryHolder) {
+            return ((InventoryHolder) anchor.getBukkitLocation().getBlock().getState()).getInventory();
         }
         return null;
     }
@@ -215,9 +225,13 @@ public abstract class Contraption {
      */
     public Group getGroup() {
         ReinforcementManager reinforcementManager = getContraptionManager().getReinforcementManager();
-        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(location)) {
-            return ((PlayerReinforcement) reinforcementManager.getReinforcement(location)).getGroup();
+        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(anchor.getBukkitLocation())) {
+            return ((PlayerReinforcement) reinforcementManager.getReinforcement(anchor.getBukkitLocation())).getGroup();
         }
         return null;
+    }
+    
+    public Collection<BlockLocation> getBlockLocations() {
+        return properties.getStructureGadget().getBlockLocations(anchor);
     }
 }

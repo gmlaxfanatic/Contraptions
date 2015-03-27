@@ -37,7 +37,6 @@ public class ContraptionManager {
 
     Plugin plugin;
     Map<String, ContraptionProperties> contraptionProperties;
-    Map<Location, Contraption> contraptions;
     ReinforcementManager reinforcementManager;
 
     /**

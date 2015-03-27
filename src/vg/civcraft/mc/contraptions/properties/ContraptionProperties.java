@@ -10,6 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.gadgets.StructureGadget;
+import vg.civcraft.mc.contraptions.utility.Anchor;
+import vg.civcraft.mc.contraptions.utility.Offset;
+import vg.civcraft.mc.contraptions.utility.Structure;
 
 /**
  * Specifies the properties of a Contraption's implementation
@@ -24,22 +28,24 @@ import org.json.JSONObject;
 public abstract class ContraptionProperties {
 
     ContraptionManager contraptionManager;
-    Material material;
+    StructureGadget structureGadget;
     String ID;
     String name;
+    StructureGadget SG_DEFAULT = new StructureGadget(new Structure(new byte[][][]{{{(byte) Material.CHEST.getId()}}}), new Offset(0, 0, 0));
 
     /**
      * Creates a new instance of Contraption properties
      *
      * @param contraptionManager The ContraptionManager object
-     * @param ID A unique string associated with this Contraption specification
-     * @param material The material these contraptions are made from
+     * @param ID                 A unique string associated with this
+     *                           Contraption specification
+     * @param material           The material these contraptions are made from
      */
-    public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name, Material material) {
+    public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name) {
         this.contraptionManager = contraptionManager;
         this.ID = ID;
         this.name = name;
-        this.material = material;
+        this.structureGadget = SG_DEFAULT;
 
     }
 
@@ -57,21 +63,21 @@ public abstract class ContraptionProperties {
 
         ContraptionsPlugin.toConsole(contraption.getLocation().getWorld().toString());
         String location = "[" + contraption.getLocation().getWorld().getUID() + ","
-                + contraption.getLocation().getBlockX() + ","
-                + contraption.getLocation().getBlockY() + ","
-                + contraption.getLocation().getBlockZ() + "]";
+                + contraption.getLocation().x + ","
+                + contraption.getLocation().y + ","
+                + contraption.getLocation().z + "]";
         saveJSON.put("Location", new JSONArray(location));
         saveJSON.put("Resources", contraption.getResources());
         return saveJSON;
     }
 
     /**
-     * Safely creates a contraption at the given location
+     * Safely creates a contraption at the given Anchor
      *
-     * @param location The Location to create the Contraption
+     * @param anchor The Anchor to create the Contraption
      * @return A Response to the success of the creation
      */
-    public abstract Response createContraption(Location location);
+    public abstract Response createContraption(Anchor anchor);
 
     /**
      * Gets the type of the properties
@@ -81,12 +87,12 @@ public abstract class ContraptionProperties {
     public abstract String getType();
 
     /**
-     * Generates a new Contraption object at the given location
+     * Generates a new Contraption object at the given Anchor
      *
-     * @param location Location to generate Contraption
+     * @param anchor Anchor to generate Contraption
      * @return The created Contraption
      */
-    public abstract Contraption newContraption(Location location);
+    public abstract Contraption newContraption(Anchor anchor);
 
     /**
      * Loads a Contraption from a file
@@ -96,10 +102,7 @@ public abstract class ContraptionProperties {
      */
     public Contraption loadContraption(JSONObject jsonObject) {
         ContraptionsPlugin.toConsole(jsonObject.toString());
-        JSONArray locationArray = jsonObject.getJSONArray("Location");
-        Location location = new Location(ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(UUID.fromString(locationArray.getString(0))),
-                locationArray.getInt(1), locationArray.getInt(2), locationArray.getInt(3));
-        Contraption contraption = newContraption(location);
+        Contraption contraption = newContraption(Anchor.fromJSON(jsonObject.getJSONObject("anchor")));
         contraption.loadResources(jsonObject.getJSONObject("Resources"));
         return contraption;
     }
@@ -111,7 +114,16 @@ public abstract class ContraptionProperties {
      * @return If Block was valid
      */
     public boolean validBlock(Block block) {
-        return block.getState().getType().equals(material);
+        return structureGadget.validBlock(block);
+    }
+
+    /**
+     * Gets the StructureGadget
+     *
+     * @return The StructureGadget
+     */
+    public StructureGadget getStructureGadget() {
+        return structureGadget;
     }
 
     /**
@@ -130,15 +142,6 @@ public abstract class ContraptionProperties {
      */
     public String getID() {
         return ID;
-    }
-
-    /**
-     * Gets the material used for this kind of Contraption
-     *
-     * @return The Material of the Contraption
-     */
-    public Material getMaterial() {
-        return material;
     }
 
     /**

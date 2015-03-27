@@ -3,8 +3,12 @@ package vg.civcraft.mc.contraptions.utility;
 import vg.civcraft.mc.contraptions.utility.Anchor.Orientation;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,11 +26,11 @@ import vg.civcraft.mc.contraptions.utility.jnbt.Tag;
  * of an anchor in the world.
  *
  */
-public class Structure {
+public class Structure implements Iterable<Offset> {
 
-    private byte[][][] blocks;
+    private final byte[][][] blocks;
     //Whether air blocks are a required part of the structure
-    private boolean ignoreAir;
+    private final boolean ignoreAir;
 
     /**
      * Creates a Structure
@@ -42,7 +46,7 @@ public class Structure {
      * Checks if structure exists at a given point
      *
      * @param location Location in a world
-     * @return If a structure exists at the location
+     * @return If a structure exists at the locations
      */
     public boolean exists(Location location) {
         for (Orientation orientation : Orientation.values()) {
@@ -60,25 +64,14 @@ public class Structure {
      * @return If a structure exists at the anchor
      */
     public boolean exists(Anchor anchor) {
-        ContraptionsPlugin.toConsole("Blocks size. x:" + blocks.length + ", y:" + blocks[0].length + ", z:" + blocks[0][0].length);
-        ContraptionsPlugin.toConsole("Testing for exisistance at anchor: " + anchor.getLocation().getBlockX() + ", " + anchor.getLocation().getY() + ", " + anchor.getLocation().getZ());
-        for (int x = 0; x < blocks.length; x++) {
-            ContraptionsPlugin.toConsole("Testing X for the " + x + " time.");
-            for (int y = 0; y < blocks[x].length; y++) {
-                for (int z = 0; z < blocks[x][y].length; z++) {
-                    ContraptionsPlugin.toConsole("Testing Block: " + blocks[x][y][z]);
-                    //Check if this is not a index contianing air which should be ignored
-                    if (!(blocks[x][y][z] == 0 && ignoreAir)) {
-                        ContraptionsPlugin.toConsole("Predicted Block: " + Material.getMaterial(blocks[x][y][z]).toString() + ". Actual Block: " + anchor.getLocation().clone().add(x * anchor.getXModifier(), y, z * anchor.getZModifier()).getBlock().getType().toString() + ". Location: " + anchor.getLocation().clone().add(x * anchor.getXModifier(), y, z * anchor.getZModifier()).toString());
-                        if (!similiarBlocks(blocks[x][y][z], (byte) anchor.getLocation().clone().add(new Offset(x, y, z).orient(anchor.orientation).toVector()).getBlock().getTypeId())) {
-                            return false;
-                        }
-                    }
+        for (Offset offset : this) {
+            if (!similiarBlocks(getMaterialID(offset), (byte) anchor.getBlock(offset).getTypeId())) {
+                if (!(getMaterialID(offset) == 0 && ignoreAir)) {
+                    return false;
                 }
             }
         }
         return true;
-
     }
 
     /**
@@ -91,11 +84,11 @@ public class Structure {
     }
 
     /**
-     * TODO: Checks if a given location is contained within structure
+     * TODO: Checks if a given locations is contained within structure
      *
-     * @param anchor Anchor of the structure
+     * @param anchor   Anchor of the structure
      * @param location Location to check if it is contained in the structure
-     * @return If the location is contained in the structure
+     * @return If the locations is contained in the structure
      */
     public boolean locationContainedInStructure(Anchor anchor, Location location) {
         return true;
@@ -116,16 +109,26 @@ public class Structure {
      */
     public Set<Material> getMaterials() {
         Set<Material> materials = new HashSet<Material>();
-        for (short x = 0; x < blocks.length; x++) {
-            for (short z = 0; z < blocks[x].length; z++) {
-                for (short y = 0; y < blocks[x][z].length; y++) {
-                    if (!(blocks[x][y][z] == 0 && ignoreAir)) {
-                        materials.add(Material.getMaterial((int) blocks[x][z][y]));
-                    }
-                }
+        for (Offset offset : this) {
+            if (!(getMaterialID(offset) == 0 && ignoreAir)) {
+                materials.add(getMaterial(offset));
             }
         }
         return materials;
+    }
+
+    /**
+     * Gets the block at the specified offset
+     *
+     * @param offset Offset of block
+     * @return Block at Offset
+     */
+    public Material getMaterial(Offset offset) {
+        return Material.getMaterial(getMaterialID(offset));
+    }
+
+    public byte getMaterialID(Offset offset) {
+        return blocks[offset.x][offset.y][offset.z];
     }
 
     /**
@@ -168,5 +171,72 @@ public class Structure {
      */
     public int[] getDimensions() {
         return new int[]{blocks.length, blocks[0].length, blocks[0][0].length};
+    }
+
+    public Collection<BlockLocation> getBlockLocations(Anchor anchor) {
+        Collection<BlockLocation> locations = new ArrayList<BlockLocation>();
+        for (Offset offset:this) {
+            locations.add(anchor.getLocationOfOffset(offset));
+        }
+        return locations;
+    }
+
+    @Override
+    public Iterator<Offset> iterator() {
+        return new OffsetIterator();
+    }
+
+    private class OffsetIterator implements
+            Iterator<Offset> {
+
+        private int index;
+        private final int size;
+        private final int xLength;
+        private final int yLength;
+        private final int zLength;
+
+        public OffsetIterator() {
+            this.index = 0;
+            int[] dimensions = getDimensions();
+            xLength = dimensions[0];
+            yLength = dimensions[1];
+            zLength = dimensions[2];
+            size = xLength * yLength * zLength;
+        }
+
+        public boolean hasNext() {
+            return this.index < size;
+        }
+
+        @Override
+        public Offset next() {
+            if (this.hasNext()) {
+                Offset offset = new Offset(getX(), getY(), getZ());
+                index++;
+                return offset;
+            }
+            throw new NoSuchElementException();
+        }
+
+        private int getX() {
+            return index % xLength;
+        }
+
+        private int getY() {
+            return (index / xLength) % yLength;
+        }
+
+        private int getZ() {
+            return ((index / xLength) / yLength) % zLength;
+        }
+
+        private int getSize() {
+            return blocks.length * blocks[0].length * blocks[0][0].length;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 }

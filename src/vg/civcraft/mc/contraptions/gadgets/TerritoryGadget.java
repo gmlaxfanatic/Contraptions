@@ -25,7 +25,7 @@ public class TerritoryGadget {
     private static double radius = 15000;
 
     /**
-     * Creates an empty Territory Gadgetu788878
+     * Creates an empty Territory Gadget
      */
     public TerritoryGadget() {
 
@@ -85,8 +85,8 @@ public class TerritoryGadget {
         for (Contraption contraption : territory.keySet()) {
             territory.put(contraption, 0d);
             sitenbrs[i] = contraption;
-            latitudes[i] = contraption.getLocation().getBlockX();
-            longitudes[i] = contraption.getLocation().getBlockY();
+            latitudes[i] = contraption.getLocation().x;
+            longitudes[i] = contraption.getLocation().z;
         }
         //Calculates edges of Voronoi diagram
         List<GraphEdge> graphEdges = v.generateVoronoi(latitudes, longitudes, -radius, radius, -radius, radius);
@@ -104,8 +104,8 @@ public class TerritoryGadget {
      * @param graphEdge   Edge to use to calculate area
      */
     private void updateArea(Contraption contraption, GraphEdge graphEdge) {
-        double triangularArea = areaTriangle(contraption.getLocation().getBlockX(),
-                contraption.getLocation().getBlockZ(), graphEdge.x1, graphEdge.y1, graphEdge.x1, graphEdge.y2);
+        double triangularArea = areaTriangle(contraption.getLocation().x,
+                contraption.getLocation().z, graphEdge.x1, graphEdge.y1, graphEdge.x1, graphEdge.y2);
         territory.put(contraption, triangularArea + territory.get(contraption));
     }
 
