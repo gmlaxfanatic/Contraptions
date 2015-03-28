@@ -1,7 +1,6 @@
 package vg.civcraft.mc.contraptions.utility;
 
 import java.io.Serializable;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.json.JSONObject;
 
@@ -10,13 +9,26 @@ import org.json.JSONObject;
  */
 public class Anchor implements Serializable {
 
-    //Describes the oritentation of the structure
-
+    /**
+     * Describes the oritentation of the structure
+     */
     public enum Orientation {
 
+        /**
+         * NorthEast
+         */
         NE(0),
+        /**
+         * SouthEast
+         */
         SE(1),
+        /**
+         * SouthWest
+         */
         SW(2),
+        /**
+         * NorthWest
+         */
         NW(3);
 
         final int id;
@@ -31,29 +43,42 @@ public class Anchor implements Serializable {
         }
     }
 
+    /**
+     * Orientation of the Anchor
+     */
     public final Orientation orientation;
+
+    /**
+     * Location of the Anchor
+     */
     public final BlockLocation location;
 
+    /**
+     * Creates an Anchor
+     *
+     * @param orientation Orientation of the Anchor
+     * @param location Location of the Anchor
+     */
     public Anchor(Orientation orientation, BlockLocation location) {
 
         this.orientation = orientation;
         this.location = new BlockLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
-    
+
     /**
      * Gets either a negative or positive increment of X depending on its
      * orientation
-     * 
-     * @return A direction of this anchor 
+     *
+     * @return An X direction of this anchor
      */
     public int getXModifier() {
         return orientation == Orientation.NE || orientation == Orientation.NW ? 1 : -1;
     }
 
     /**
-     * Gets either a negative or positive increment of X depending on its
+     * Gets either a negative or positive increment of Z depending on its
      * orientation
-     * 
+     *
      * @return Z direction of this anchor
      */
     public int getZModifier() {
@@ -62,7 +87,7 @@ public class Anchor implements Serializable {
 
     /**
      * Returns a location the offset given this anchor
-     * 
+     *
      * @param offset An offset from the anchor
      * @return Location representing the location of the Offset
      */
@@ -73,7 +98,8 @@ public class Anchor implements Serializable {
 
     /**
      * Gets the block located in the world given the offset and this anchor
-     * 
+     *
+     * @param offset
      * @return The Block at the given offset
      */
     public Block getBlock(Offset offset) {
@@ -81,34 +107,48 @@ public class Anchor implements Serializable {
     }
 
     /**
-     * Check if location is contained within a bounding box at this anchor
-     * TODO: This looks wrong
+     * Check if location is contained within a bounding box at this anchor TODO:
+     * This looks wrong
+     *
+     * @param testLocation Location to test
+     * @param dimensions An array of the form int[]{xDim,yDim,zDim}
      * @return If the location is contained within the bounding box
      */
-    public boolean containedIn(Location testLocation, int[] dimensions) {
-        if ((testLocation.getBlockX() - location.x) < dimensions[0] * getXModifier()) {
-            if ((testLocation.getBlockZ() - location.z) < dimensions[2] * getZModifier()) {
-                if (0 <= (testLocation.getBlockZ() - location.z) && (testLocation.getBlockZ() - location.z) < dimensions[1]) {
+    public boolean containedIn(BlockLocation testLocation, int[] dimensions) {
+        if ((testLocation.getX() - location.x) < dimensions[0] * getXModifier()) {
+            if ((testLocation.getZ() - location.z) < dimensions[2] * getZModifier()) {
+                if (0 <= (testLocation.getY() - location.y) && (testLocation.getY() - location.y) < dimensions[1]) {
                     return true;
                 }
             }
         }
         return false;
     }
-    
-    public Location getBukkitLocation() {
-        return location.getLocation();
-    }
-    
+
+    /**
+     * Imports this Anchor from a JSONObject
+     * @param jsonObject JSONObject containing Anchor
+     * @return A new Anchor
+     */
     public static Anchor fromJSON(JSONObject jsonObject) {
-        throw new UnsupportedOperationException("Method not supported yet");
+        Orientation orientation = Orientation.getOrientation(jsonObject.getInt("orientation"));
+        BlockLocation location = BlockLocation.fromJSON(jsonObject.getJSONArray("location"));
+        return new Anchor(orientation,location);
     }
-    
-    public BlockLocation getLocation(){
+
+    /**
+     * Gets the location of this Anchor
+     * @return
+     */
+    public BlockLocation getLocation() {
         return location;
     }
-    
-    public Orientation getOrientation(){
+
+    /**
+     * Gets the Orientation of this Anchor
+     * @return Orientation of this Anchor
+     */
+    public Orientation getOrientation() {
         return orientation;
     }
 }

@@ -22,9 +22,6 @@ import vg.civcraft.mc.contraptions.utility.jnbt.Tag;
 /**
  * Holds a defined three-dimensional rectangle of specified blocks
  *
- * Additionally provides methods for examening the structure within the context
- * of an anchor in the world.
- *
  */
 public class Structure implements Iterable<Offset> {
 
@@ -86,12 +83,12 @@ public class Structure implements Iterable<Offset> {
     /**
      * TODO: Checks if a given locations is contained within structure
      *
-     * @param anchor   Anchor of the structure
+     * @param anchor Anchor of the structure
      * @param location Location to check if it is contained in the structure
      * @return If the locations is contained in the structure
      */
-    public boolean locationContainedInStructure(Anchor anchor, Location location) {
-        return true;
+    public boolean locationContainedInStructure(Anchor anchor, BlockLocation location) {
+        return anchor.containedIn(location, getDimensions());
     }
 
     /**
@@ -127,6 +124,12 @@ public class Structure implements Iterable<Offset> {
         return Material.getMaterial(getMaterialID(offset));
     }
 
+    /**
+     * Gest the Material ID at the offset within this structure
+     *
+     * @param offset Offset of Material
+     * @return Material ID at offset
+     */
     public byte getMaterialID(Offset offset) {
         return blocks[offset.x][offset.y][offset.z];
     }
@@ -173,9 +176,16 @@ public class Structure implements Iterable<Offset> {
         return new int[]{blocks.length, blocks[0].length, blocks[0][0].length};
     }
 
+    /**
+     * Gets a collection of block locations occupied by this structure given the
+     * Anchor
+     *
+     * @param anchor Anchor of Structure
+     * @return Collection of occupied BlockLocations
+     */
     public Collection<BlockLocation> getBlockLocations(Anchor anchor) {
         Collection<BlockLocation> locations = new ArrayList<BlockLocation>();
-        for (Offset offset:this) {
+        for (Offset offset : this) {
             locations.add(anchor.getLocationOfOffset(offset));
         }
         return locations;

@@ -115,7 +115,7 @@ public class ContraptionManager {
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     //If there isn't already a Contraption at the bukkitLocation load up the contraption
-                    if (dao.getContraptionByLocation(contraption.getLocation())!=null) {
+                    if (dao.getContraption(contraption.getLocation())!=null) {
                         dao.registerContraption(contraption);
                         ContraptionsPlugin.toConsole("Loaded Factory: " + contraption.save().toString(2));
                     }
@@ -169,7 +169,7 @@ public class ContraptionManager {
      * @return Contraption at bukkitLocation or null
      */
     public Contraption getContraption(BlockLocation location) {
-        return dao.getContraptionByLocation(location);
+        return dao.getContraption(location);
 
     }
 
@@ -245,7 +245,7 @@ public class ContraptionManager {
      * @param contraption Contraption to be destroyed
      */
     public void destroy(Contraption contraption) {
-        if (dao.removeContraptions(contraption)) {
+        if (dao.removeContraption(contraption)) {
             dao.removeAssociatedBlocks(contraption);
             contraption.destroy();
         }
@@ -287,7 +287,7 @@ public class ContraptionManager {
             }
         }
         BlockLocation location = new BlockLocation(bukkitLocation);
-        Contraption contraption = dao.getContraptionByLocation(location);
+        Contraption contraption = dao.getContraption(location);
         //If a contraption doesn't exist on bukkitLocation
         if (contraption == null) {
             createContraption(location, player).conveyTo(player);

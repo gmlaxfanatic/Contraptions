@@ -109,7 +109,7 @@ public class FactoryProperties extends ContraptionProperties {
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
             Factory newFactory = new Factory(this, anchor);
             contraptionManager.registerContraption(newFactory);
-            SoundType.CREATION.play(anchor.getBukkitLocation());
+            SoundType.CREATION.play(anchor.getLocation());
             return new Response(true, "Created a " + newFactory.getName() + " factory!", newFactory);
         }
         return new Response(false, "Incorrect items for a Factory");

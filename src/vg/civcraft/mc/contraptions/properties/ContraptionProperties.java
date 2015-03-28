@@ -36,16 +36,14 @@ public abstract class ContraptionProperties {
      * Creates a new instance of Contraption properties
      *
      * @param contraptionManager The ContraptionManager object
-     * @param ID                 A unique string associated with this
-     *                           Contraption specification
-     * @param material           The material these contraptions are made from
+     * @param ID A unique string associated with this Contraption specification
+     * @param name The Name this Contraption to referred to by
      */
     public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name) {
         this.contraptionManager = contraptionManager;
         this.ID = ID;
         this.name = name;
         this.structureGadget = SG_DEFAULT;
-
     }
 
     /**
@@ -59,7 +57,6 @@ public abstract class ContraptionProperties {
         saveJSON.put("Type", getType());
         saveJSON.put("ID", getID());
         ContraptionsPlugin.toConsole(contraption.getLocation().toString());
-
         ContraptionsPlugin.toConsole(contraption.getLocation().getWorld().toString());
         String location = "[" + contraption.getLocation().getWorld().getUID() + ","
                 + contraption.getLocation().x + ","
@@ -71,9 +68,9 @@ public abstract class ContraptionProperties {
     }
 
     /**
-     * Safely creates a contraption at the given Anchor
+     * Safely creates a contraption at the given location
      *
-     * @param anchor The Anchor to create the Contraption
+     * @param location Location to create Contraption
      * @return A Response to the success of the creation
      */
     public abstract Response createContraption(BlockLocation location);

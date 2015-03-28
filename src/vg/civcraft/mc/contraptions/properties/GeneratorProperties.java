@@ -96,7 +96,7 @@ public class GeneratorProperties extends ContraptionProperties {
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
             Generator newGenerator = new Generator(this, anchor);
             contraptionManager.registerContraption(newGenerator);
-            SoundType.CREATION.play(anchor.getBukkitLocation());
+            SoundType.CREATION.play(anchor.getLocation());
             return new Response(true, "Created a " + newGenerator.getName() + " factory!", newGenerator);
         }
         return new Response(false, "Incorrect items for a Factory");

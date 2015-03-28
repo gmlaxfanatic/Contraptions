@@ -13,9 +13,9 @@ public enum SoundType {
      this.sounds = sounds;
     }
 
-    public void play(Location location) {
+    public void play(BlockLocation location) {
         for (Sound sound : sounds) {
-            location.getWorld().playSound(location, sound, 1f, 1f);
+            location.getWorld().playSound(location.getBukkitLocation(), sound, 1f, 1f);
         }
     }
 }

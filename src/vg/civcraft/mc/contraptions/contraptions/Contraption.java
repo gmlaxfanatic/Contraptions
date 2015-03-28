@@ -164,7 +164,7 @@ public abstract class Contraption {
             }
 
         }
-        SoundType.DESTRUCTION.play(anchor.getBukkitLocation());
+        SoundType.DESTRUCTION.play(anchor.getLocation());
     }
 
     /**
@@ -173,8 +173,8 @@ public abstract class Contraption {
      * @return The inventory of the contraption
      */
     public Inventory getInventory() {
-        if (anchor.getBukkitLocation().getBlock().getState() instanceof InventoryHolder) {
-            return ((InventoryHolder) anchor.getBukkitLocation().getBlock().getState()).getInventory();
+        if (anchor.getLocation().getBukkitLocation().getBlock().getState() instanceof InventoryHolder) {
+            return ((InventoryHolder) anchor.getLocation().getBukkitLocation().getBlock().getState()).getInventory();
         }
         return null;
     }
@@ -226,8 +226,8 @@ public abstract class Contraption {
      */
     public Group getGroup() {
         ReinforcementManager reinforcementManager = getContraptionManager().getReinforcementManager();
-        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(anchor.getBukkitLocation())) {
-            return ((PlayerReinforcement) reinforcementManager.getReinforcement(anchor.getBukkitLocation())).getGroup();
+        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(anchor.getLocation().getBukkitLocation())) {
+            return ((PlayerReinforcement) reinforcementManager.getReinforcement(anchor.getLocation().getBukkitLocation())).getGroup();
         }
         return null;
     }

@@ -91,7 +91,7 @@ public class Factory extends Contraption implements MenuCommand {
         Menu menu = CivMenu.newMenu();
         ProductionGadget gadget = getProperties().getProductionGadgets().get(index);
         if (gadget.produceGoods(getInventory())) {
-            SoundType.PRODUCTION.play(anchor.getBukkitLocation());
+            SoundType.PRODUCTION.play(anchor.getLocation());
             menu.addEntry("Produced ", gadget.getOutputs());
             menu.send(player);
             return true;

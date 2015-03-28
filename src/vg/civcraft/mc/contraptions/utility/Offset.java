@@ -3,7 +3,6 @@ package vg.civcraft.mc.contraptions.utility;
 import vg.civcraft.mc.contraptions.utility.Anchor.Orientation;
 import java.util.HashSet;
 import java.util.Set;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 import vg.civcraft.mc.contraptions.ContraptionsPlugin;
