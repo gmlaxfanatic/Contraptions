@@ -13,8 +13,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.contraptions.Factory;
 import vg.civcraft.mc.contraptions.utility.Anchor;
+import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
+import vg.civcraft.mc.contraptions.utility.SoundType;
 
 public class GeneratorProperties extends ContraptionProperties {
 
@@ -80,14 +83,20 @@ public class GeneratorProperties extends ContraptionProperties {
      * @return Created Contraption if successful
      */
     @Override
-    public Response createContraption(Anchor anchor) {
-        if (!structureGadget.exists(anchor)) {
+    public Response createContraption(BlockLocation location) {
+        //Check if interaction block is correct
+        if (structureGadget.validBlock(location.getBlock())) {
             return new Response(false, "Incorrect block for a Factory");
         }
-        Inventory inventory = ((InventoryHolder) anchor.getBukkitLocation().getBlock().getState()).getInventory();
+        Anchor anchor = structureGadget.exists(location);
+        if(anchor==null){
+            return new Response(false,"Incorrect structure for factory");
+        }
+        Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
             Generator newGenerator = new Generator(this, anchor);
             contraptionManager.registerContraption(newGenerator);
+            SoundType.CREATION.play(anchor.getBukkitLocation());
             return new Response(true, "Created a " + newGenerator.getName() + " factory!", newGenerator);
         }
         return new Response(false, "Incorrect items for a Factory");

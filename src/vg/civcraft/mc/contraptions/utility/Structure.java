@@ -48,7 +48,7 @@ public class Structure implements Iterable<Offset> {
      * @param location Location in a world
      * @return If a structure exists at the locations
      */
-    public boolean exists(Location location) {
+    public boolean exists(BlockLocation location) {
         for (Orientation orientation : Orientation.values()) {
             if (exists(new Anchor(orientation, location))) {
                 return true;
@@ -204,6 +204,7 @@ public class Structure implements Iterable<Offset> {
             size = xLength * yLength * zLength;
         }
 
+        @Override
         public boolean hasNext() {
             return this.index < size;
         }

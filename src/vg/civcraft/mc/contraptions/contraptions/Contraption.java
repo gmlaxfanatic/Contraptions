@@ -9,6 +9,7 @@ import vg.civcraft.mc.contraptions.utility.Response;
 import vg.civcraft.mc.contraptions.utility.SoundType;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitTask;
@@ -233,5 +234,9 @@ public abstract class Contraption {
     
     public Collection<BlockLocation> getBlockLocations() {
         return properties.getStructureGadget().getBlockLocations(anchor);
+    }
+    
+    public void blockDestroyed(Block block) {
+        
     }
 }

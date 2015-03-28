@@ -59,13 +59,13 @@ public class Offset {
      * @param location Location to offset
      * @return Potential anchors for offset
      */
-    public Set<Anchor> getPotentialAnchors(Location location) {
+    public Set<Anchor> getPotentialAnchors(BlockLocation location) {
         Set<Anchor> anchors = new HashSet<Anchor>();
         ContraptionsPlugin.toConsole("Potential anchors for " + location.toString());
         for (Orientation orientation : Orientation.values()) {
             Offset orientatedOffset = this.orient(orientation);
-            anchors.add(new Anchor(orientation, location.clone().subtract(orientatedOffset.toVector())));
-            ContraptionsPlugin.toConsole("Orientation " + orientation.name() + ". " + new Anchor(orientation, location.clone().subtract(orientatedOffset.toVector())).toString());
+            anchors.add(new Anchor(orientation, new BlockLocation(location.getWorld(),location.x-orientatedOffset.x,
+                    location.y-orientatedOffset.y,location.z-orientatedOffset.z)));
         }
         return anchors;
     }

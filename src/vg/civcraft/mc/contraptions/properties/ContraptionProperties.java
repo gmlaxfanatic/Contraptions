@@ -4,14 +4,13 @@ import vg.civcraft.mc.contraptions.ContraptionManager;
 import vg.civcraft.mc.contraptions.ContraptionsPlugin;
 import vg.civcraft.mc.contraptions.contraptions.Contraption;
 import vg.civcraft.mc.contraptions.utility.Response;
-import java.util.UUID;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.gadgets.StructureGadget;
 import vg.civcraft.mc.contraptions.utility.Anchor;
+import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.contraptions.utility.Offset;
 import vg.civcraft.mc.contraptions.utility.Structure;
 
@@ -77,7 +76,7 @@ public abstract class ContraptionProperties {
      * @param anchor The Anchor to create the Contraption
      * @return A Response to the success of the creation
      */
-    public abstract Response createContraption(Anchor anchor);
+    public abstract Response createContraption(BlockLocation location);
 
     /**
      * Gets the type of the properties

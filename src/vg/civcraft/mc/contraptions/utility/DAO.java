@@ -3,6 +3,7 @@ package vg.civcraft.mc.contraptions.utility;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import vg.civcraft.mc.contraptions.contraptions.Contraption;
 
@@ -39,6 +40,10 @@ public class DAO {
         return associatedContraptions.get(location);
     }
 
+    public Collection<Contraption> getContraptions(BlockLocation location) {
+        return getAssociatedContraptions(location);
+    }
+    
     /**
      * Inserts a Contraption
      *
@@ -64,5 +69,23 @@ public class DAO {
                 associatedContraptions.put(location, contraptions);
             }
         }
+    }
+
+    public boolean removeContraptions(Contraption contraption) {
+        if(contraptions.containsKey(contraption.getLocation())) {
+            contraptions.remove(contraption.getLocation());
+            return true;
+        }
+        return false;
+    }
+    
+    public void removeAssociatedBlocks(Contraption contraption) {
+        for(BlockLocation location:contraption.getBlockLocations()){
+            associatedContraptions.remove(location);
+        }
+    }
+    
+    public Iterator<Contraption> iterator() {
+        return contraptions.values().iterator();
     }
 }

@@ -34,10 +34,10 @@ public class Anchor implements Serializable {
     public final Orientation orientation;
     public final BlockLocation location;
 
-    public Anchor(Orientation orientation, Location location) {
+    public Anchor(Orientation orientation, BlockLocation location) {
 
         this.orientation = orientation;
-        this.location = new BlockLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        this.location = new BlockLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
     
     /**
@@ -102,5 +102,13 @@ public class Anchor implements Serializable {
     
     public static Anchor fromJSON(JSONObject jsonObject) {
         throw new UnsupportedOperationException("Method not supported yet");
+    }
+    
+    public BlockLocation getLocation(){
+        return location;
+    }
+    
+    public Orientation getOrientation(){
+        return orientation;
     }
 }

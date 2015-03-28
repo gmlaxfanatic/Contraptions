@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Location;
@@ -28,6 +29,8 @@ import org.json.JSONWriter;
 import vg.civcraft.mc.citadel.Citadel;
 import vg.civcraft.mc.citadel.ReinforcementManager;
 import vg.civcraft.mc.citadel.reinforcement.PlayerReinforcement;
+import vg.civcraft.mc.contraptions.utility.BlockLocation;
+import vg.civcraft.mc.contraptions.utility.DAO;
 import vg.civcraft.mc.namelayer.permission.PermissionType;
 
 /**
@@ -38,6 +41,7 @@ public class ContraptionManager {
     Plugin plugin;
     Map<String, ContraptionProperties> contraptionProperties;
     ReinforcementManager reinforcementManager;
+    DAO dao;
 
     /**
      * Creates a ContraptionManager
@@ -50,7 +54,7 @@ public class ContraptionManager {
             reinforcementManager = Citadel.getReinforcementManager();
         }
         contraptionProperties = new HashMap<String, ContraptionProperties>();
-        contraptions = new HashMap<Location, Contraption>();
+        dao = new DAO();
     }
 
     /**
@@ -110,12 +114,12 @@ public class ContraptionManager {
                 ContraptionsPlugin.toConsole("Loading Factory with ID " + ID);
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
-                    //If there isn't already a Contraption at the location load up the contraption
-                    if (!contraptions.containsKey(contraption.getLocation())) {
-                        contraptions.put(contraption.getLocation(), contraption);
+                    //If there isn't already a Contraption at the bukkitLocation load up the contraption
+                    if (dao.getContraptionByLocation(contraption.getLocation())!=null) {
+                        dao.registerContraption(contraption);
                         ContraptionsPlugin.toConsole("Loaded Factory: " + contraption.save().toString(2));
                     }
-                    //If there is already a Contraption at that location permenantly delete that contraption
+                    //If there is already a Contraption at that bukkitLocation permenantly delete that contraption
                     //However log the information for larborous fixing that should never need to be done
                     else {
                         ContraptionsPlugin.toConsole("Deleting Factory due to location conflict:\n" + contraption.save().toString(2));
@@ -146,8 +150,9 @@ public class ContraptionManager {
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
             jsonWriter.array();
-            for (Contraption contraption : contraptions.values()) {
-                jsonWriter.value(contraption.save());
+            Iterator<Contraption> contraptions = dao.iterator();
+            while(contraptions.hasNext()){
+                jsonWriter.value(contraptions.next().save());
             }
             jsonWriter.endArray();
             bufferedWriter.flush();
@@ -158,33 +163,29 @@ public class ContraptionManager {
     }
 
     /**
-     * Gets a Contraption associated with the given location
+     * Gets a Contraption associated with the given bukkitLocation
      *
-     * @param location The location to check
-     * @return Contraption at location or null
+     * @param location The bukkitLocation to check
+     * @return Contraption at bukkitLocation or null
      */
-    public Contraption getContraption(Location location) {
-        return contraptions.get(location);
+    public Contraption getContraption(BlockLocation location) {
+        return dao.getContraptionByLocation(location);
 
     }
 
     /**
-     * Gets contraptions located within a square around the given location
+     * Gets contraptions located within a square around the given bukkitLocation
      *
-     * @param location Central location
+     * @param location Central bukkitLocation
      * @param radius   Square radius from which to search
      * @return Set of contraptions in radius
      */
-    public Set<Contraption> getContraptions(Location location, int radius) {
+    public Set<Contraption> getContraptions(BlockLocation location, int radius) {
         Set<Contraption> contraptions = new HashSet<Contraption>();
         Contraption contraption;
-        Location currentLocation = location.clone();
-
         for (int x = -radius; x <= radius; x++) {
-            currentLocation.setX(x);
-            for (int z = -radius; z <= radius; z++) {
-                currentLocation.setZ(z);
-                contraption = getContraption(currentLocation);
+           for (int z = -radius; z <= radius; z++) {
+                contraption = getContraption(new BlockLocation(location.world,x,location.y,z));
                 if (contraption != null) {
                     contraptions.add(contraption);
                 }
@@ -194,12 +195,12 @@ public class ContraptionManager {
     }
 
     /**
-     * Creates a factory at the location
+     * Creates a factory at the bukkitLocation
      *
-     * @param location The location to create a contraption
+     * @param location The bukkitLocation to create a contraption
      * @return The response related to the creation solution
      */
-    public Response createContraption(Location location, Player player) {
+    public Response createContraption(BlockLocation location, Player player) {
         Block block = location.getBlock();
         boolean matchedBlock = false;
         Response response;
@@ -212,7 +213,7 @@ public class ContraptionManager {
                     StringBuilder alert = new StringBuilder();
                     alert.append("Created ").append(response.getContraption().getName());
                     alert.append(" belonging to group ").append(response.getContraption().getGroup());
-                    alert.append(" at (").append(location.getBlockX()).append(" ").append(location.getBlockY()).append(" ").append(location.getBlockZ());
+                    alert.append(" at (").append(location.x).append(" ").append(location.y).append(" ").append(location.z);
                     alert.append(") by player ").append(player.getUniqueId());
                     ContraptionsPlugin.toConsole(alert.toString());
 
@@ -234,7 +235,8 @@ public class ContraptionManager {
      * @param cotraption Contraption to register
      */
     public void registerContraption(Contraption cotraption) {
-        contraptions.put(cotraption.getLocation(), cotraption);
+        dao.registerContraption(cotraption);
+        dao.registerAssociatedBlocks(cotraption);
     }
 
     /**
@@ -243,11 +245,8 @@ public class ContraptionManager {
      * @param contraption Contraption to be destroyed
      */
     public void destroy(Contraption contraption) {
-        Location location = contraption.getLocation();
-        if (contraptions.containsKey(location)) {
-            contraptions.remove(location);
-            String eventMessage = String.format("Destroyed %s at (%d, %d, %d)", contraption.getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-            ContraptionsPlugin.toConsole(eventMessage);
+        if (dao.removeContraptions(contraption)) {
+            dao.removeAssociatedBlocks(contraption);
             contraption.destroy();
         }
     }
@@ -258,8 +257,8 @@ public class ContraptionManager {
      * @param block Block which was broken
      */
     public void handleBlockDestruction(Block block) {
-        if (contraptions.containsKey(block.getLocation())) {
-            destroy(contraptions.get(block.getLocation()));
+        for(Contraption contraption:dao.getContraptions(new BlockLocation(block.getLocation()))){
+            contraption.blockDestroyed(block);
         }
     }
 
@@ -278,20 +277,21 @@ public class ContraptionManager {
         if (!player.getItemInHand().getType().equals(Material.STICK)) {
             return;
         }
-        Location location = e.getClickedBlock().getLocation();
+        Location bukkitLocation = e.getClickedBlock().getLocation();
         //Checks if permissions are active and block is reinforced
-        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(location)) {
-            if (((PlayerReinforcement) reinforcementManager.getReinforcement(location)).isAccessible(player, PermissionType.CHESTS)) {
+        if (ContraptionsPlugin.PERMISSIONS && reinforcementManager.isReinforced(bukkitLocation)) {
+            if (((PlayerReinforcement) reinforcementManager.getReinforcement(bukkitLocation)).isAccessible(player, PermissionType.CHESTS)) {
                 Response response = new Response(false, "You don't have permission to interact with Contraptions at this block");
                 response.conveyTo(player);
                 return;
             }
         }
-        Contraption contraption = getContraption(location);
-        //If a contraption doesn't exist on location
+        BlockLocation location = new BlockLocation(bukkitLocation);
+        Contraption contraption = dao.getContraptionByLocation(location);
+        //If a contraption doesn't exist on bukkitLocation
         if (contraption == null) {
             createContraption(location, player).conveyTo(player);
-        } //If contraption exists at location
+        } //If contraption exists at bukkitLocation
         else {
             contraption.trigger().conveyTo(player);
         }

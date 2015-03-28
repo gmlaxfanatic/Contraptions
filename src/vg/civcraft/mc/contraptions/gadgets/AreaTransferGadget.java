@@ -111,7 +111,7 @@ public class AreaTransferGadget {
      * @return The Contraptions surrounding the given contraption
      */
     private Set<Contraption> getContraptions(Contraption contraption) {
-        return contraption.getContraptionManager().getContraptions(contraption.getAnchor().getBukkitLocation(), radius);
+        return contraption.getContraptionManager().getContraptions(contraption.getAnchor().getLocation(), radius);
     }
 
     class AreaTransferRunnable extends BukkitRunnable {
