@@ -44,7 +44,11 @@ public class DAO {
      * @return Collection of contraptions associated with location
      */
     public Collection<Contraption> getAssociatedContraptions(BlockLocation location) {
-        return associatedContraptions.get(location);
+        Collection<Contraption> contraptions = associatedContraptions.get(location);
+        if (contraptions == null) {
+            return new ArrayList();
+        }
+        return contraptions;
     }
 
     /**

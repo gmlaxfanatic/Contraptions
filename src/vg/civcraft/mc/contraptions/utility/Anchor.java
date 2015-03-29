@@ -127,17 +127,26 @@ public class Anchor implements Serializable {
 
     /**
      * Imports this Anchor from a JSONObject
+     *
      * @param jsonObject JSONObject containing Anchor
      * @return A new Anchor
      */
     public static Anchor fromJSON(JSONObject jsonObject) {
         Orientation orientation = Orientation.getOrientation(jsonObject.getInt("orientation"));
         BlockLocation location = BlockLocation.fromJSON(jsonObject.getJSONArray("location"));
-        return new Anchor(orientation,location);
+        return new Anchor(orientation, location);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("orientation", orientation.id);
+        jsonObject.put("location", location.toJSON());
+        return jsonObject;
     }
 
     /**
      * Gets the location of this Anchor
+     *
      * @return
      */
     public BlockLocation getLocation() {
@@ -146,6 +155,7 @@ public class Anchor implements Serializable {
 
     /**
      * Gets the Orientation of this Anchor
+     *
      * @return Orientation of this Anchor
      */
     public Orientation getOrientation() {

@@ -100,7 +100,7 @@ public class InventoryHelpers {
     }
 
     public static int lcm(Set<ItemStack> itemStacks) {
-        int[] amounts = new int[1];
+        int[] amounts = new int[itemStacks.size()];
         int index=0;
         for(ItemStack itemStack:itemStacks){
             amounts[index] = itemStack.getAmount();

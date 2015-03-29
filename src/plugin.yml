@@ -1,4 +1,4 @@
 name: Contraptions
-main: com.untamedears.contraptions.ContraptionsPlugin
+main: vg.civcraft.mc.contraptions.ContraptionsPlugin
 author: gmlaxfanatic
 version: 0.0

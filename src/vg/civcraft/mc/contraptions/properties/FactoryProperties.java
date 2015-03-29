@@ -97,10 +97,6 @@ public class FactoryProperties extends ContraptionProperties {
      */
     @Override
     public Response createContraption(BlockLocation location) {
-        //Check if interaction block is correct
-        if (structureGadget.validBlock(location.getBlock())) {
-            return new Response(false, "Incorrect block for a Factory");
-        }
         Anchor anchor = structureGadget.exists(location);
         if(anchor==null){
             return new Response(false,"Incorrect structure for factory");

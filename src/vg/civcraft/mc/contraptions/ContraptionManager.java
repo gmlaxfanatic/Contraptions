@@ -115,11 +115,10 @@ public class ContraptionManager {
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     //If there isn't already a Contraption at the bukkitLocation load up the contraption
-                    if (dao.getContraption(contraption.getLocation())!=null) {
+                    if (dao.getContraption(contraption.getLocation()) != null) {
                         dao.registerContraption(contraption);
                         ContraptionsPlugin.toConsole("Loaded Factory: " + contraption.save().toString(2));
-                    }
-                    //If there is already a Contraption at that bukkitLocation permenantly delete that contraption
+                    } //If there is already a Contraption at that bukkitLocation permenantly delete that contraption
                     //However log the information for larborous fixing that should never need to be done
                     else {
                         ContraptionsPlugin.toConsole("Deleting Factory due to location conflict:\n" + contraption.save().toString(2));
@@ -151,7 +150,7 @@ public class ContraptionManager {
             JSONWriter jsonWriter = new JSONWriter(bufferedWriter);
             jsonWriter.array();
             Iterator<Contraption> contraptions = dao.iterator();
-            while(contraptions.hasNext()){
+            while (contraptions.hasNext()) {
                 jsonWriter.value(contraptions.next().save());
             }
             jsonWriter.endArray();
@@ -177,15 +176,15 @@ public class ContraptionManager {
      * Gets contraptions located within a square around the given bukkitLocation
      *
      * @param location Central bukkitLocation
-     * @param radius   Square radius from which to search
+     * @param radius Square radius from which to search
      * @return Set of contraptions in radius
      */
     public Set<Contraption> getContraptions(BlockLocation location, int radius) {
         Set<Contraption> contraptions = new HashSet<Contraption>();
         Contraption contraption;
         for (int x = -radius; x <= radius; x++) {
-           for (int z = -radius; z <= radius; z++) {
-                contraption = getContraption(new BlockLocation(location.world,x,location.y,z));
+            for (int z = -radius; z <= radius; z++) {
+                contraption = getContraption(new BlockLocation(location.world, x, location.y, z));
                 if (contraption != null) {
                     contraptions.add(contraption);
                 }
@@ -208,6 +207,7 @@ public class ContraptionManager {
             if (contraptionProperty.validBlock(block)) {
                 matchedBlock = true;
                 response = contraptionProperty.createContraption(location);
+                response.conveyTo(player);
                 if (response.getSuccess()) {
                     //Publish creation to console for logging
                     StringBuilder alert = new StringBuilder();
@@ -216,7 +216,6 @@ public class ContraptionManager {
                     alert.append(" at (").append(location.x).append(" ").append(location.y).append(" ").append(location.z);
                     alert.append(") by player ").append(player.getUniqueId());
                     ContraptionsPlugin.toConsole(alert.toString());
-
                     return response;
                 }
             }
@@ -257,7 +256,7 @@ public class ContraptionManager {
      * @param block Block which was broken
      */
     public void handleBlockDestruction(Block block) {
-        for(Contraption contraption:dao.getContraptions(new BlockLocation(block.getLocation()))){
+        for (Contraption contraption : dao.getContraptions(new BlockLocation(block.getLocation()))) {
             contraption.blockDestroyed(block);
         }
     }

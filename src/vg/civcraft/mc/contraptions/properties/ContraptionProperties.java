@@ -56,13 +56,7 @@ public abstract class ContraptionProperties {
         JSONObject saveJSON = new JSONObject();
         saveJSON.put("Type", getType());
         saveJSON.put("ID", getID());
-        ContraptionsPlugin.toConsole(contraption.getLocation().toString());
-        ContraptionsPlugin.toConsole(contraption.getLocation().getWorld().toString());
-        String location = "[" + contraption.getLocation().getWorld().getUID() + ","
-                + contraption.getLocation().x + ","
-                + contraption.getLocation().y + ","
-                + contraption.getLocation().z + "]";
-        saveJSON.put("Location", new JSONArray(location));
+        saveJSON.put("anchor", contraption.getAnchor().toJSON());
         saveJSON.put("Resources", contraption.getResources());
         return saveJSON;
     }

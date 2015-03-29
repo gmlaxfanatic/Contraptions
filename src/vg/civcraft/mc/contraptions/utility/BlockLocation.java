@@ -1,5 +1,6 @@
 package vg.civcraft.mc.contraptions.utility;
 
+import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -153,9 +154,52 @@ public class BlockLocation {
     public int getZ() {
         return z;
     }
-    
+
     public static BlockLocation fromJSON(JSONArray jsonArray) {
         World world = ContraptionsPlugin.getContraptionPlugin().getServer().getWorld(jsonArray.getString(0));
-        return new BlockLocation(world,jsonArray.getInt(1),jsonArray.getInt(2),jsonArray.getInt(3));
+        return new BlockLocation(world, jsonArray.getInt(1), jsonArray.getInt(2), jsonArray.getInt(3));
+    }
+    
+    public JSONArray toJSON() {
+        return (new JSONArray()).put(world.getName()).put(x).put(y).put(z);
+    }
+
+    /**
+     * Based on Bukkit hashCode() for Location, likely a non-optimal but workable solution
+     * @return A Hashcode for this BlockLocation
+     */
+    @Override
+    public int hashCode() {
+        int hash = 3;
+
+        hash = 19 * hash + (this.world != null ? this.world.hashCode() : 0);
+        hash = 19 * hash + (int) (Double.doubleToLongBits(this.x) ^ Double.doubleToLongBits(this.x) >>> 32);
+        hash = 19 * hash + (int) (Double.doubleToLongBits(this.y) ^ Double.doubleToLongBits(this.y) >>> 32);
+        hash = 19 * hash + (int) (Double.doubleToLongBits(this.z) ^ Double.doubleToLongBits(this.z) >>> 32);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BlockLocation other = (BlockLocation) obj;
+        if (!Objects.equals(this.world, other.world)) {
+            return false;
+        }
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        if (this.z != other.z) {
+            return false;
+        }
+        return true;
     }
 }
