@@ -1,5 +1,6 @@
 package vg.civcraft.mc.contraptions.gadgets;
 
+import java.util.Collection;
 import vg.civcraft.mc.contraptions.utility.voronoi.GraphEdge;
 import vg.civcraft.mc.contraptions.utility.voronoi.Voronoi;
 import vg.civcraft.mc.contraptions.contraptions.Contraption;
@@ -7,7 +8,6 @@ import vg.civcraft.mc.contraptions.utility.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Calculates the 2D territory controlled by a registered contraption
@@ -28,7 +28,6 @@ public class TerritoryGadget {
      * Creates an empty Territory Gadget
      */
     public TerritoryGadget() {
-
         territory = new HashMap<Contraption, Double>();
         resources = new HashMap<Contraption, Resource>();
     }
@@ -42,8 +41,7 @@ public class TerritoryGadget {
     public void addContraptions(Contraption contraption, Resource resource) {
         territory.put(contraption, 0d);
         resources.put(contraption, resource);
-        calculateTerritories();
-        updateResources();
+        updateTerritories();
     }
 
     /**
@@ -54,39 +52,30 @@ public class TerritoryGadget {
     public void removeContraption(Contraption contraption) {
         territory.remove(contraption);
         resources.remove(contraption);
-        calculateTerritories();
-        updateResources();
-    }
-
-    /**
-     * Updated the Resources for all of the registered Contraptions by dividing
-     * the territory they control by the total territory
-     */
-    private void updateResources() {
-        for (Contraption contraption : resources.keySet()) {
-            resources.get(contraption).setAndUpdate(territory.get(contraption) / (4 * radius * radius));
-        }
+        updateTerritories();
     }
 
     /**
      * In 2D calculates the number of blocks the each Contraption controls
      */
-    private void calculateTerritories() {
-        if (territory.isEmpty()) {
+    private void updateTerritories() {
+        Collection<Contraption> contraptions = resources.keySet();
+        if (contraptions.isEmpty()) {
             return;
         }
         //Creates a new Voronoi object with a minimum spacing of 1
         Voronoi v = new Voronoi(1);
         //Gets Contraptions in a nice format and sets territory control to 0
-        Contraption[] sitenbrs = new Contraption[territory.size()];
+        Contraption[] sitenbrs = new Contraption[contraptions.size()];
         int i = 0;
-        double[] latitudes = new double[territory.size()];
-        double[] longitudes = new double[territory.size()];
-        for (Contraption contraption : territory.keySet()) {
-            territory.put(contraption, 0d);
+        double[] latitudes = new double[contraptions.size()];
+        double[] longitudes = new double[contraptions.size()];
+        for (Contraption contraption : contraptions) {
             sitenbrs[i] = contraption;
             latitudes[i] = contraption.getLocation().x;
             longitudes[i] = contraption.getLocation().z;
+            //reset resource to 0
+            resources.get(contraption).set(0d);
         }
         //Calculates edges of Voronoi diagram
         List<GraphEdge> graphEdges = v.generateVoronoi(latitudes, longitudes, -radius, radius, -radius, radius);
@@ -106,7 +95,7 @@ public class TerritoryGadget {
     private void updateArea(Contraption contraption, GraphEdge graphEdge) {
         double triangularArea = areaTriangle(contraption.getLocation().x,
                 contraption.getLocation().z, graphEdge.x1, graphEdge.y1, graphEdge.x1, graphEdge.y2);
-        territory.put(contraption, triangularArea + territory.get(contraption));
+        resources.get(contraption).change(triangularArea);
     }
 
     /**

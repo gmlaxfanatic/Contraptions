@@ -56,7 +56,7 @@ public class ConversionGadget {
      * Given an inventory checks if there are enough ItemStacks to generate
      * amount of resource
      *
-     * @param amount    The amount of resource to generate
+     * @param amount The amount of resource to generate
      * @param inventory The inventory to pull ItemStacks from
      * @return Check if there are enough ItemStacks to generate amount
      */
@@ -68,15 +68,19 @@ public class ConversionGadget {
     /**
      * Consumes ItemSets to generate a resource
      *
-     * @param amount    Amount of resource to produce
+     * @param amount Amount of resource to produce
      * @param inventory The inventory from which to draw ItemStacks
-     * @param resource  The resource to generate
+     * @param resource The resource to generate
      * @return If there were enough ItemStacks to generate amount
      */
     public boolean convertToResource(double amount, Inventory inventory, Resource resource) {
-        int numberOfSets = (int) Math.ceil(amount / conversion);
-        if (InventoryHelpers.removeMultiple(inventory, itemStacks, numberOfSets)) {
-            resource.change(numberOfSets * conversion);
+        int itemAmount = (int) Math.ceil(amount / conversion);
+        return convertToResource(itemAmount, inventory, resource);
+    }
+
+    public boolean convertToResrouce(int itemAmount, Inventory inventory, Resource resource) {
+        if (InventoryHelpers.removeMultiple(inventory, itemStacks, itemAmount)) {
+            resource.change(itemAmount * conversion);
             return true;
         }
         return false;
@@ -85,9 +89,9 @@ public class ConversionGadget {
     /**
      * Consumes a resource to generate ItemStacks
      *
-     * @param resource  Resource to consume
+     * @param resource Resource to consume
      * @param inventory Inventory to place ItemStacks in
-     * @param amount    Amount of resource to consume
+     * @param amount Amount of resource to consume
      */
     public void convertToItemStacks(Resource resource, Inventory inventory, double amount) {
         int numberOfSets = (int) Math.ceil(amount / conversion);
@@ -97,10 +101,55 @@ public class ConversionGadget {
     }
 
     /**
+     * Attempts to convert to a resource until that resource exceeds amount
+     *
+     * @param resource Resource to convert to
+     * @param inventory Inventory to get ItemStacks from
+     * @param amount Amount which the resource should exceed
+     * @return If the resource exceeds the amount
+     */
+    public boolean convertUpToResource(Resource resource, Inventory inventory, double amount) {
+        double resourceRequired = amount - resource.get();
+        if (resourceRequired <= 0) {
+            return true;
+        }
+        int itemsRequired = (int) Math.ceil(resourceRequired / conversion);
+        int itemsAvailable = InventoryHelpers.amountAvailable(inventory, itemStacks);
+        if (itemsAvailable >= itemsRequired) {
+            convertToResource(itemsRequired, inventory, resource);
+            return true;
+        } else {
+            convertToResource(itemsAvailable, inventory, resource);
+            return false;
+        }
+    }
+
+    /**
+     * Converts resource to ItemStacks until the resource is below amount
+     *
+     * @param resource Resource to convert
+     * @param inventory Inventory to place ItemStacks in
+     * @param amount Amount to drop resource below
+     */
+    public void ConvertDownToResource(Resource resource, Inventory inventory, double amount) {
+        if (resource.get() > amount) {
+            convertToItemStacks(resource, inventory, resource.get() - amount);
+        }
+        //Required becuase the conversion gadget will round down, failing to convert to the last ItemStack
+        if (resource.get() > amount) {
+            convertToItemStacks(resource, inventory, conversion);
+        }
+    }
+
+    public double getConversionRate() {
+        return conversion;
+    }
+
+    /**
      * Gets a ConvertToItemStackRunnable
      *
      * @param contraption Associated contraption
-     * @param resource    Associated resource
+     * @param resource Associated resource
      * @return A BukkitTask associated with a runnable of this ConversionGadget
      */
     public BukkitTask getConvertToItemStacksRunnable(Contraption contraption, Resource resource) {
@@ -117,7 +166,7 @@ public class ConversionGadget {
          * ItemStacks
          *
          * @param contraption Contraption associated with runnable
-         * @param resource    Resource associated with runnable
+         * @param resource Resource associated with runnable
          */
         public ConvertToItemStacksRunnable(Contraption contraption, Resource resource) {
             this.contraption = contraption;
@@ -128,9 +177,9 @@ public class ConversionGadget {
          * Schedules the task and grows the resource to the delay
          *
          * @param plugin The Contraptions Plugin
-         * @param delay  The delay until the task is executed in ticks
+         * @param delay The delay until the task is executed in ticks
          * @param period The period in ticks with which the task is executed
-         * 
+         *
          * @return A Task associated with this runnable
          */
         @Override
@@ -153,7 +202,7 @@ public class ConversionGadget {
      *
      * @param jsonObject The JSONObject containing the information
      * @return A ConversionGadget with the properties contained in the
-     *         JSONObject
+     * JSONObject
      */
     public static ConversionGadget fromJSON(JSONObject jsonObject) {
         Set<ItemStack> itemStacks = InventoryHelpers.fromJSON(jsonObject.getJSONArray("inputs"));

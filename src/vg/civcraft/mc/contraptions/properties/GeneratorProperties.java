@@ -21,10 +21,12 @@ import vg.civcraft.mc.contraptions.utility.SoundType;
 
 public class GeneratorProperties extends ContraptionProperties {
 
+    int period;
     MatchGadget matchGadget;
     TerritoryGadget territoryGadget;
     ConversionGadget conversionGadget;
-    GrowGadget growGadget;
+    GrowGadget generationGadget;
+    GrowGadget degredationGadget;
     MinMaxGadget minMaxGadget;
 
     /**
@@ -38,12 +40,14 @@ public class GeneratorProperties extends ContraptionProperties {
      * @param conversionGadget The ConversionGadget associated with this
      * specification
      */
-    public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
+    public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, int period, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget generationGadget, GrowGadget degredationGadget, MinMaxGadget minMaxGadget) {
         super(contraptionManager, ID, name);
+        this.period = period;
         this.matchGadget = matchGadget;
         this.territoryGadget = territoryGadget;
         this.conversionGadget = conversionGadget;
-        this.growGadget = growGadget;
+        this.generationGadget = generationGadget;
+        this.degredationGadget = degredationGadget;
         this.minMaxGadget = minMaxGadget;
     }
 
@@ -57,13 +61,15 @@ public class GeneratorProperties extends ContraptionProperties {
      */
     public static GeneratorProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
+        int period = JSONHelpers.loadInt(jsonObject, "period", 600);
         MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject, "building_materials"));
         TerritoryGadget territoryGadget = new TerritoryGadget();
         Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials");
-        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int)(51840000*3.33333)));
-        GrowGadget growGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject,"max_repair",51840000));
-        return new GeneratorProperties(contraptionManager, ID, name, matchGadget, territoryGadget, conversionGadget, growGadget, minMaxGadget);
+        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int) (51840000 * 3.33333)));
+        GrowGadget generationGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "generation_rate", 1));
+        GrowGadget degredationGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject, "max_repair", 51840000));
+        return new GeneratorProperties(contraptionManager, ID, name, period, matchGadget, territoryGadget, conversionGadget, generationGadget, degredationGadget, minMaxGadget);
     }
 
     @Override
@@ -89,8 +95,8 @@ public class GeneratorProperties extends ContraptionProperties {
             return new Response(false, "Incorrect block for a Factory");
         }
         Anchor anchor = structureGadget.exists(location);
-        if(anchor==null){
-            return new Response(false,"Incorrect structure for factory");
+        if (anchor == null) {
+            return new Response(false, "Incorrect structure for factory");
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
@@ -125,8 +131,12 @@ public class GeneratorProperties extends ContraptionProperties {
      *
      * @return The GrowGadget
      */
-    public GrowGadget getGrowGadget() {
-        return growGadget;
+    public GrowGadget getGenerationGadget() {
+        return generationGadget;
+    }
+
+    public GrowGadget getDegradationGadget() {
+        return degredationGadget;
     }
 
     /**
@@ -136,6 +146,10 @@ public class GeneratorProperties extends ContraptionProperties {
      */
     public MinMaxGadget getMinMaxGadget() {
         return minMaxGadget;
+    }
+
+    public int getPeriod() {
+        return period;
     }
 
 }

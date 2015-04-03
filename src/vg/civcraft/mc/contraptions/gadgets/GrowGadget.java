@@ -68,13 +68,17 @@ public class GrowGadget {
      * @param resorce The resource being Grown
      * @param amount  A signed amount to change the resource by
      */
-    private void grow(Resource resource, int amount, Resource scaler) {
+    public void grow(Resource resource, int amount, Resource scaler) {
         if(scaler == null) {
             resource.change(amount*rate);
         }
         else {
             resource.change(amount*rate*scaler.get());
         }
+    }
+    
+    public void grow(Resource resource, int amount) {
+        grow(resource, amount, null);
     }
 
     class GrowRunnable extends BukkitRunnable {
