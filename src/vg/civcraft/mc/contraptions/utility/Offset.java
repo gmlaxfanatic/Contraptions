@@ -3,8 +3,8 @@ package vg.civcraft.mc.contraptions.utility;
 import vg.civcraft.mc.contraptions.utility.Anchor.Orientation;
 import java.util.HashSet;
 import java.util.Set;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
+import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.ContraptionsPlugin;
 
 /**
@@ -63,19 +63,16 @@ public class Offset {
         ContraptionsPlugin.toConsole("Potential anchors for " + location.toString());
         for (Orientation orientation : Orientation.values()) {
             Offset orientatedOffset = this.orient(orientation);
-            anchors.add(new Anchor(orientation, new BlockLocation(location.getWorld(),location.x-orientatedOffset.x,
-                    location.y-orientatedOffset.y,location.z-orientatedOffset.z)));
+            anchors.add(new Anchor(orientation, new BlockLocation(location.getWorld(), location.x - orientatedOffset.x,
+                    location.y - orientatedOffset.y, location.z - orientatedOffset.z)));
         }
         return anchors;
     }
 
-    /**
-     * TODO: Imports an offset from the configuration file
-     *
-     * @param configurationSection
-     * @return
-     */
-    public static Offset fromConfig(ConfigurationSection configurationSection) {
-        return new Offset(configurationSection.getInt("x", 0), configurationSection.getInt("y", 0), configurationSection.getInt("z", 0));
+    public static Offset fromJSON(JSONObject jsonObject) {
+        int x = JSONHelpers.loadInt(jsonObject, "x", 0);
+        int y = JSONHelpers.loadInt(jsonObject, "y", 0);
+        int z = JSONHelpers.loadInt(jsonObject, "z", 0);
+        return new Offset(x, y, z);
     }
 }

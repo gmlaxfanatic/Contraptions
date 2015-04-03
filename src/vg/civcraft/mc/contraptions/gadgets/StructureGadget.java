@@ -1,11 +1,14 @@
 package vg.civcraft.mc.contraptions.gadgets;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Set;
 import org.bukkit.block.Block;
+import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.ContraptionsPlugin;
 import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.BlockLocation;
+import vg.civcraft.mc.contraptions.utility.JSONHelpers;
 import vg.civcraft.mc.contraptions.utility.Offset;
 import vg.civcraft.mc.contraptions.utility.Structure;
 
@@ -76,5 +79,13 @@ public class StructureGadget {
      */
     public Collection<BlockLocation> getBlockLocations(Anchor anchor) {
         return structure.getBlockLocations(anchor);
+    }
+
+    public static StructureGadget fromJSON(JSONObject jsonObject) {
+        String filename = JSONHelpers.loadString(jsonObject, "structure_file");
+        File file = new File(filename);
+        Offset offset = Offset.fromJSON(jsonObject);
+        Structure structure =  Structure.parseSchematic(file);
+        return new StructureGadget(structure,offset);
     }
 }

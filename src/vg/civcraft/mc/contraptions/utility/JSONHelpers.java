@@ -20,6 +20,13 @@ public class JSONHelpers {
         return alt;
     }
 
+    public static String loadString(JSONObject object, String key) {
+        if (object.has(key)) {
+            return object.getString(key);
+        }
+        throw new IllegalArgumentException();
+    }
+    
     public static String loadString(JSONObject object, String key, String alt) {
         if (object.has(key)) {
             return object.getString(key);

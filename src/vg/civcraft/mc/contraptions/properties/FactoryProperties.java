@@ -46,7 +46,7 @@ public class FactoryProperties extends ContraptionProperties {
      * specification
      */
     public FactoryProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, List<ProductionGadget> productionGadgets, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, name);
+        super(contraptionManager, ID, name,ContraptionProperties.SG_DEFAULT);
         this.matchGadget = matchGadget;
         this.productionGadgets = productionGadgets;
         this.conversionGadget = conversionGadget;

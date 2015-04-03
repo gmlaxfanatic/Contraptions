@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
-import vg.civcraft.mc.contraptions.contraptions.Factory;
+import vg.civcraft.mc.contraptions.gadgets.StructureGadget;
 import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.contraptions.utility.JSONHelpers;
@@ -40,8 +40,8 @@ public class GeneratorProperties extends ContraptionProperties {
      * @param conversionGadget The ConversionGadget associated with this
      * specification
      */
-    public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, int period, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget generationGadget, GrowGadget degredationGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, name);
+    public GeneratorProperties(ContraptionManager contraptionManager, String ID, String name, StructureGadget structureGadget, int period, MatchGadget matchGadget, TerritoryGadget territoryGadget, ConversionGadget conversionGadget, GrowGadget generationGadget, GrowGadget degredationGadget, MinMaxGadget minMaxGadget) {
+        super(contraptionManager, ID, name, structureGadget);
         this.period = period;
         this.matchGadget = matchGadget;
         this.territoryGadget = territoryGadget;
@@ -73,6 +73,13 @@ public class GeneratorProperties extends ContraptionProperties {
      * @return The specified FactoryProperties file
      */
     public static GeneratorProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
+        String name = JSONHelpers.loadString(jsonObject, "name", ID);
+        StructureGadget structureGadget = ContraptionProperties.SG_DEFAULT;
+        try {
+            structureGadget = StructureGadget.fromJSON(jsonObject.getJSONObject("structure"));
+        } catch (Exception e) {
+
+        }
         //In ItemSets per day
         double generationRate = JSONHelpers.loadDouble(jsonObject, "generation_rate", 10000);
         //In ItemSets per day
@@ -80,7 +87,6 @@ public class GeneratorProperties extends ContraptionProperties {
         double maxItemStacks = JSONHelpers.loadDouble(jsonObject, "capacity", 500);
         //How frequently to update the generator in seconds
         int period = JSONHelpers.loadInt(jsonObject, "period", 600);
-        String name = JSONHelpers.loadString(jsonObject, "name", ID);
         MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject, "construction_cost"));
         Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "materials");
         TerritoryGadget territoryGadget = new TerritoryGadget();
@@ -88,7 +94,7 @@ public class GeneratorProperties extends ContraptionProperties {
         GrowGadget generationGadget = new GrowGadget(generationRate / (24 * 60 * 60 * 20));
         GrowGadget degredationGadget = new GrowGadget(degredationRate / (24 * 60 * 60 * 20));
         MinMaxGadget minMaxGadget = new MinMaxGadget(0, maxItemStacks);
-        return new GeneratorProperties(contraptionManager, ID, name, period, matchGadget, territoryGadget, conversionGadget, generationGadget, degredationGadget, minMaxGadget);
+        return new GeneratorProperties(contraptionManager, ID, name, structureGadget, period, matchGadget, territoryGadget, conversionGadget, generationGadget, degredationGadget, minMaxGadget);
     }
 
     @Override

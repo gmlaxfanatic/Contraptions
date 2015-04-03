@@ -30,7 +30,7 @@ public abstract class ContraptionProperties {
     StructureGadget structureGadget;
     String ID;
     String name;
-    StructureGadget SG_DEFAULT = new StructureGadget(new Structure(new byte[][][]{{{(byte) Material.CHEST.getId()}}}), new Offset(0, 0, 0));
+    static StructureGadget SG_DEFAULT = new StructureGadget(new Structure(new byte[][][]{{{(byte) Material.CHEST.getId()}}}), new Offset(0, 0, 0));
 
     /**
      * Creates a new instance of Contraption properties
@@ -39,11 +39,11 @@ public abstract class ContraptionProperties {
      * @param ID A unique string associated with this Contraption specification
      * @param name The Name this Contraption to referred to by
      */
-    public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name) {
+    public ContraptionProperties(ContraptionManager contraptionManager, String ID, String name, StructureGadget structureGadget) {
         this.contraptionManager = contraptionManager;
         this.ID = ID;
         this.name = name;
-        this.structureGadget = SG_DEFAULT;
+        this.structureGadget = structureGadget;
     }
 
     /**
