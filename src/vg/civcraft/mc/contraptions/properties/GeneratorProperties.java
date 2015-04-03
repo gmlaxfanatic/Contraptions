@@ -52,7 +52,20 @@ public class GeneratorProperties extends ContraptionProperties {
     }
 
     /**
-     * Imports a GeneratorProperties object from a configuration file
+     * Imports a GeneratorProperties object from a configuration file.
+     *
+     * The config file should be formatted as follows:
+     * <pre>
+     * {
+     *   name: "ID" //Common name of this generator
+     *   generation_rate: 10000 //ItemStacks generated globally per day
+     *   degredation_rate: 50 //ItemStacks degraded by a generator per day
+     *   capacity: 500 //Amount of excess capacity of ItemStacks the generator will hold
+     *   period: 600 //Frequency of updates of the generator in seconds
+     *   construction_cost: { ItemSet } //Cost to build Generator
+     *   materials: { ItemSet } //Materials generated and consumed by Generator
+     * }
+     * </pre>
      *
      * @param contraptionManager The ContraptionManager
      * @param ID The Unique ID of this specification
@@ -60,15 +73,21 @@ public class GeneratorProperties extends ContraptionProperties {
      * @return The specified FactoryProperties file
      */
     public static GeneratorProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
-        String name = jsonObject.getString("name");
+        //In ItemSets per day
+        double generationRate = JSONHelpers.loadDouble(jsonObject, "generation_rate", 10000);
+        //In ItemSets per day
+        double degredationRate = JSONHelpers.loadDouble(jsonObject, "degredation_rate", 50);
+        double maxItemStacks = JSONHelpers.loadDouble(jsonObject, "capacity", 500);
+        //How frequently to update the generator in seconds
         int period = JSONHelpers.loadInt(jsonObject, "period", 600);
-        MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject, "building_materials"));
+        String name = JSONHelpers.loadString(jsonObject, "name", ID);
+        MatchGadget matchGadget = new MatchGadget(JSONHelpers.loadItemStacks(jsonObject, "construction_cost"));
+        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "materials");
         TerritoryGadget territoryGadget = new TerritoryGadget();
-        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials");
-        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int) (51840000 * 3.33333)));
-        GrowGadget generationGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "generation_rate", 1));
-        GrowGadget degredationGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject, "max_repair", 51840000));
+        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, 1);
+        GrowGadget generationGadget = new GrowGadget(generationRate / (24 * 60 * 60 * 20));
+        GrowGadget degredationGadget = new GrowGadget(degredationRate / (24 * 60 * 60 * 20));
+        MinMaxGadget minMaxGadget = new MinMaxGadget(0, maxItemStacks);
         return new GeneratorProperties(contraptionManager, ID, name, period, matchGadget, territoryGadget, conversionGadget, generationGadget, degredationGadget, minMaxGadget);
     }
 
