@@ -52,7 +52,10 @@ public class ContraptionsPlugin extends JavaPlugin {
         }
         //Load all files in the configs folder
         for (File configFile : configFolder.listFiles()) {
-            contraptionManager.loadProperties(configFile);
+            //If its not the schematics folder
+            if (!configFile.getName().equals("schematics")) {
+                contraptionManager.loadProperties(configFile);
+            }
         }
 
         //Loading Contraptions

@@ -66,7 +66,7 @@ public class Factory extends Contraption implements MenuCommand {
         for (ProductionGadget gadget : getProperties().getProductionGadgets()) {
             menu.addEntry(gadget.getName())
                     .setHover(new Object[]{"Convert: ", gadget.getInputs(), "\nTo: ", gadget.getOutputs()})
-                    .setCommand(menu, new String[]{Integer.toString(index)});
+                    .setCommand(this, new String[]{Integer.toString(index)});
             index++;
         }
         menu.addEntry("Repair")

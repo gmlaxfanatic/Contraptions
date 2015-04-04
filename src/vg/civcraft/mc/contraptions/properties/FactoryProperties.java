@@ -18,7 +18,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 import vg.civcraft.mc.contraptions.gadgets.StructureGadget;
-import vg.civcraft.mc.contraptions.gadgets.TerritoryGadget;
 import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
@@ -68,11 +67,11 @@ public class FactoryProperties extends ContraptionProperties {
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
         String name = JSONHelpers.loadString(jsonObject, "name", ID);
-        StructureGadget structureGadget = ContraptionProperties.SG_DEFAULT;
-        try {
-            structureGadget = StructureGadget.fromJSON(jsonObject.getJSONObject("structure"));
-        } catch (Exception e) {
-
+        StructureGadget structureGadget;
+        if (jsonObject.has("structure")) {
+            structureGadget = StructureGadget.fromJSON(jsonObject);
+        } else{
+            structureGadget = ContraptionProperties.SG_DEFAULT;
         }
         //How frequently to update the generator in seconds
         int period = JSONHelpers.loadInt(jsonObject, "period", 600);
@@ -120,7 +119,7 @@ public class FactoryProperties extends ContraptionProperties {
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
             Factory newFactory = new Factory(this, anchor);
             contraptionManager.registerContraption(newFactory);
-            SoundType.CREATION.play(anchor.getLocation());
+            SoundType.CREATION.play(newFactory.getLocation());
             return new Response(true, "Created a " + newFactory.getName() + " factory!", newFactory);
         }
         return new Response(false, "Incorrect items for a Factory");

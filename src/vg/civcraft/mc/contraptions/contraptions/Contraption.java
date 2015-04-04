@@ -105,7 +105,7 @@ public abstract class Contraption {
      * @return The Location of the Contraption
      */
     public BlockLocation getLocation() {
-        return anchor.location;
+        return anchor.getLocationOfOffset(getProperties().getStructureGadget().getOffset());
     }
     /**
      * Gets the Anchor of the Contraption

@@ -94,7 +94,7 @@ public class Structure implements Iterable<Offset> {
     /**
      * Checks if the given offset is within the bounds of the structure
      */
-    private boolean validOffset(Offset offset) {
+    public boolean validOffset(Offset offset) {
         return offset.x < blocks.length && offset.y < blocks[0].length && offset.z < blocks[0][0].length
                 && offset.x >= 0 && offset.y >= 0 && offset.z >= 0;
     }

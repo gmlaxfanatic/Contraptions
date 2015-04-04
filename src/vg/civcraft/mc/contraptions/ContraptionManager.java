@@ -115,7 +115,7 @@ public class ContraptionManager {
                 if (contraptionProperties.containsKey(ID)) {
                     Contraption contraption = contraptionProperties.get(ID).loadContraption(savedContraption);
                     //If there isn't already a Contraption at the bukkitLocation load up the contraption
-                    if (dao.getContraption(contraption.getLocation()) != null) {
+                    if (dao.getContraption(contraption.getLocation()) == null) {
                         dao.registerContraption(contraption);
                         ContraptionsPlugin.toConsole("Loaded Factory: " + contraption.save().toString(2));
                     } //If there is already a Contraption at that bukkitLocation permenantly delete that contraption
@@ -207,7 +207,6 @@ public class ContraptionManager {
             if (contraptionProperty.validBlock(block)) {
                 matchedBlock = true;
                 response = contraptionProperty.createContraption(location);
-                response.conveyTo(player);
                 if (response.getSuccess()) {
                     //Publish creation to console for logging
                     StringBuilder alert = new StringBuilder();

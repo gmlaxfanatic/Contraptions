@@ -82,10 +82,21 @@ public class StructureGadget {
     }
 
     public static StructureGadget fromJSON(JSONObject jsonObject) {
-        String filename = JSONHelpers.loadString(jsonObject, "structure_file");
-        File file = new File(filename);
+        File schematicsFolder = new File(ContraptionsPlugin.getContraptionPlugin().getDataFolder() + "/configs/schematics");
+        if (!schematicsFolder.exists()) {
+            schematicsFolder.mkdirs();
+        }
+        String filename = JSONHelpers.loadString(jsonObject, "structure");
+        File file = new File(schematicsFolder + "/" + filename + ".schematic");
         Offset offset = Offset.fromJSON(jsonObject);
-        Structure structure =  Structure.parseSchematic(file);
-        return new StructureGadget(structure,offset);
+        Structure structure = Structure.parseSchematic(file);
+        if (!structure.validOffset(offset)) {
+            throw new IllegalArgumentException("Offset not valid for structure");
+        }
+        return new StructureGadget(structure, offset);
+    }
+
+    public Offset getOffset() {
+        return offset;
     }
 }
