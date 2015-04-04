@@ -12,6 +12,7 @@ import vg.civcraft.mc.civmenu.CivMenu;
 import vg.civcraft.mc.civmenu.Menu;
 import vg.civcraft.mc.civmenu.MenuCommand;
 import vg.civcraft.mc.contraptions.utility.Anchor;
+import vg.civcraft.mc.contraptions.utility.StaggeredRunnable;
 
 /**
  * A Factory Contraption meant to replace the current ProductionFactory object
@@ -33,12 +34,12 @@ public class Factory extends Contraption implements MenuCommand {
      * Creates a Factory Contraption
      *
      * @param properties The Factory Properties Object
-     * @param Anchor   The Anchor of the Contraption
+     * @param anchor The Anchor of the Contraption
      */
     public Factory(FactoryProperties properties, Anchor anchor) {
         super(properties, anchor);
         energy = new Resource(0, this);
-        tasks.add(properties.getGrowGadget().run(energy));
+        tasks.add(new FactoryRunnable().runStaggeredTask(properties.getPeriod()));
     }
 
     @Override
@@ -65,7 +66,7 @@ public class Factory extends Contraption implements MenuCommand {
         for (ProductionGadget gadget : getProperties().getProductionGadgets()) {
             menu.addEntry(gadget.getName())
                     .setHover(new Object[]{"Convert: ", gadget.getInputs(), "\nTo: ", gadget.getOutputs()})
-                    .setCommand(menu,new String[]{Integer.toString(index)});
+                    .setCommand(menu, new String[]{Integer.toString(index)});
             index++;
         }
         menu.addEntry("Repair")
@@ -73,6 +74,7 @@ public class Factory extends Contraption implements MenuCommand {
         return new Response(true, menu, this);
     }
 
+    @Override
     public boolean execute(CommandSender sender, String args[]) {
         if (!(sender instanceof Player)) {
             return false;
@@ -117,6 +119,21 @@ public class Factory extends Contraption implements MenuCommand {
             }
         }
         update();
+    }
+
+    class FactoryRunnable extends StaggeredRunnable {
+
+        @Override
+        protected void execute(int duration) {
+            //Grow essence based on territory controlled
+            getProperties().getGrowGadget().grow(energy, duration);
+            update();
+        }
+
+        @Override
+        protected int getPeriod() {
+            return getProperties().getPeriod();
+        }
     }
 
     @Override

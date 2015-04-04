@@ -17,6 +17,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
+import vg.civcraft.mc.contraptions.gadgets.StructureGadget;
+import vg.civcraft.mc.contraptions.gadgets.TerritoryGadget;
 import vg.civcraft.mc.contraptions.utility.Anchor;
 import vg.civcraft.mc.contraptions.utility.BlockLocation;
 import vg.civcraft.mc.contraptions.utility.InventoryHelpers;
@@ -27,6 +29,7 @@ import vg.civcraft.mc.contraptions.utility.JSONHelpers;
  */
 public class FactoryProperties extends ContraptionProperties {
 
+    int period;
     MatchGadget matchGadget;
     List<ProductionGadget> productionGadgets;
     ConversionGadget conversionGadget;
@@ -45,8 +48,9 @@ public class FactoryProperties extends ContraptionProperties {
      * @param conversionGadget The ConversionGadget associated with this
      * specification
      */
-    public FactoryProperties(ContraptionManager contraptionManager, String ID, String name, MatchGadget matchGadget, List<ProductionGadget> productionGadgets, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
-        super(contraptionManager, ID, name,ContraptionProperties.SG_DEFAULT);
+    public FactoryProperties(ContraptionManager contraptionManager, String ID, String name, StructureGadget structureGadget, int period, MatchGadget matchGadget, List<ProductionGadget> productionGadgets, ConversionGadget conversionGadget, GrowGadget growGadget, MinMaxGadget minMaxGadget) {
+        super(contraptionManager, ID, name, structureGadget);
+        this.period = period;
         this.matchGadget = matchGadget;
         this.productionGadgets = productionGadgets;
         this.conversionGadget = conversionGadget;
@@ -63,20 +67,31 @@ public class FactoryProperties extends ContraptionProperties {
      * @return The specified FactoryProperties file
      */
     public static FactoryProperties fromConfig(ContraptionManager contraptionManager, String ID, JSONObject jsonObject) {
-        String name = jsonObject.getString("name");
-        Set<ItemStack> matchGadgetItems = JSONHelpers.loadItemStacks(jsonObject,"building_materials");
+        String name = JSONHelpers.loadString(jsonObject, "name", ID);
+        StructureGadget structureGadget = ContraptionProperties.SG_DEFAULT;
+        try {
+            structureGadget = StructureGadget.fromJSON(jsonObject.getJSONObject("structure"));
+        } catch (Exception e) {
+
+        }
+        //How frequently to update the generator in seconds
+        int period = JSONHelpers.loadInt(jsonObject, "period", 600);
+        //Creation recipe
+        Set<ItemStack> matchGadgetItems = JSONHelpers.loadItemStacks(jsonObject, "building_materials");
         MatchGadget matchGadget = new MatchGadget(matchGadgetItems);
+        //Production Recipes
         List<ProductionGadget> productionGadgets = new ArrayList<ProductionGadget>();
         Iterator<String> productionGadgetNames = jsonObject.getJSONObject("recipes").keys();
-        while(productionGadgetNames.hasNext()) {
+        while (productionGadgetNames.hasNext()) {
             String productionGadgetName = productionGadgetNames.next();
             productionGadgets.add(ProductionGadget.fromJSON(productionGadgetName, jsonObject.getJSONObject("recipes").getJSONObject(productionGadgetName)));
         }
-        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials",InventoryHelpers.multiply(matchGadgetItems,InventoryHelpers.lcm(matchGadgetItems)));
-        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int)(51840000*3.33333)));
+        //Repair
+        Set<ItemStack> repairMaterials = JSONHelpers.loadItemStacks(jsonObject, "repair_materials", InventoryHelpers.multiply(matchGadgetItems, InventoryHelpers.lcm(matchGadgetItems)));
+        ConversionGadget conversionGadget = new ConversionGadget(repairMaterials, JSONHelpers.loadInt(jsonObject, "repair_amount", (int) (51840000 * 3.33333)));
         GrowGadget growGadget = new GrowGadget(JSONHelpers.loadDouble(jsonObject, "breakdown_rate", 1));
-        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject,"max_repair",51840000));
-        return new FactoryProperties(contraptionManager, ID, name, matchGadget, productionGadgets, conversionGadget, growGadget, minMaxGadget);
+        MinMaxGadget minMaxGadget = new MinMaxGadget(-Double.MAX_VALUE, JSONHelpers.loadInt(jsonObject, "max_repair", 51840000));
+        return new FactoryProperties(contraptionManager, ID, name, structureGadget, period, matchGadget, productionGadgets, conversionGadget, growGadget, minMaxGadget);
     }
 
     @Override
@@ -98,8 +113,8 @@ public class FactoryProperties extends ContraptionProperties {
     @Override
     public Response createContraption(BlockLocation location) {
         Anchor anchor = structureGadget.exists(location);
-        if(anchor==null){
-            return new Response(false,"Incorrect structure for factory");
+        if (anchor == null) {
+            return new Response(false, "Incorrect structure for factory");
         }
         Inventory inventory = ((InventoryHolder) location.getBlock().getState()).getInventory();
         if (matchGadget.matches(inventory) && matchGadget.consume(inventory)) {
@@ -147,4 +162,7 @@ public class FactoryProperties extends ContraptionProperties {
         return minMaxGadget;
     }
 
+    public int getPeriod() {
+        return period;
+    }
 }

@@ -31,27 +31,6 @@ public class GrowGadget {
     }
 
     /**
-     * Creates a runnable associated with this gadget with constant growth
-     * 
-     * @param resource Resource being grown
-     * @return The GrowGadget Runnable
-     */
-    public BukkitTask run(Resource resource) {
-        return run(resource, null);
-    }
-
-    /**
-     * Creates a runnable associated with this gadget with scaled growth
-     * 
-     * @param scaler   Scaler to growth rate
-     * @param resource Resource being grown
-     * @return The GrowGadget Runnable
-     */
-    public BukkitTask run(Resource resource, Resource scaler) {
-        return (new GrowRunnable(resource, scaler)).runTaskTimerAsynchronously(ContraptionsPlugin.getContraptionPlugin(), 1000, 1000);
-    }
-
-    /**
      * Imports a GrowGadget from a JSONObject
      * 
      * @param jsonObject The JSONObject containing the information
@@ -79,48 +58,5 @@ public class GrowGadget {
     
     public void grow(Resource resource, int amount) {
         grow(resource, amount, null);
-    }
-
-    class GrowRunnable extends BukkitRunnable {
-
-        //Growing resource
-        Resource resource;
-        //Scaler
-        Resource scaler;
-        //Keeps track of the period of the task
-        int period;
-
-        /**
-         * The GrowGadget runnable associated with a contraption
-         * 
-         * @param resource The resource being grown
-         * @param scaler   A resource that scales the growth rate
-         */
-        public GrowRunnable(Resource resource, Resource scaler) {
-            this.resource = resource;
-            this.scaler = resource;
-        }
-
-        /**
-         * Schedules the task and grows the resource to the delay
-         * 
-         * @param Plugin The Contraptions Plugin
-         * @param delay  The delay until the task is executed in ticks
-         * @param period The period in ticks with which the task is executed
-         */
-        @Override
-        public synchronized BukkitTask runTaskTimer(Plugin plugin, long delay, long period) throws IllegalArgumentException, IllegalStateException {
-            grow(resource, (int) delay, scaler);
-            this.period = (int) period;
-            return super.runTaskTimer(plugin, delay, period);
-        }
-
-        /**
-         * Grows the resource
-         */
-        @Override
-        public void run() {
-            grow(resource, period, scaler);
-        }
     }
 }
